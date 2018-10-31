@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,9 +16,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Teleop", group="Pushbot")
+@Autonomous(name="Deploy", group="Pushbot")
 
-public class EverythingTest extends LinearOpMode {
+public class Deploy extends LinearOpMode {
 
 	/* Declare OpMode members. */
 	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
@@ -25,84 +26,48 @@ public class EverythingTest extends LinearOpMode {
 	float moveY;
 	float moveX;
 	float rotate;
+	int liftHeight;
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
+		liftHeight=robot.getLiftHeight();
 		waitForStart();
-		while(opModeIsActive()) {
-            telemetry.update();
-            telemetry.addData("height", robot.getLiftHeight());
-            //Display coordinates and trackable
-            if (robot.resetCoordinates()) {
-                telemetry.addData("Target", robot.currentTrackable.getName());
-                // express position (translation) of robot in inches.
-                VectorF translation = robot.lastLocation.getTranslation();
-                //ArrayList translation[x, y, z]
-                telemetry.addData("x", translation.get(0) / robot.mmPerInch);
-                telemetry.addData("y", translation.get(1) / robot.mmPerInch);
+		while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
+			robot.lift("up");
+			telemetry.addData("liftHeight", robot.getLiftHeight());
+			telemetry.addData("startingHeight", liftHeight);
+		}
+		robot.lift("stop");
+		sleep(100);
+		robot.moveLeftRight(0.75);
+		sleep(250);
+		robot.stopMotors();
+		sleep(100);
+		liftHeight=robot.getLiftHeight();
+		while(Math.abs(liftHeight-robot.getLiftHeight())<3300&&!gamepad1.a){
+			robot.lift("down");
+		}
+		robot.lift("stop");
+		while (opModeIsActive()) {
+			telemetry.update();
+			telemetry.addData("height", robot.getLiftHeight());
+			//Display coordinates and trackable
+			if (robot.resetCoordinates()) {
+				telemetry.addData("Target", robot.currentTrackable.getName());
+				// express position (translation) of robot in inches.
+				VectorF translation = robot.lastLocation.getTranslation();
+				//ArrayList translation[x, y, z]
+				telemetry.addData("x", translation.get(0) / robot.mmPerInch);
+				telemetry.addData("y", translation.get(1) / robot.mmPerInch);
 
-                // Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
-                Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Heading", rotation.thirdAngle);
-            }
-            else {
-                telemetry.addData("Target", "none");
-            }
-
-            //Move Robot
-			moveY = (float) Range.clip(-gamepad1.left_stick_y, -1, 1);
-			moveX = (float) Range.clip(-gamepad1.left_stick_x, -1, 1);
-			rotate = (float) Range.clip(-gamepad1.right_stick_x, -1, 1);
-			if ((Math.abs(moveY) > 0.25)) {
-				robot.moveUpDown(-moveY);
-
-			}
-			else if (Math.abs(moveX) > 0.25)
-				robot.moveLeftRight(-moveX);
-			else if (Math.abs(rotate) > 0.25) {
-				robot.rotate(-rotate);
+				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
+				Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
+				telemetry.addData("Heading", rotation.thirdAngle);
 			} else {
-				robot.moveUpDown(0);
-				robot.moveLeftRight(0);
-				robot.rotate(0);
+				telemetry.addData("Target", "none");
 			}
 
-/*			if(moveY != 0 || moveX != 0){
-
-			}*/
-
-			//Move team marker mechanism
-			if(gamepad1.left_trigger>0.1){
-				robot.marker1.setPosition(0.7);
-			}
-			if(gamepad1.right_trigger>0.1){
-				robot.marker1.setPosition(0);
-			}
-
-			else{
-				//robot.marker.setPower(0.6);
-			}
-
-			//lift robot
-			if(gamepad1.a){
-				robot.lift();
-			}
-			if(gamepad1.b){
-				robot.lower();
-			}
-			if(gamepad1.dpad_up){
-				robot.lift("up");
-			}
-			else if (gamepad1.dpad_down){
-				robot.lift("down");
-			}
-			else{
-				robot.lift("stop");
-			}
 
 		}
-
-
 	}
-
 }

@@ -37,18 +37,21 @@ public class AvesAblazeHardwarePushbot {
 	DcMotor motor2;
 	DcMotor motor3;
 
-	DcMotor lift1;
-	DcMotor lift2;
+	private DcMotor lift1;
+	private DcMotor lift2;
 
 	int startingHeight;
 
-	Servo door;
-	CRServo marker;
+	Servo marker1;
+	Servo marker2;
 
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
 	public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-	public static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+	public static final float mmTargetHeight   = (6) * mmPerInch;
+	public static double angle=0;
+
+	// the height of the center of the target image above the floor
 	VuforiaTrackables targetsRoverRuckus;
 	List<VuforiaTrackable> allTrackables;
 	VuforiaTrackable currentTrackable;
@@ -66,8 +69,10 @@ public class AvesAblazeHardwarePushbot {
 	public void init(HardwareMap ahwMap) {
 
 		hwMap=ahwMap;
-		door=hwMap.get(Servo.class, "door");
-		marker=hwMap.get(CRServo.class, "marker");
+		marker1=hwMap.get(Servo.class, "marker1");
+		marker2=hwMap.get(Servo.class, "marker2");
+		marker1.setPosition(0);
+		marker2.setPosition(0);
 
 		/*
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
@@ -325,6 +330,7 @@ public class AvesAblazeHardwarePushbot {
 					OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
 					if (robotLocationTransform != null) {
 						lastLocation = robotLocationTransform;
+
 					}
 					return targetVisible;
 				}
@@ -333,12 +339,12 @@ public class AvesAblazeHardwarePushbot {
 	}
 	public void lift(String direction){
 		if(direction.equals("up")){
-			lift1.setPower(1);
-			lift2.setPower(1);
-		}
-		else if(direction.equals("down")){
 			lift1.setPower(-1);
 			lift2.setPower(-1);
+		}
+		else if(direction.equals("down")){
+			lift1.setPower(1);
+			lift2.setPower(1);
 		}
 		else if(direction.equals("stop")){
 			lift1.setPower(0);
@@ -373,6 +379,9 @@ public class AvesAblazeHardwarePushbot {
 		motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+	}
+	public int getLiftHeight(){
+		return lift1.getCurrentPosition();
 	}
 
 }

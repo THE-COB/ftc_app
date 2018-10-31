@@ -31,7 +31,7 @@ public class EverythingTest extends LinearOpMode {
 		waitForStart();
 		while(opModeIsActive()) {
             telemetry.update();
-            telemetry.addData("height", robot.lift1.getCurrentPosition());
+            telemetry.addData("height", robot.getLiftHeight());
             //Display coordinates and trackable
             if (robot.resetCoordinates()) {
                 telemetry.addData("Target", robot.currentTrackable.getName());
@@ -73,18 +73,12 @@ public class EverythingTest extends LinearOpMode {
 
 			//Move team marker mechanism
 			if(gamepad1.left_trigger>0.1){
-				robot.door.setPosition(0.7);
+				robot.marker1.setPosition(0.7);
 			}
 			if(gamepad1.right_trigger>0.1){
-				robot.door.setPosition(0);
+				robot.marker1.setPosition(0);
 			}
 
-			if(gamepad1.right_bumper){
-				robot.marker.setPower(0.5-gamepad1.right_trigger/2);
-			}
-			else if(gamepad1.left_bumper){
-				robot.marker.setPower(0.5+(gamepad1.left_trigger/2));
-			}
 			else{
 				//robot.marker.setPower(0.6);
 			}
@@ -97,16 +91,13 @@ public class EverythingTest extends LinearOpMode {
 				robot.lower();
 			}
 			if(gamepad1.dpad_up){
-				robot.lift1.setPower(-1);
-				robot.lift2.setPower(-1);
+				robot.lift("up");
 			}
 			else if (gamepad1.dpad_down){
-				robot.lift1.setPower(1);
-				robot.lift2.setPower(1);
+				robot.lift("down");
 			}
 			else{
-				robot.lift1.setPower(0);
-				robot.lift2.setPower(0);
+				robot.lift("stop");
 			}
 
 		}
