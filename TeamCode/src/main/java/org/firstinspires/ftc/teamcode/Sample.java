@@ -34,36 +34,38 @@ public class Sample extends LinearOpMode {
 		telemetry.update();
 		waitForStart();
 
+		double[] distances = new double[5];
+		robot.stopMotors();
+		sleep(1000);
+		distances[0]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(0.1);
+		sleep(400);
+		distances[1]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(-0.1);
+		sleep(400);
+		distances[2]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(0.1);
+		sleep(300);
+		distances[3]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(-0.1);
+		sleep(300);
+		distances[4]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		double s = 0;
+		double sd=0;
 
+
+		for (double d : distances) {
+			s += d;
+		}
+		s/=20;
+		for(double d:distances){
+			sd+=(Math.abs(s-d));
+		}
 
 		while (opModeIsActive()) {
-			double[] distances = new double[5];
-			distances[0]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
-			robot.rotate(0.1);
-			sleep(100);
-			distances[1]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
-			robot.rotate(-0.1);
-			sleep(100);
-			distances[2]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
-			robot.rotate(0.1);
-			sleep(90);
-			distances[3]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
-			robot.rotate(-0.1);
-			sleep(90);
-			distances[4]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
-			double s = 0;
-			double sd=0;
 
-
-				for (double d : distances) {
-					s += d;
-				}
-				s/=20;
-				for(double d:distances){
-					sd+=(Math.abs(s-d));
-				}
 			if(s>0) {
-				if (sd > 2) {
+				if (sd > 11) {
 					telemetry.addData("color", "yellow");
 				} else {
 					telemetry.addData("color", "white");

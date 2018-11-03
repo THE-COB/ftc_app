@@ -12,8 +12,10 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -314,6 +316,46 @@ public class Deploy extends LinearOpMode {
 		} else {
 			telemetry.addData("Target", "none");
 		}
+	}
+	public String checkColor() {
+		double[] distances = new double[5];
+		robot.stopMotors();
+		sleep(1000);
+		distances[0] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(0.1);
+		sleep(400);
+		distances[1] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(-0.1);
+		sleep(400);
+		distances[2] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(0.1);
+		sleep(300);
+		distances[3] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		robot.rotate(-0.1);
+		sleep(300);
+		distances[4] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+		double s = 0;
+		double sd = 0;
+
+
+		for (double d : distances) {
+			s += d;
+		}
+		s /= 20;
+		for (double d : distances) {
+			sd += (Math.abs(s - d));
+		}
+
+			if (s > 0) {
+				if (sd > 11) {
+					return "yellow";
+				} else {
+					return "white";
+				}
+			}
+			else{
+			return "none";
+			}
 	}
 
 
