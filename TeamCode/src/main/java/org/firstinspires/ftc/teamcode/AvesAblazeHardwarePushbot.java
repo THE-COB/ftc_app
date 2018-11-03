@@ -370,29 +370,23 @@ public class AvesAblazeHardwarePushbot {
 		return Math.round(translation.get(1)/mmPerInch);
 	}
 	public int getAngle(){
-		double oldAngle;
-		double posAngle;
-		if(resetCoordinates()) {
-			rotation=Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-			if(rotation.thirdAngle>=135)
-			oldAngle = rotation.thirdAngle-135;
-			else{
-				oldAngle=360+rotation.thirdAngle;
-			}
-		}
-		else if(!resetCoordinates()&&imu1.isGyroCalibrated()){
+		if(!resetCoordinates()){
 			//use imu1
-			angles   = imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-			 oldAngle=angles.thirdAngle;
 		}
-		else{
-			return 1000;
+		else {
+			double oldAngle = rotation.thirdAngle;
+			double posAngle = oldAngle;
+			int finalAngle;
+			if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
+			if((int) (Math.round(posAngle)) - 45 < 0){
+				finalAngle = 360-(int)Math.round(posAngle);
+			}
+			else{
+				finalAngle = (int) (Math.round(posAngle)) - 45;
+			}
+			return finalAngle;
 		}
-		posAngle = oldAngle;
-		if(oldAngle<45){
-
-		}
-		return (int) Math.round(posAngle-45);
+		return 10000;
 	}
 
 	public void lift(String direction){
@@ -447,6 +441,14 @@ public class AvesAblazeHardwarePushbot {
 					rotate(0.05);
 				}
 			}
+		}
+		stopMotors();
+	}
+	public void moveToCoord(int x, int y, int angle){
+		int oldAngle = getAngle();
+		rotateToAngle(angle);
+		while(getX()!=x && getY()!=y){
+			moveUpDown(0.25);
 		}
 		stopMotors();
 	}
