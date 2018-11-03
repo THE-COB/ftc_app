@@ -381,10 +381,12 @@ public class AvesAblazeHardwarePushbot {
 			return 1000;
 		}
 		posAngle = oldAngle;
-		if(oldAngle<45){
-
+		if(posAngle>0&&posAngle<180){
+			return(int) Math.round(posAngle+45);
 		}
-		return (int) Math.round(posAngle-45);
+		else{
+			return (int) Math.round(315+posAngle);
+		}
 	}
 
 	public void lift(String direction){
