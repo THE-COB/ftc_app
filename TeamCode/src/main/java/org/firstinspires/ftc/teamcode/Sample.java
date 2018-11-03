@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -31,76 +32,41 @@ public class Sample extends LinearOpMode {
 		robot.init(hardwareMap);
 		telemetry.addData("status", "ready");
 		telemetry.update();
-		liftHeight=robot.getLiftHeight();
 		waitForStart();
-		sleep(1);
-		/*while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
-			robot.lift("up");
-			telemetry.addData("liftHeight", robot.getLiftHeight());
-			telemetry.addData("startingHeight", liftHeight);
-		}
-		robot.lift("stop");
-		sleep(100);
-		robot.moveLeftRight(-0.75);
-		sleep(250);
-		robot.moveUpDown(1);
-		sleep(100);
-		robot.stopMotors();
-		sleep(100);
-		liftHeight=robot.getLiftHeight();
-		while(Math.abs(liftHeight-robot.getLiftHeight())<3300&&!gamepad1.a){
-			robot.lift("down");
-		}
-		robot.lift("stop");*/
-		/*robot.moveUpDown(1);
-		sleep(250);
-		robot.moveLeftRight(-0.3);
-		sleep(500);
-		if(!robot.resetCoordinates()){
-			robot.moveLeftRight(-0.3);
-			sleep(200);
-		}
-		if(!robot.resetCoordinates()){
-			robot.moveLeftRight(-0.3);
-			sleep(200);
-		}
-		if(!robot.resetCoordinates()){
-			robot.moveLeftRight(-0.3);
-			sleep(200);
-		}
-		if(!robot.resetCoordinates()){
-			robot.moveLeftRight(-0.3);
-			sleep(200);
-		}*/
-//Move to (-48,-15)
-		VectorF translation;
-		/* translation = robot.lastLocation.getTranslation();
-		while(robot.resetCoordinates()&&(translation.get(0)>-46||translation.get(1)>-12)&&opModeIsActive()){
-			 translation = robot.lastLocation.getTranslation();
-			 robot.moveLeftRight(0.3);
-		}
-		robot.stopMotors();*/
 
-		//strafe right
-		goldMineral="left";
-		robot.moveLeftRight(0.2, 50);
-		goldMineral="center";
-		sleep(5000);
-		robot.moveLeftRight(0.2, 50);
-		goldMineral="right";
-		sleep(5000);
+
 
 		while (opModeIsActive()) {
+			double s = 0;
+			if (robot.sensorDistance.getDistance(DistanceUnit.INCH)<15){
+				double[] distances = new double[20];
+				do {
+					int counter = 0;
+					distances[counter] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+				}
+				while (distances.length < 20);
+
+				for (double d : distances) {
+					s += d;
+				}
+			}
+			if(s>0) {
+				if (s / 20 > 0.5) {
+					telemetry.addData("color", "yellow");
+				} else {
+					telemetry.addData("color", "white");
+				}
+			}
 			telemetry.update();
 			telemetry.addData("height", robot.getLiftHeight());
 			//Display coordinates and trackable
 			if (robot.resetCoordinates()) {
 				telemetry.addData("Target", robot.currentTrackable.getName());
 				// express position (translation) of robot in inches.
-				translation = robot.lastLocation.getTranslation();
+				robot.translation = robot.lastLocation.getTranslation();
 				//ArrayList translation[x, y, z]
-				telemetry.addData("x", translation.get(0) / robot.mmPerInch);
-				telemetry.addData("y", translation.get(1) / robot.mmPerInch);
+				telemetry.addData("x", robot.translation.get(0) / robot.mmPerInch);
+				telemetry.addData("y", robot.translation.get(1) / robot.mmPerInch);
 
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);

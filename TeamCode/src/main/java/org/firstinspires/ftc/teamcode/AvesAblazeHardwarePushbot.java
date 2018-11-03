@@ -4,8 +4,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -48,6 +50,8 @@ public class AvesAblazeHardwarePushbot {
 	private DcMotor lift2;
 
 	BNO055IMU imu1;
+	ColorSensor sensorColor;
+	DistanceSensor sensorDistance;
 	int startingHeight;
 
 	Servo marker1;
@@ -86,6 +90,10 @@ public class AvesAblazeHardwarePushbot {
 
 
 		imu1=hwMap.get(BNO055IMU.class, "imu 1");
+		sensorColor = hwMap.get(ColorSensor.class, "colorRange");
+
+		// get a reference to the distance sensor that shares the same name.
+		sensorDistance = hwMap.get(DistanceSensor.class, "colorRange");
 
 		/*
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
@@ -364,7 +372,7 @@ public class AvesAblazeHardwarePushbot {
 	public int getAngle(){
 		double oldAngle;
 		double posAngle;
-		if(resetCoordinates()) {
+		if(!resetCoordinates()) {
 			rotation=Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
 			if(rotation.thirdAngle>=135)
 			oldAngle = rotation.thirdAngle-135;
@@ -372,7 +380,7 @@ public class AvesAblazeHardwarePushbot {
 				oldAngle=360+rotation.thirdAngle;
 			}
 		}
-		else if(!resetCoordinates()&&imu1.isGyroCalibrated()){
+		else if(resetCoordinates()&&imu1.isGyroCalibrated()){
 			//use imu1
 			angles   = imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 			 oldAngle=angles.thirdAngle;
@@ -380,13 +388,14 @@ public class AvesAblazeHardwarePushbot {
 		else{
 			return 1000;
 		}
-		posAngle = oldAngle;
+		return (int)Math.round(oldAngle);
+/*		posAngle = oldAngle;
 		if(posAngle>0&&posAngle<180){
 			return(int) Math.round(posAngle+45);
 		}
 		else{
 			return (int) Math.round(315+posAngle);
-		}
+		}*/
 	}
 
 	public void lift(String direction){
