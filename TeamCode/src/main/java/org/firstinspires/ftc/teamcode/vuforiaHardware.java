@@ -52,7 +52,7 @@ public class vuforiaHardware {
 	VuforiaTrackable currentTrackable;
 	// Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
 	// Valid choices are:  BACK or FRONT
-	public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
+	public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
 	public OpenGLMatrix lastLocation = null;
 	public boolean targetVisible = false;

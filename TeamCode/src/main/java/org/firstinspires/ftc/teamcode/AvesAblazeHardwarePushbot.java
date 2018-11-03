@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -18,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
@@ -40,6 +44,7 @@ public class AvesAblazeHardwarePushbot {
 	private DcMotor lift1;
 	private DcMotor lift2;
 
+	BNO055IMU imu1;
 	int startingHeight;
 
 	Servo marker1;
@@ -57,11 +62,13 @@ public class AvesAblazeHardwarePushbot {
 	VuforiaTrackable currentTrackable;
 	// Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
 	// Valid choices are:  BACK or FRONT
-	public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
+	public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
 	public OpenGLMatrix lastLocation = null;
 	public boolean targetVisible = false;
 
+	public Orientation rotation;
+	public VectorF translation;
 
 	HardwareMap hwMap;
 
@@ -71,8 +78,10 @@ public class AvesAblazeHardwarePushbot {
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
 		marker2=hwMap.get(Servo.class, "marker2");
-		marker1.setPosition(0);
-		marker2.setPosition(0);
+		marker1.setPosition(1);
+
+
+		imu1=hwMap.get(BNO055IMU.class, "imu 1");
 
 		/*
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
@@ -259,10 +268,10 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(power);
 	}
 	public void moveUpDown(double power){
-		motor0.setPower(power);
-		motor1.setPower(-power);
-		motor2.setPower(power);
-		motor3.setPower(-power);
+		motor0.setPower(-power);
+		motor1.setPower(power);
+		motor2.setPower(-power);
+		motor3.setPower(power);
 	}
 	public void rotate(double power, int tics){
 		if(tics < 0) power = power*-1;
@@ -332,11 +341,35 @@ public class AvesAblazeHardwarePushbot {
 						lastLocation = robotLocationTransform;
 
 					}
+					translation = lastLocation.getTranslation();
+					rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
 					return targetVisible;
 				}
 			}
 		return targetVisible;
 	}
+
+	public int getX(){
+		if(!resetCoordinates()) return 10000;
+		return Math.round(translation.get(0)/mmPerInch);
+	}
+	public int getY(){
+		if(!resetCoordinates()) return 10000;
+		return Math.round(translation.get(1)/mmPerInch);
+	}
+	public int getAngle(){
+		if(!resetCoordinates()){
+			//use imu1
+		}
+		else {
+			double oldAngle = rotation.thirdAngle;
+			double posAngle = oldAngle;
+			if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
+			return (int) (Math.round(posAngle)) - 45;
+		}
+		return 10000;
+	}
+
 	public void lift(String direction){
 		if(direction.equals("up")){
 			lift1.setPower(-1);
@@ -351,6 +384,44 @@ public class AvesAblazeHardwarePushbot {
 			lift2.setPower(0);
 		}
 	}
+
+	public void rotateToAngle(int newAngle){
+		int diff = newAngle-getAngle();
+		if((diff>0 && diff<180) || (diff<0 && Math.abs(diff)>180)){
+			while(Math.abs(getAngle()-newAngle)>0.7){
+				if(Math.abs(getAngle()-newAngle)>50){
+					rotate(-0.8);
+				}
+				else if(Math.abs(getAngle()-newAngle)>10){
+					rotate(-0.2);
+				}
+				else if(Math.abs(getAngle()-newAngle)>4){
+					rotate(-0.1);
+				}
+				else{
+					rotate(-0.05);
+				}
+			}
+		}
+		else{
+			while(Math.abs(getAngle()-newAngle)>0.7){
+				if(Math.abs(getAngle()-newAngle)>50){
+					rotate(0.8);
+				}
+				else if(Math.abs(getAngle()-newAngle)>10){
+					rotate(0.2);
+				}
+				else if(Math.abs(getAngle()-newAngle)>4){
+					rotate(0.1);
+				}
+				else{
+					rotate(0.05);
+				}
+			}
+		}
+		stopMotors();
+	}
+
 	public void lift(){
 		while(lift1.getCurrentPosition()<3350+startingHeight){
 			lift("up");

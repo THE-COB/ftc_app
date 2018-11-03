@@ -90,6 +90,7 @@ public class SensorBNO055IMU extends LinearOpMode
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+
         imu.initialize(parameters);
 
         // Set up our telemetry dashboard
