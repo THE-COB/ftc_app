@@ -37,15 +37,23 @@ public class Sample extends LinearOpMode {
 
 
 		while (opModeIsActive()) {
+			double[] distances = new double[5];
+			distances[0]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+			robot.rotate(0.1);
+			sleep(100);
+			distances[1]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+			robot.rotate(-0.1);
+			sleep(100);
+			distances[2]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+			robot.rotate(0.1);
+			sleep(90);
+			distances[3]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
+			robot.rotate(-0.1);
+			sleep(90);
+			distances[4]=robot.sensorDistance.getDistance(DistanceUnit.INCH);
 			double s = 0;
 			double sd=0;
-			if (robot.sensorDistance.getDistance(DistanceUnit.INCH)<6){
-				double[] distances = new double[20];
-				do {
-					int counter = 0;
-					distances[counter] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-				}
-				while (distances.length < 20);
+
 
 				for (double d : distances) {
 					s += d;
@@ -54,14 +62,14 @@ public class Sample extends LinearOpMode {
 				for(double d:distances){
 					sd+=(Math.abs(s-d));
 				}
-			}
 			if(s>0) {
-				if (sd > 0.5) {
+				if (sd > 2) {
 					telemetry.addData("color", "yellow");
 				} else {
 					telemetry.addData("color", "white");
 				}
 			}
+			telemetry.addData("standard deviation", sd);
 			telemetry.update();
 			telemetry.addData("height", robot.getLiftHeight());
 
