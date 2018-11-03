@@ -38,7 +38,8 @@ public class Sample extends LinearOpMode {
 
 		while (opModeIsActive()) {
 			double s = 0;
-			if (robot.sensorDistance.getDistance(DistanceUnit.INCH)<15){
+			double sd=0;
+			if (robot.sensorDistance.getDistance(DistanceUnit.INCH)<6){
 				double[] distances = new double[20];
 				do {
 					int counter = 0;
@@ -49,9 +50,13 @@ public class Sample extends LinearOpMode {
 				for (double d : distances) {
 					s += d;
 				}
+				s/=20;
+				for(double d:distances){
+					sd+=(Math.abs(s-d));
+				}
 			}
 			if(s>0) {
-				if (s / 20 > 0.5) {
+				if (sd > 0.5) {
 					telemetry.addData("color", "yellow");
 				} else {
 					telemetry.addData("color", "white");
@@ -59,6 +64,7 @@ public class Sample extends LinearOpMode {
 			}
 			telemetry.update();
 			telemetry.addData("height", robot.getLiftHeight());
+
 			//Display coordinates and trackable
 			if (robot.resetCoordinates()) {
 				telemetry.addData("Target", robot.currentTrackable.getName());
