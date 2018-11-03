@@ -79,7 +79,7 @@ public class SensorREVColorDistance extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        //comment
+        //comments
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "colorRange");
 
