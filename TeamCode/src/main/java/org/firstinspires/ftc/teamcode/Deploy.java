@@ -28,6 +28,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 public class Deploy extends LinearOpMode {
 
 	/* Declare OpMode members. */
+
 	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
 	private ElapsedTime runtime = new ElapsedTime();
 	float moveY;
@@ -44,10 +45,8 @@ public class Deploy extends LinearOpMode {
 		liftHeight=robot.getLiftHeight();
 		waitForStart();
 		robot.rotateToAngle(180);
-		String color=checkColor();
 		while(opModeIsActive()){
 			telemetry.addData("angle", robot.getAngle());
-			telemetry.addData("color", color);
 			telemetry.update();
 		}
 		sleep(1);
@@ -337,6 +336,7 @@ public class Deploy extends LinearOpMode {
 		distances[4] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		double s = 0;
 		double sd = 0;
+		robot.stopMotors();
 
 
 		for (double d : distances) {
