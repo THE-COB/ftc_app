@@ -44,9 +44,10 @@ public class Deploy extends LinearOpMode {
 		liftHeight=robot.getLiftHeight();
 		waitForStart();
 		robot.rotateToAngle(180);
-
+		String color=checkColor();
 		while(opModeIsActive()){
 			telemetry.addData("angle", robot.getAngle());
+			telemetry.addData("color", color);
 			telemetry.update();
 		}
 		sleep(1);
