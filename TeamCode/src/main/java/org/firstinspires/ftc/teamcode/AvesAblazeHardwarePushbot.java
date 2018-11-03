@@ -412,6 +412,10 @@ public class AvesAblazeHardwarePushbot {
 
 	public void rotateToAngle(int newAngle){
 		int diff = newAngle-getAngle();
+		if(newAngle == getAngle()){
+			stopMotors();
+			return;
+		}
 		if((diff>0 && diff<180) || (diff<0 && Math.abs(diff)>180)){
 			while(Math.abs(getAngle()-newAngle)>0.7){
 				if(getAngle()-newAngle>360){
