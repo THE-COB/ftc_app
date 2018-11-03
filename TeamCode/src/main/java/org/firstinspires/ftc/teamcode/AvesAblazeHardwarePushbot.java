@@ -274,10 +274,14 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(-power);
 	}
 	public void moveLeftRight(double power){
+		int angle = getAngle();
 		motor0.setPower(-power);
 		motor1.setPower(-power);
 		motor2.setPower(power);
 		motor3.setPower(power);
+		if(angle != getAngle()){
+			rotateToAngle(angle);
+		}
 	}
 	public void moveUpDown(double power){
 		motor0.setPower(-power);
@@ -299,6 +303,7 @@ public class AvesAblazeHardwarePushbot {
 		stopMotors();
 	}
 	public void moveLeftRight(double power, int tics){
+		int angle = getAngle();
 		if(tics<0) power = power*-1;
 		int initPos = motor0.getCurrentPosition();
 		int currPos = initPos;
