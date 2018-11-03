@@ -12,6 +12,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -69,6 +72,7 @@ public class AvesAblazeHardwarePushbot {
 
 	public Orientation rotation;
 	public VectorF translation;
+	Orientation angles;
 
 	HardwareMap hwMap;
 
@@ -358,16 +362,31 @@ public class AvesAblazeHardwarePushbot {
 		return Math.round(translation.get(1)/mmPerInch);
 	}
 	public int getAngle(){
-		if(!resetCoordinates()){
+		double oldAngle;
+		double posAngle;
+		if(resetCoordinates()) {
+			rotation=Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+			if(rotation.thirdAngle>=135)
+			oldAngle = rotation.thirdAngle-135;
+			else{
+				oldAngle=360+rotation.thirdAngle;
+			}
+		}
+		else if(!resetCoordinates()&&imu1.isGyroCalibrated()){
 			//use imu1
+			angles   = imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+			 oldAngle=angles.thirdAngle;
 		}
-		else {
-			double oldAngle = rotation.thirdAngle;
-			double posAngle = oldAngle;
-			if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
-			return (int) (Math.round(posAngle)) - 45;
+		else{
+			return 1000;
 		}
-		return 10000;
+		posAngle = oldAngle;
+		if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
+		if(posAngle>=45)
+		return (int) (Math.round(posAngle)) - 45;
+		else{
+			return (int) Math.round(360+posAngle);
+		}
 	}
 
 	public void lift(String direction){
@@ -389,7 +408,11 @@ public class AvesAblazeHardwarePushbot {
 		int diff = newAngle-getAngle();
 		if((diff>0 && diff<180) || (diff<0 && Math.abs(diff)>180)){
 			while(Math.abs(getAngle()-newAngle)>0.7){
-				if(Math.abs(getAngle()-newAngle)>50){
+				if(getAngle()-newAngle>360){
+					stopMotors();
+					break;
+				}
+				else if(Math.abs(getAngle()-newAngle)>50){
 					rotate(-0.8);
 				}
 				else if(Math.abs(getAngle()-newAngle)>10){

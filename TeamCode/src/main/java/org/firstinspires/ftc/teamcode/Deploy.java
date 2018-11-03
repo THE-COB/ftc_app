@@ -42,7 +42,11 @@ public class Deploy extends LinearOpMode {
 		liftHeight=robot.getLiftHeight();
 		waitForStart();
 		robot.rotateToAngle(180);
-		while(opModeIsActive());
+
+		while(opModeIsActive()){
+			telemetry.addData("angle", robot.getAngle());
+			telemetry.update();
+		}
 		sleep(1);
 		while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
 			robot.lift("up");
