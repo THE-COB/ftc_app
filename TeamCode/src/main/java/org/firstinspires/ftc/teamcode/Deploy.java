@@ -131,7 +131,7 @@ public class Deploy extends LinearOpMode {
 		}
 		sleep(150);
 		robot.stopMotors();
-		robot
+		color=robot.checkColor();
 		sleep(1000);
 		robot.rotateToAngle(135);
 
