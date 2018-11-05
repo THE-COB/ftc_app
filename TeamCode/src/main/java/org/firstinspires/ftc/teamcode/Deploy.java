@@ -138,11 +138,11 @@ public class Deploy extends LinearOpMode {
 		//robot.moveLeftRight(0.8);
 		sleep(200);
 		if(color.equals("yellow")){
-			robot.drive(20,true);
+			robot.drive(20,true,0.8);
 			sleep(700);
 			robot.stopMotors();
 			robot.rotateToAngle(180);
-			robot.drive(20, true);
+			robot.drive(20, true,0.8);
 			robot.marker1.setPosition(0.3);
 			sleep(1000);
 			robot.marker1.setPosition(1);
@@ -162,7 +162,7 @@ public class Deploy extends LinearOpMode {
 			sleep(1000);
 			sleep(200);
 			if(color.equals("yellow")){
-				robot.drive(20,true);
+				robot.drive(20,true,0.8);
 			}
 			else {
 				robot.moveLeftRight(0.2);
@@ -182,7 +182,7 @@ public class Deploy extends LinearOpMode {
 				sleep(1000);
 
 
-				robot.drive(20, true);
+				robot.drive(20, true,0.8);
 			}
 
 			/*
@@ -199,7 +199,7 @@ public class Deploy extends LinearOpMode {
 
 		}
 		robot.rotateToAngle(270);
-		robot.drive(83, true);
+		robot.drive(83, true,0.8);
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();
