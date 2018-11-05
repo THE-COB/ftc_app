@@ -19,7 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Deploy", group="Pushbot")
+@TeleOp(name="CheckColor", group="Pushbot")
 
 public class CheckColor extends LinearOpMode {
 
