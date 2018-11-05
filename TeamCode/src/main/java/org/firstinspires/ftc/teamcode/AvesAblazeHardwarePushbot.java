@@ -84,6 +84,7 @@ public class AvesAblazeHardwarePushbot {
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap ahwMap) {
 
+		//Getting servos for HardwareMap
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
 		marker2=hwMap.get(Servo.class, "marker2");
@@ -91,6 +92,7 @@ public class AvesAblazeHardwarePushbot {
 
 
 
+		//Getting sensors from HardwareMap
 		imu1=hwMap.get(BNO055IMU.class, "imu 1");
 		// get a reference to the color sensor.
 		sensorColor = hwMap.get(ColorSensor.class, "colorRange");
@@ -101,6 +103,8 @@ public class AvesAblazeHardwarePushbot {
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
 		*/
 
+		//Getting motors from HardwareMap and initializing them
+		//names self explanatory
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -263,18 +267,21 @@ public class AvesAblazeHardwarePushbot {
 	}
 
 
+	//Stop motors
 	public  void stopMotors(){
 		motor0.setPower(0);
 		motor1.setPower(0);
 		motor2.setPower(0);
 		motor3.setPower(0);
 	}
+	//rotates from power
 	public void rotate(double power){
 		motor0.setPower(-power);
 		motor1.setPower(-power);
 		motor2.setPower(-power);
 		motor3.setPower(-power);
 	}
+	//Moves left-right based off power
 	public void moveLeftRight(double power){
 		//int angle = getAngle();
 		motor0.setPower(-power);
@@ -285,12 +292,14 @@ public class AvesAblazeHardwarePushbot {
 			rotateToAngle(angle);
 		}*/
 	}
+	//Moves forward-back based off power
 	public void moveUpDown(double power){
 		motor0.setPower(-power);
 		motor1.setPower(power);
 		motor2.setPower(-power);
 		motor3.setPower(power);
 	}
+	//Rotate based off power and tics
 	public void rotate(double power, int tics){
 		if(tics < 0) power = power*-1;
 		int initPos = motor0.getCurrentPosition();
@@ -304,6 +313,7 @@ public class AvesAblazeHardwarePushbot {
 		}
 		stopMotors();
 	}
+	//Moves left-right based off power(magnitude) and tics
 	public void moveLeftRight(double power, int tics){
 		int angle = getAngle();
 		if(tics<0) power = power*-1;
@@ -318,6 +328,7 @@ public class AvesAblazeHardwarePushbot {
 		}
 		stopMotors();
 	}
+	//Moves forward-back based off power(magnitude) and tics
 	public void moveUpDown(double power, int tics){
 		if(tics<0) power = power*-1;
 		int initPos = (Math.abs(motor0.getCurrentPosition())+Math.abs(motor1.getCurrentPosition())+Math.abs(motor2.getCurrentPosition())+Math.abs(motor3.getCurrentPosition()))/4;
@@ -333,6 +344,7 @@ public class AvesAblazeHardwarePushbot {
 		stopMotors();
 	}
 
+	//Moves forward-back based off inches, if it's moving forward and power(magnitude)
 	public void drive(double inches, boolean forward, double power){
 		double val = 85;
 		if(power>0.5) val = 65;
@@ -344,6 +356,7 @@ public class AvesAblazeHardwarePushbot {
 
 	}
 
+	//Returns encoder value for motor based on motor number
 	public int getMotorVal(int motorNum){
 		switch (motorNum){
 			case 0: return motor0.getCurrentPosition();
@@ -377,14 +390,17 @@ public class AvesAblazeHardwarePushbot {
 		return targetVisible;
 	}
 
+	//Returns x coordinate from vuforia
 	public int getX(){
 		if(!resetCoordinates()) return 10000;
 		return Math.round(translation.get(0)/mmPerInch);
 	}
+	//Returns y coordinate from vuforia
 	public int getY(){
 		if(!resetCoordinates()) return 10000;
 		return Math.round(translation.get(1)/mmPerInch);
 	}
+	//Returns angle based off vuforia or rev hub imu
 	public int getAngle(){
 		if(!resetCoordinates()&&imu1.isGyroCalibrated()){
 			angles=imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -411,6 +427,7 @@ public class AvesAblazeHardwarePushbot {
 		}
 	}
 
+	//Runs lift motors
 	public void lift(String direction){
 		if(direction.equals("up")){
 			lift1.setPower(-1);
@@ -425,6 +442,7 @@ public class AvesAblazeHardwarePushbot {
 			lift2.setPower(0);
 		}
 	}
+	//Rotates to certain angle
 	public void rotateToAngle(int newAngle) {
 		int diff = newAngle - getAngle();
 		if (newAngle == getAngle()) {
@@ -459,6 +477,7 @@ public class AvesAblazeHardwarePushbot {
 		stopMotors();
 
 	}
+	//Moves to vuforia coordinate from either vuforia or rev imu angle
 	public void moveToCoord(int x, int y, int angle){
 		int oldAngle = getAngle();
 		rotateToAngle(angle);
@@ -468,6 +487,7 @@ public class AvesAblazeHardwarePushbot {
 		stopMotors();
 	}
 
+	//More lift motors correctly
 	public void lift(){
 		while(lift1.getCurrentPosition()<3350+startingHeight){
 			lift("up");
@@ -491,15 +511,18 @@ public class AvesAblazeHardwarePushbot {
 		lift2.setPower(0);
 	}
 
+	//Resets encoders
 	public void resetEncodes(){
 		motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 	}
+	//Really self explanatory
 	public int getLiftHeight(){
 		return lift1.getCurrentPosition();
 	}
+	//Again, super self explanatory
 	public String checkColor() {
 		if (sensorDistance.getDistance(DistanceUnit.INCH) < 6.5) {
 			return "white";
