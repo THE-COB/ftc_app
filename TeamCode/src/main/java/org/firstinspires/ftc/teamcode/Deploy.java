@@ -134,7 +134,10 @@ public class Deploy extends LinearOpMode {
 		color=robot.checkColor();
 		sleep(1000);
 		robot.rotateToAngle(135);
-
+		while(opModeIsActive()&&!gamepad1.a){
+			telemetry.update();
+			telemetry.addData("ratio", robot.sensorColor.blue() / Math.pow(20 - robot.sensorDistance.getDistance(DistanceUnit.INCH), 1));
+		}
 		//robot.moveLeftRight(0.8);
 		sleep(200);
 		if(color.equals("yellow")){
@@ -143,8 +146,8 @@ public class Deploy extends LinearOpMode {
 			robot.stopMotors();
 			sleep(1500);
 			robot.rotateToAngle(180);
-			robot.moveLeftRight(-0.5);
-			sleep(200);
+			robot.moveLeftRight(0.5);
+			sleep(600);
 			robot.stopMotors();
 			robot.marker1.setPosition(0.3);
 			sleep(1000);
@@ -201,6 +204,7 @@ public class Deploy extends LinearOpMode {
 		}
 		robot.rotateToAngle(265);
 		robot.drive(83, true,0.8);
+		robot.stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();

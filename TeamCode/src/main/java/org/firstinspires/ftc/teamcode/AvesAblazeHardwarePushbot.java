@@ -456,9 +456,9 @@ public class AvesAblazeHardwarePushbot {
 					rotate(-0.5);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 15) {
-					rotate(-0.25);
-				} else  {
 					rotate(-0.2);
+				} else  {
+					rotate(-0.07);
 				}
 			} else {
 
@@ -466,13 +466,12 @@ public class AvesAblazeHardwarePushbot {
 					rotate(0.4);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 15) {
-					rotate(0.25);
+					rotate(0.17);
 				} else {
-					rotate(0.15);
+					rotate(0.1);
 				}
 			}
 
-			stopMotors();
 		}
 		stopMotors();
 
@@ -524,6 +523,7 @@ public class AvesAblazeHardwarePushbot {
 	}
 	//Again, super self explanatory
 	public String checkColor() {
+
 		if (sensorColor.blue() / Math.pow(20 - sensorDistance.getDistance(DistanceUnit.INCH), 1) < 1.2) {
 			return "yellow";
 		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
