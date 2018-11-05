@@ -66,7 +66,17 @@ public class CheckColor extends LinearOpMode {
 		}
 	}
 	public String checkColor() {
-		double[] distances = new double[5];
+		if(robot.sensorDistance.getDistance(DistanceUnit.INCH)<6){
+			return "white";
+		}
+		else if(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20){
+			return "yellow";
+		}
+		else{
+			return "nothing";
+		}
+
+		/*double[] distances = new double[5];
 		robot.stopMotors();
 		distances[0] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		robot.rotate(0.1);
@@ -103,7 +113,7 @@ public class CheckColor extends LinearOpMode {
 			}
 			else{
 			return "none";
-			}
+			}*/
 	}
 
 

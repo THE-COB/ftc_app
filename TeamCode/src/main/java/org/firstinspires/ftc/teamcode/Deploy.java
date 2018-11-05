@@ -131,6 +131,7 @@ public class Deploy extends LinearOpMode {
 		}
 		sleep(150);
 		robot.stopMotors();
+		robot
 		sleep(1000);
 		robot.rotateToAngle(135);
 
@@ -219,46 +220,6 @@ public class Deploy extends LinearOpMode {
 		} else {
 			telemetry.addData("Target", "none");
 		}
-	}
-	public String checkColor() {
-		double[] distances = new double[5];
-		robot.stopMotors();
-		distances[0] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-		robot.rotate(0.1);
-		sleep(300);
-		distances[1] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-		robot.rotate(-0.1);
-		sleep(300);
-		distances[2] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-		robot.rotate(0.1);
-		sleep(300);
-		distances[3] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-		robot.rotate(-0.1);
-		sleep(300);
-		distances[4] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-		double s = 0;
-		sd = 0;
-		robot.stopMotors();
-
-
-		for (double d : distances) {
-			s += d;
-		}
-		s /= 20;
-		for (double d : distances) {
-			sd += (Math.abs(s - d));
-		}
-
-			if (s > 0) {
-				if (sd > 16) {
-					return "yellow";
-				} else {
-					return "white";
-				}
-			}
-			else{
-			return "none";
-			}
 	}
 
 
