@@ -141,6 +141,7 @@ public class Deploy extends LinearOpMode {
 			robot.drive(23,true,0.8);
 			sleep(700);
 			robot.stopMotors();
+			sleep(1500);
 			robot.rotateToAngle(180);
 			robot.moveLeftRight(-0.5);
 			sleep(200);
@@ -165,6 +166,8 @@ public class Deploy extends LinearOpMode {
 			sleep(200);
 			if(color.equals("yellow")){
 				robot.drive(29,true,0.8);
+				robot.stopMotors();
+				sleep(1500);
 				robot.rotateToAngle(180);
 				robot.drive(6, true,0.8);
 				robot.marker1.setPosition(0.3);
@@ -182,7 +185,8 @@ public class Deploy extends LinearOpMode {
 				}
 				robot.stopMotors();
 				robot.drive(21, true,0.8);
-				sleep(1000);
+				robot.stopMotors();
+				sleep(1500);
 				robot.rotateToAngle(180);
 				robot.drive(23, true,0.8);
 				robot.marker1.setPosition(0.3);
