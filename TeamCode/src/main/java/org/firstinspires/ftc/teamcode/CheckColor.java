@@ -43,7 +43,7 @@ public class CheckColor extends LinearOpMode {
 			if(gamepad1.a) {
 				color=checkColor();
 			}
-				telemetry.addData("color",color);
+			telemetry.addData("color",color);
 			telemetry.addData("sd",sd);
 			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 			telemetry.update();
