@@ -35,20 +35,13 @@ public class Deploy extends LinearOpMode {
 	float moveX;
 	float rotate;
 	int liftHeight;
-
+	double sd;
+	String color;
 	Orientation angles;
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
-		telemetry.addData("status", "ready");
-		telemetry.update();
-		liftHeight=robot.getLiftHeight();
 		waitForStart();
-		robot.rotateToAngle(180);
-		while(opModeIsActive()){
-			telemetry.addData("angle", robot.getAngle());
-			telemetry.update();
-		}
 		sleep(1);
 		while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
 			robot.lift("up");
@@ -93,32 +86,23 @@ public class Deploy extends LinearOpMode {
 		robot.rotate(-0.1);
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 		int direction=-1;
-		while((Math.abs(robot.rotation.thirdAngle)<179|!robot.resetCoordinates())&&opModeIsActive()){
-			robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("angle", robot.rotation.thirdAngle);
-			telemetry.update();
-
-			if(Math.abs(robot.rotation.thirdAngle)<170){
-				direction=1;
-			}
-
-			if(Math.abs(robot.rotation.thirdAngle)>165){
-				robot.rotate(-0.05*direction);
-			}
-			else if(Math.abs(robot.rotation.thirdAngle)<90){
-				robot.rotate(-0.3*direction);
-			}
-			else{
-				robot.rotate(-0.1*direction);
-			}
-
-			}
 			robot.stopMotors();
 		sleep(1000);
 		robot.moveUpDown(0.15);
 		robot.translation=robot.lastLocation.getTranslation();
-		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<59){
-			robot.moveUpDown(0.15);
+		robot.rotateToAngle(135);
+		BNO055IMU.Parameters imuParameters;
+		imuParameters = new BNO055IMU.Parameters();
+		imuParameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+		imuParameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+		imuParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+		imuParameters.loggingEnabled      = true;
+		imuParameters.loggingTag          = "IMU";
+		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+		robot.imu1.initialize(imuParameters);
+		robot.startingAngle=135;
+		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<58){
+			robot.moveUpDown(0.1);
 			robot.translation=robot.lastLocation.getTranslation();
 			telemetry.addData("x", robot.getX());
 			telemetry.addData("y", robot.getY());
@@ -126,12 +110,9 @@ public class Deploy extends LinearOpMode {
 			while(gamepad1.a){
 				robot.stopMotors();
 			}
-			sleep(500);
 			while(gamepad1.a){
 				robot.stopMotors();
 			}
-			robot.stopMotors();
-			sleep(500);
 			robot.translation=robot.lastLocation.getTranslation();
 			telemetry.addData("x", robot.translation.get(0));
 			telemetry.addData("y", robot.translation.get(1));
@@ -140,144 +121,66 @@ public class Deploy extends LinearOpMode {
 				robot.stopMotors();
 			}
 		}
+		robot.rotateToAngle(135);
 		robot.stopMotors();
 		sleep(1000);
 		//robot.moveLeftRight(0.8);
 		sleep(200);
-		while(robot.getX()<-52&&opModeIsActive()){
+		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
 			robot.moveLeftRight(0.2);
 		}
+		sleep(150);
 		robot.stopMotors();
 		sleep(1000);
-		direction=-1;
-		while((Math.abs(robot.rotation.thirdAngle)<179|!robot.resetCoordinates())&&opModeIsActive()){
-			robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("angle", robot.rotation.thirdAngle);
+		robot.rotateToAngle(135);
+
+		//robot.moveLeftRight(0.8);
+		sleep(200);
+		robot.moveLeftRight(0.2);
+		sleep(1000);
+		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
+			robot.moveLeftRight(0.2);
+			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 			telemetry.update();
-
-			if(Math.abs(robot.rotation.thirdAngle)<170){
-				direction=1;
-			}
-
-			if(Math.abs(robot.rotation.thirdAngle)>165){
-				robot.rotate(-0.05*direction);
-			}
-			else if(Math.abs(robot.rotation.thirdAngle)<90){
-				robot.rotate(-0.3*direction);
-			}
-			else{
-				robot.rotate(-0.1*direction);
-			}
-
 		}
-		BNO055IMU.Parameters imuParameters = new BNO055IMU.Parameters();
-		imuParameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-		imuParameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-		imuParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-		imuParameters.loggingEnabled      = true;
-		imuParameters.loggingTag          = "IMU";
-		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-		robot.imu1.initialize(imuParameters);
-		//robot.moveLeftRight(0.8);
-		sleep(200);
-		while(robot.getX()<-43&&opModeIsActive()){
-			robot.moveLeftRight(0.2);
-		}
+			sleep(150);
+		robot.rotateToAngle(135);
 		robot.stopMotors();
 		sleep(1000);
-		direction=-1;
-		/*while((Math.abs(robot.rotation.thirdAngle)<179|!robot.resetCoordinates())&&opModeIsActive()){
-			robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("angle", robot.rotation.thirdAngle);
-			telemetry.update();
-
-			if(Math.abs(robot.rotation.thirdAngle)<170){
-				direction=1;
-			}
-
-			if(Math.abs(robot.rotation.thirdAngle)>165){
-				robot.rotate(-0.05*direction);
-			}
-			else if(Math.abs(robot.rotation.thirdAngle)<90){
-				robot.rotate(-0.3*direction);
-			}
-			else{
-				robot.rotate(-0.1*direction);
-			}
-
-		}*/
-		//robot.moveLeftRight(0.8);
 		sleep(200);
-		while(robot.getX()<-32&&opModeIsActive()&&robot.resetCoordinates()){
+		robot.moveLeftRight(0.2);
+		sleep(1000);
+		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
 			robot.moveLeftRight(0.2);
+			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
+			telemetry.update();
 		}
+			sleep(150);
 		if(!robot.resetCoordinates()){
 			robot.moveLeftRight(0.2);
 			sleep(100);
 		}
 		robot.stopMotors();
-		sleep(1000);direction=-1;
-		/*while((Math.abs(robot.rotation.thirdAngle)<179|!robot.resetCoordinates())&&opModeIsActive()){
-			robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("angle", robot.rotation.thirdAngle);
-			telemetry.update();
+		sleep(1000);
 
-			if(Math.abs(robot.rotation.thirdAngle)<170){
-				direction=1;
-			}
 
-			if(Math.abs(robot.rotation.thirdAngle)>165){
-				robot.rotate(-0.05*direction);
-			}
-			else if(Math.abs(robot.rotation.thirdAngle)<90){
-				robot.rotate(-0.3*direction);
-			}
-			else{
-				robot.rotate(-0.1*direction);
-			}
-
-		}*/
 		robot.moveUpDown(1);
 		sleep(700);
 		robot.stopMotors();
 
 		robot.rotate(-1);
 
-		do {
-			 angles   = robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			telemetry.addData("angle", angles.firstAngle);
-			if(angles.firstAngle>25){
-				robot.rotate(-0.3);
-			}
-			if(angles.firstAngle>35){
-				robot.rotate(-0.1);
-			}
-		}
-		while((angles.firstAngle<44||angles.firstAngle>46)&&opModeIsActive());
-
-		robot.moveUpDown(0.5);
-		sleep(800);
-		robot.stopMotors();
+		robot.rotateToAngle(180);
+		robot.drive(100,true);
 		robot.marker1.setPosition(0.3);
-		sleep(3000);
+		sleep(1000);
 		robot.marker1.setPosition(1);
-		robot.rotate(-1);
-		do {
-			angles   = robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			telemetry.addData("angle", angles.firstAngle);
-			if(angles.firstAngle>115){
-				robot.rotate(-0.3);
-			}
-			if(angles.firstAngle>125){
-				robot.rotate(-0.1);
-			}
-		}
-		while((angles.firstAngle<134||angles.firstAngle>136)&&opModeIsActive());
-		robot.moveUpDown(1);
-		sleep(2300);
+		robot.rotateToAngle(270);
+		robot.drive(270,true);
 		robot.stopMotors();
-
+		String color="hi";
 		while (opModeIsActive()){
+			telemetry.addData("color", color);
 			telemetry.update();
 			 angles   = robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			telemetry.addData("angle", angles.firstAngle);
@@ -320,13 +223,12 @@ public class Deploy extends LinearOpMode {
 	public String checkColor() {
 		double[] distances = new double[5];
 		robot.stopMotors();
-		sleep(1000);
 		distances[0] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		robot.rotate(0.1);
-		sleep(400);
+		sleep(300);
 		distances[1] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		robot.rotate(-0.1);
-		sleep(400);
+		sleep(300);
 		distances[2] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		robot.rotate(0.1);
 		sleep(300);
@@ -335,7 +237,7 @@ public class Deploy extends LinearOpMode {
 		sleep(300);
 		distances[4] = robot.sensorDistance.getDistance(DistanceUnit.INCH);
 		double s = 0;
-		double sd = 0;
+		sd = 0;
 		robot.stopMotors();
 
 
@@ -348,7 +250,7 @@ public class Deploy extends LinearOpMode {
 		}
 
 			if (s > 0) {
-				if (sd > 11) {
+				if (sd > 16) {
 					return "yellow";
 				} else {
 					return "white";

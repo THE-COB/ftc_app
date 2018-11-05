@@ -63,7 +63,7 @@ public class AvesAblazeHardwarePushbot {
 	public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
 	public static final float mmTargetHeight   = (6) * mmPerInch;
 	public static double angle=0;
-
+	int startingAngle=0;
 	// the height of the center of the target image above the floor
 	VuforiaTrackables targetsRoverRuckus;
 	List<VuforiaTrackable> allTrackables;
@@ -88,6 +88,7 @@ public class AvesAblazeHardwarePushbot {
 		marker1=hwMap.get(Servo.class, "marker1");
 		marker2=hwMap.get(Servo.class, "marker2");
 		marker1.setPosition(1);
+
 
 
 		imu1=hwMap.get(BNO055IMU.class, "imu 1");
@@ -275,14 +276,14 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(-power);
 	}
 	public void moveLeftRight(double power){
-		int angle = getAngle();
+		//int angle = getAngle();
 		motor0.setPower(-power);
 		motor1.setPower(-power);
 		motor2.setPower(power);
 		motor3.setPower(power);
-		if(angle != getAngle()){
+		/*if(angle != getAngle()){
 			rotateToAngle(angle);
-		}
+		}*/
 	}
 	public void moveUpDown(double power){
 		motor0.setPower(-power);
@@ -308,7 +309,7 @@ public class AvesAblazeHardwarePushbot {
 		if(tics<0) power = power*-1;
 		int initPos = motor0.getCurrentPosition();
 		int currPos = initPos;
-		while(currPos != initPos+tics){
+		while(Math.abs(currPos) < initPos+tics){
 			motor0.setPower(-power);
 			motor1.setPower(-power);
 			motor2.setPower(power);
@@ -321,7 +322,7 @@ public class AvesAblazeHardwarePushbot {
 		if(tics<0) power = power*-1;
 		int initPos = motor0.getCurrentPosition();
 		int currPos = initPos;
-		while(currPos != initPos+tics){
+		while(Math.abs(currPos) < initPos+tics){
 			motor0.setPower(power);
 			motor1.setPower(-power);
 			motor2.setPower(power);
@@ -330,6 +331,15 @@ public class AvesAblazeHardwarePushbot {
 
 		}
 		stopMotors();
+	}
+
+	public void drive(double inches, boolean forward){
+		if(forward)
+			moveUpDown(-0.8,(int)Math.round(45*inches));
+		else{
+			moveUpDown(0.8,(int)Math.round(45*inches));
+		}
+
 	}
 	public void moveAll(double xVal, double yVal) {
 
@@ -376,10 +386,14 @@ public class AvesAblazeHardwarePushbot {
 		return Math.round(translation.get(1)/mmPerInch);
 	}
 	public int getAngle(){
-		if(!resetCoordinates()){
-			//use imu1
+		if(!resetCoordinates()&&imu1.isGyroCalibrated()){
+			angles=imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			double currentAngle=angles.firstAngle;
+			int finalAngle= startingAngle+(int)Math.round(currentAngle);
+			return finalAngle;
+
 		}
-		else {
+		else if(resetCoordinates()){
 			double oldAngle = rotation.thirdAngle;
 			double posAngle = oldAngle;
 			int finalAngle;
@@ -392,7 +406,9 @@ public class AvesAblazeHardwarePushbot {
 			}
 			return finalAngle;
 		}
-		return 10000;
+		else{
+			return 10000;
+		}
 	}
 
 	public void lift(String direction){
@@ -409,50 +425,37 @@ public class AvesAblazeHardwarePushbot {
 			lift2.setPower(0);
 		}
 	}
-
-	public void rotateToAngle(int newAngle){
-		int diff = newAngle-getAngle();
-		if(newAngle == getAngle()){
+	public void rotateToAngle(int newAngle) {
+		int diff = newAngle - getAngle();
+		if (newAngle == getAngle()) {
 			stopMotors();
 			return;
 		}
-		if((diff>0 && diff<180) || (diff<0 && Math.abs(diff)>180)){
-			while(Math.abs(getAngle()-newAngle)>0.7){
-				if(getAngle()-newAngle>360){
-					stopMotors();
-					break;
+		while (Math.abs(getAngle() - newAngle) > 0.7) {
+			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
+
+				if (Math.abs(getAngle() - newAngle) > 40) {
+					rotate(-0.5);
 				}
-				else if(Math.abs(getAngle()-newAngle)>50){
-					rotate(-0.8);
-				}
-				else if(Math.abs(getAngle()-newAngle)>10){
+				else if (Math.abs(getAngle() - newAngle) > 15) {
 					rotate(-0.2);
-				}
-				else if(Math.abs(getAngle()-newAngle)>4){
+				} else  {
 					rotate(-0.1);
 				}
-				else{
-					rotate(-0.05);
+			} else {
+
+				if (Math.abs(getAngle() - newAngle) > 40) {
+					rotate(0.4);
 				}
-			}
-		}
-		else{
-			while(Math.abs(getAngle()-newAngle)>0.7){
-				if(Math.abs(getAngle()-newAngle)>50){
-					rotate(0.8);
-				}
-				else if(Math.abs(getAngle()-newAngle)>10){
+				else if (Math.abs(getAngle() - newAngle) > 15) {
 					rotate(0.2);
-				}
-				else if(Math.abs(getAngle()-newAngle)>4){
+				} else {
 					rotate(0.1);
 				}
-				else{
-					rotate(0.05);
-				}
 			}
+
+			stopMotors();
 		}
-		stopMotors();
 	}
 	public void moveToCoord(int x, int y, int angle){
 		int oldAngle = getAngle();
