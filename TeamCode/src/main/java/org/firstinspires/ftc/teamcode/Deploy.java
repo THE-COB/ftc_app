@@ -101,7 +101,7 @@ public class Deploy extends LinearOpMode {
 		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 		robot.imu1.initialize(imuParameters);
 		robot.startingAngle=135;
-		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<58){
+		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<57){
 			robot.moveUpDown(0.1);
 			robot.translation=robot.lastLocation.getTranslation();
 			telemetry.addData("x", robot.getX());
@@ -139,6 +139,13 @@ public class Deploy extends LinearOpMode {
 		sleep(200);
 		if(color.equals("yellow")){
 			robot.drive(20,true);
+			sleep(700);
+			robot.stopMotors();
+			robot.rotateToAngle(180);
+			robot.drive(20, true);
+			robot.marker1.setPosition(0.3);
+			sleep(1000);
+			robot.marker1.setPosition(1);
 			robot.stopMotors();
 		}
 		else {
@@ -181,20 +188,18 @@ public class Deploy extends LinearOpMode {
 			/*
 			sleep(700);
 			robot.stopMotors();
-
-			robot.rotate(-1);
-
 			robot.rotateToAngle(180);
-			robot.drive(100, true);
+			robot.drive(20, true);
 			robot.marker1.setPosition(0.3);
 			sleep(1000);
 			robot.marker1.setPosition(1);
-			robot.rotateToAngle(270);
-			robot.drive(270, true);*/
+			*/
 			robot.stopMotors();
 			color = "hi";
 
 		}
+		robot.rotateToAngle(270);
+		robot.drive(83, true);
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();

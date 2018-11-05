@@ -499,7 +499,7 @@ public class AvesAblazeHardwarePushbot {
 		return lift1.getCurrentPosition();
 	}
 	public String checkColor() {
-		if (sensorDistance.getDistance(DistanceUnit.INCH) < 6) {
+		if (sensorDistance.getDistance(DistanceUnit.INCH) < 5.5) {
 			return "white";
 		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
 			return "yellow";
