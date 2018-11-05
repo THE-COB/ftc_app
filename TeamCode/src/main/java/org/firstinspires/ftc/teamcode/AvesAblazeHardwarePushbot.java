@@ -456,6 +456,8 @@ public class AvesAblazeHardwarePushbot {
 
 			stopMotors();
 		}
+		stopMotors();
+
 	}
 	public void moveToCoord(int x, int y, int angle){
 		int oldAngle = getAngle();
