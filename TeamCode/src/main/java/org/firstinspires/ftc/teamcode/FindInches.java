@@ -17,7 +17,7 @@ public class FindInches extends LinearOpMode {
 		waitForStart();
 
 		while(opModeIsActive()){
-			//Test 1: in
+			/*//Test 1: in
 			if(gamepad1.a) robot.moveUpDown(0.25,250);
 			if(gamepad1.b) robot.moveUpDown(0.25,500);
 			if(gamepad1.x) robot.moveUpDown(0.25,750);
@@ -33,7 +33,12 @@ public class FindInches extends LinearOpMode {
 			telemetry.addData("motor2",robot.motor2.getCurrentPosition());
 			telemetry.addData("motor3",robot.motor3.getCurrentPosition());
 
-			telemetry.update();
+			telemetry.update();*/
+
+			if(gamepad1.a) robot.drive(3,true,0.8);
+			if(gamepad1.b) robot.drive(6,true,0.8);
+			if(gamepad1.x) robot.drive(9,true,0.8);
+			if(gamepad1.y) robot.drive(12,true,0.8);
 		}
 	}
 }

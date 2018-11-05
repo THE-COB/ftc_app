@@ -333,17 +333,15 @@ public class AvesAblazeHardwarePushbot {
 		stopMotors();
 	}
 
-	public void drive(double inches, boolean forward){
+	public void drive(double inches, boolean forward, double power){
 		if(forward)
-			moveUpDown(-0.8,(int)Math.round(45*inches));
+			moveUpDown(-power,(int)Math.round(86.22*inches));
 		else{
-			moveUpDown(0.8,(int)Math.round(45*inches));
+			moveUpDown(power,(int)Math.round(86.22*inches));
 		}
 
 	}
-	public void moveAll(double xVal, double yVal) {
 
-	}
 	public int getMotorVal(int motorNum){
 		switch (motorNum){
 			case 0: return motor0.getCurrentPosition();
