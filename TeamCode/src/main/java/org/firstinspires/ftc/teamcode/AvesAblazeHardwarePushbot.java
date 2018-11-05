@@ -320,14 +320,14 @@ public class AvesAblazeHardwarePushbot {
 	}
 	public void moveUpDown(double power, int tics){
 		if(tics<0) power = power*-1;
-		int initPos = motor0.getCurrentPosition();
+		int initPos = (Math.abs(motor0.getCurrentPosition())+Math.abs(motor1.getCurrentPosition())+Math.abs(motor2.getCurrentPosition())+Math.abs(motor3.getCurrentPosition()))/4;
 		int currPos = initPos;
 		while(Math.abs(currPos) < initPos+tics){
 			motor0.setPower(power);
 			motor1.setPower(-power);
 			motor2.setPower(power);
 			motor3.setPower(-power);
-			currPos = motor0.getCurrentPosition();
+			currPos = (Math.abs(motor0.getCurrentPosition())+Math.abs(motor1.getCurrentPosition())+Math.abs(motor2.getCurrentPosition())+Math.abs(motor3.getCurrentPosition()))/4;
 
 		}
 		stopMotors();
