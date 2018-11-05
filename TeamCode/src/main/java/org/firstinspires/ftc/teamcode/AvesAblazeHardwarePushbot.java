@@ -335,7 +335,7 @@ public class AvesAblazeHardwarePushbot {
 
 	public void drive(double inches, boolean forward, double power){
 		double val = 85;
-		if(power>0.5) val = 80;
+		if(power>0.5) val = 65;
 		if(forward)
 			moveUpDown(-power,(int)Math.round(val*inches));
 		else{
