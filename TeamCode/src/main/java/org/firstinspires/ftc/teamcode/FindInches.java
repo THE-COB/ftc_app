@@ -10,7 +10,7 @@ public class FindInches extends LinearOpMode {
 
 	@Override
 	public void runOpMode() {
-		//Test 1:
+		//Test 1: in
 		robot.moveUpDown(0.25,250);
 	}
 }
