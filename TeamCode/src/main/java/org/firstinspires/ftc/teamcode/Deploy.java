@@ -137,49 +137,64 @@ public class Deploy extends LinearOpMode {
 
 		//robot.moveLeftRight(0.8);
 		sleep(200);
-		robot.moveLeftRight(0.2);
-		sleep(1000);
-		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
-			robot.moveLeftRight(0.2);
-			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
-			telemetry.update();
+		if(color.equals("yellow")){
+			robot.drive(20,true);
+			robot.stopMotors();
 		}
+		else {
+			robot.moveLeftRight(0.2);
+			sleep(1000);
+			while (!(robot.sensorDistance.getDistance(DistanceUnit.INCH) < 20) && opModeIsActive() && robot.resetCoordinates()) {
+				robot.moveLeftRight(0.2);
+				telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
+				telemetry.update();
+			}
 			sleep(150);
-		robot.rotateToAngle(135);
-		robot.stopMotors();
-		sleep(1000);
-		sleep(200);
-		robot.moveLeftRight(0.2);
-		sleep(1000);
-		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
-			robot.moveLeftRight(0.2);
-			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
-			telemetry.update();
+			robot.rotateToAngle(135);
+			robot.stopMotors();
+			sleep(1000);
+			sleep(200);
+			if(color.equals("yellow")){
+				robot.drive(20,true);
+			}
+			else {
+				robot.moveLeftRight(0.2);
+				sleep(1000);
+
+				while (!(robot.sensorDistance.getDistance(DistanceUnit.INCH) < 20) && opModeIsActive() && robot.resetCoordinates()) {
+					robot.moveLeftRight(0.2);
+					telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
+					telemetry.update();
+				}
+				sleep(200);
+				if (!robot.resetCoordinates()) {
+					robot.moveLeftRight(0.2);
+					sleep(100);
+				}
+				robot.stopMotors();
+				sleep(1000);
+
+
+				robot.drive(20, true);
+			}
+
+			/*
+			sleep(700);
+			robot.stopMotors();
+
+			robot.rotate(-1);
+
+			robot.rotateToAngle(180);
+			robot.drive(100, true);
+			robot.marker1.setPosition(0.3);
+			sleep(1000);
+			robot.marker1.setPosition(1);
+			robot.rotateToAngle(270);
+			robot.drive(270, true);*/
+			robot.stopMotors();
+			color = "hi";
+
 		}
-			sleep(150);
-		if(!robot.resetCoordinates()){
-			robot.moveLeftRight(0.2);
-			sleep(100);
-		}
-		robot.stopMotors();
-		sleep(1000);
-
-
-		robot.moveUpDown(1);
-		sleep(700);
-		robot.stopMotors();
-
-		robot.rotate(-1);
-
-		robot.rotateToAngle(180);
-		robot.drive(100,true);
-		robot.marker1.setPosition(0.3);
-		sleep(1000);
-		robot.marker1.setPosition(1);
-		robot.rotateToAngle(270);
-		robot.drive(270,true);
-		robot.stopMotors();
-		String color="hi";
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();
