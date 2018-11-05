@@ -47,7 +47,8 @@ public class CheckColor extends LinearOpMode {
 			telemetry.addData("sd",sd);
 			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 			telemetry.addData("alpha", robot.sensorColor.alpha());
-			telemetry.addData("ratio", robot.sensorColor.alpha()/robot.sensorDistance.getDistance(DistanceUnit.INCH));
+			telemetry.addData("blue", robot.sensorColor.blue());
+			telemetry.addData("ratio", robot.sensorColor.blue()/Math.pow(20-robot.sensorDistance.getDistance(DistanceUnit.INCH),1));
 			telemetry.update();
 		}
 	}
@@ -68,11 +69,11 @@ public class CheckColor extends LinearOpMode {
 		}
 	}
 	public String checkColor() {
-		if(robot.sensorDistance.getDistance(DistanceUnit.INCH)<6){
-			return "white";
+		if(robot.sensorColor.blue()/Math.pow(20-robot.sensorDistance.getDistance(DistanceUnit.INCH),1)<1.2){
+			return "yellow";
 		}
 		else if(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20){
-			return "yellow";
+			return "white";
 		}
 		else{
 			return "nothing";

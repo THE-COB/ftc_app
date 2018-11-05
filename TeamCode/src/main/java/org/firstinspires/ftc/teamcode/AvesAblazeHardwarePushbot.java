@@ -524,13 +524,12 @@ public class AvesAblazeHardwarePushbot {
 	}
 	//Again, super self explanatory
 	public String checkColor() {
-		if (sensorDistance.getDistance(DistanceUnit.INCH) < 6.5) {
-			return "white";
-		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
+		if (sensorColor.blue() / Math.pow(20 - sensorDistance.getDistance(DistanceUnit.INCH), 1) < 1.2) {
 			return "yellow";
+		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
+			return "white";
 		} else {
 			return "nothing";
 		}
-
 	}
 }

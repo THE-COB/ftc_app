@@ -199,7 +199,7 @@ public class Deploy extends LinearOpMode {
 			color = "hi";
 
 		}
-		robot.rotateToAngle(270);
+		robot.rotateToAngle(265);
 		robot.drive(83, true,0.8);
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
