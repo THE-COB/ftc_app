@@ -138,11 +138,13 @@ public class Deploy extends LinearOpMode {
 		//robot.moveLeftRight(0.8);
 		sleep(200);
 		if(color.equals("yellow")){
-			robot.drive(20,true,0.8);
+			robot.drive(23,true,0.8);
 			sleep(700);
 			robot.stopMotors();
 			robot.rotateToAngle(180);
-			robot.drive(20, true,0.8);
+			robot.moveLeftRight(-0.5);
+			sleep(200);
+			robot.stopMotors();
 			robot.marker1.setPosition(0.3);
 			sleep(1000);
 			robot.marker1.setPosition(1);
@@ -162,7 +164,12 @@ public class Deploy extends LinearOpMode {
 			sleep(1000);
 			sleep(200);
 			if(color.equals("yellow")){
-				robot.drive(20,true,0.8);
+				robot.drive(29,true,0.8);
+				robot.rotateToAngle(180);
+				robot.drive(6, true,0.8);
+				robot.marker1.setPosition(0.3);
+				sleep(1000);
+				robot.marker1.setPosition(1);
 			}
 			else {
 				robot.moveLeftRight(0.2);
@@ -173,27 +180,17 @@ public class Deploy extends LinearOpMode {
 					telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 					telemetry.update();
 				}
-				sleep(200);
-				if (!robot.resetCoordinates()) {
-					robot.moveLeftRight(0.2);
-					sleep(100);
-				}
 				robot.stopMotors();
+				robot.drive(21, true,0.8);
 				sleep(1000);
-
-
-				robot.drive(20, true,0.8);
+				robot.rotateToAngle(180);
+				robot.drive(23, true,0.8);
+				robot.marker1.setPosition(0.3);
+				sleep(1000);
+				robot.marker1.setPosition(1);
 			}
 
-			/*
-			sleep(700);
-			robot.stopMotors();
-			robot.rotateToAngle(180);
-			robot.drive(20, true);
-			robot.marker1.setPosition(0.3);
-			sleep(1000);
-			robot.marker1.setPosition(1);
-			*/
+
 			robot.stopMotors();
 			color = "hi";
 
