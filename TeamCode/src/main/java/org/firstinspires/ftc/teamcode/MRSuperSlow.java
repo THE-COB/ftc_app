@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by Rohan Mathur on 10/24/18.
  */
-@Disabled
+
 @TeleOp(name="MRSuperSlow", group="pushbot")
 public class MRSuperSlow extends OpMode {
 
@@ -25,10 +25,10 @@ public class MRSuperSlow extends OpMode {
 	@Override
 	public void loop() {
 		if(gamepad1.a){
-			motor0.setPower(0.75);
+			motor0.setPower(0.5);
 		}
 		else if(gamepad1.b){
-			motor0.setPower(-0.75);
+			motor0.setPower(-0.5);
 		}
 		else{
 			motor0.setPower(0);

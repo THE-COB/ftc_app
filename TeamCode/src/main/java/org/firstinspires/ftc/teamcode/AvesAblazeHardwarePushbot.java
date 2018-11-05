@@ -438,9 +438,9 @@ public class AvesAblazeHardwarePushbot {
 					rotate(-0.5);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 15) {
-					rotate(-0.2);
+					rotate(-0.25);
 				} else  {
-					rotate(-0.1);
+					rotate(-0.2);
 				}
 			} else {
 
@@ -448,9 +448,9 @@ public class AvesAblazeHardwarePushbot {
 					rotate(0.4);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 15) {
-					rotate(0.2);
+					rotate(0.25);
 				} else {
-					rotate(0.1);
+					rotate(0.15);
 				}
 			}
 
@@ -499,7 +499,7 @@ public class AvesAblazeHardwarePushbot {
 		return lift1.getCurrentPosition();
 	}
 	public String checkColor() {
-		if (sensorDistance.getDistance(DistanceUnit.INCH) < 5.5) {
+		if (sensorDistance.getDistance(DistanceUnit.INCH) < 6.5) {
 			return "white";
 		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
 			return "yellow";

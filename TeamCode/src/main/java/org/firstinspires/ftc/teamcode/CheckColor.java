@@ -46,6 +46,8 @@ public class CheckColor extends LinearOpMode {
 			telemetry.addData("color",color);
 			telemetry.addData("sd",sd);
 			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
+			telemetry.addData("alpha", robot.sensorColor.alpha());
+			telemetry.addData("ratio", robot.sensorColor.alpha()/robot.sensorDistance.getDistance(DistanceUnit.INCH));
 			telemetry.update();
 		}
 	}
