@@ -11,6 +11,15 @@ public class FindInches extends LinearOpMode {
 	@Override
 	public void runOpMode() {
 		//Test 1: in
-		robot.moveUpDown(0.25,250);
+		if(gamepad1.a) robot.moveUpDown(0.25,250);
+		if(gamepad1.b) robot.moveUpDown(0.25,500);
+		if(gamepad1.x) robot.moveUpDown(0.25,750);
+		if(gamepad1.y) robot.moveUpDown(0.25,1000);
+
+		if(gamepad1.dpad_up) robot.moveUpDown(0.5,250);
+		if(gamepad1.dpad_down) robot.moveUpDown(0.5,500);
+		if(gamepad1.dpad_left) robot.moveUpDown(0.5,750);
+		if(gamepad1.dpad_right) robot.moveUpDown(0.5,1000);
+
 	}
 }
