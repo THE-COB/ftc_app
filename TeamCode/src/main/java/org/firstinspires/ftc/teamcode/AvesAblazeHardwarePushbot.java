@@ -405,7 +405,7 @@ public class AvesAblazeHardwarePushbot {
 		if(!resetCoordinates()&&imu1.isGyroCalibrated()){
 			angles=imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			double currentAngle=angles.firstAngle;
-			int finalAngle= startingAngle+(int)Math.round(currentAngle);
+			int finalAngle= startingAngle+(int)Math.round(currentAngle)-10;
 			return finalAngle;
 
 		}
@@ -449,23 +449,23 @@ public class AvesAblazeHardwarePushbot {
 			stopMotors();
 			return;
 		}
-		while (Math.abs(getAngle() - newAngle) > 0.7) {
+		while (Math.abs(getAngle() - newAngle) > 1) {
 			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
 
-				if (Math.abs(getAngle() - newAngle) > 40) {
+				if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(-0.5);
 				}
-				else if (Math.abs(getAngle() - newAngle) > 15) {
-					rotate(-0.2);
+				else if (Math.abs(getAngle() - newAngle) > 20) {
+					rotate(-0.17);
 				} else  {
 					rotate(-0.07);
 				}
 			} else {
 
-				if (Math.abs(getAngle() - newAngle) > 40) {
+				if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(0.4);
 				}
-				else if (Math.abs(getAngle() - newAngle) > 15) {
+				else if (Math.abs(getAngle() - newAngle) > 20) {
 					rotate(0.17);
 				} else {
 					rotate(0.1);

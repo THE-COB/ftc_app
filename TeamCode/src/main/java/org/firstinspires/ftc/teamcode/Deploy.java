@@ -51,13 +51,12 @@ public class Deploy extends LinearOpMode {
 			telemetry.update();
 		}
 		robot.lift("stop");
-		sleep(100);
+
 		robot.moveLeftRight(-0.75);
 		sleep(250);
 		robot.moveUpDown(1);
 		sleep(100);
 		robot.stopMotors();
-		sleep(100);
 		liftHeight=robot.getLiftHeight();
 		while(Math.abs(liftHeight-robot.getLiftHeight())<3300&&!gamepad1.a){
 			robot.lift("down");
@@ -66,7 +65,6 @@ public class Deploy extends LinearOpMode {
 		robot.moveUpDown(1);
 		sleep(200);
 		robot.stopMotors();
-		sleep(500);
 		robot.moveLeftRight(-0.3);
 		sleep(1500);
 		robot.rotate(0.1);
@@ -82,13 +80,7 @@ public class Deploy extends LinearOpMode {
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 		telemetry.addData("angle", robot.rotation.thirdAngle);
 		telemetry.update();
-		sleep(500);
-		robot.rotate(-0.1);
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-		int direction=-1;
-			robot.stopMotors();
-		sleep(1000);
-		robot.moveUpDown(0.15);
 		robot.translation=robot.lastLocation.getTranslation();
 		robot.rotateToAngle(135);
 		BNO055IMU.Parameters imuParameters;
@@ -101,7 +93,7 @@ public class Deploy extends LinearOpMode {
 		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 		robot.imu1.initialize(imuParameters);
 		robot.startingAngle=135;
-		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<57){
+		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<58){
 			robot.moveUpDown(0.1);
 			robot.translation=robot.lastLocation.getTranslation();
 			telemetry.addData("x", robot.getX());
@@ -123,25 +115,25 @@ public class Deploy extends LinearOpMode {
 		}
 		robot.rotateToAngle(135);
 		robot.stopMotors();
-		sleep(1000);
 		//robot.moveLeftRight(0.8);
 		sleep(200);
 		while(!(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates()){
 			robot.moveLeftRight(0.2);
 		}
-		sleep(150);
+		sleep(100);
 		robot.stopMotors();
 		color=robot.checkColor();
-		sleep(1000);
-		robot.rotateToAngle(135);
 		while(opModeIsActive()&&!gamepad1.a){
 			telemetry.update();
 			telemetry.addData("ratio", robot.sensorColor.blue() / Math.pow(20 - robot.sensorDistance.getDistance(DistanceUnit.INCH), 1));
 		}
+		color=robot.checkColor();
+		robot.rotateToAngle(135);
+
 		//robot.moveLeftRight(0.8);
 		sleep(200);
 		if(color.equals("yellow")){
-			robot.drive(23,true,0.8);
+			robot.drive(23,true,0.6);
 			sleep(700);
 			robot.stopMotors();
 			sleep(1500);
@@ -156,19 +148,21 @@ public class Deploy extends LinearOpMode {
 		}
 		else {
 			robot.moveLeftRight(0.2);
-			sleep(1000);
+			sleep(700);
 			while (!(robot.sensorDistance.getDistance(DistanceUnit.INCH) < 20) && opModeIsActive() && robot.resetCoordinates()) {
 				robot.moveLeftRight(0.2);
 				telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 				telemetry.update();
 			}
-			sleep(150);
+			sleep(100);
+			color=robot.checkColor();
 			robot.rotateToAngle(135);
+
 			robot.stopMotors();
 			sleep(1000);
 			sleep(200);
 			if(color.equals("yellow")){
-				robot.drive(29,true,0.8);
+				robot.drive(29,true,0.6);
 				robot.stopMotors();
 				sleep(1500);
 				robot.rotateToAngle(180);
@@ -187,7 +181,7 @@ public class Deploy extends LinearOpMode {
 					telemetry.update();
 				}
 				robot.stopMotors();
-				robot.drive(21, true,0.8);
+				robot.drive(21, true,0.6);
 				robot.stopMotors();
 				sleep(1500);
 				robot.rotateToAngle(180);
@@ -203,7 +197,7 @@ public class Deploy extends LinearOpMode {
 
 		}
 		robot.rotateToAngle(265);
-		robot.drive(83, true,0.8);
+		robot.drive(63, true,0.8);
 		robot.stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
