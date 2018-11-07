@@ -15,7 +15,8 @@ public class TestStudio extends OpMode {
 	@Override
 	public void loop() {
 		telemetry.update();
-		telemetry.addData("testLoop","loop works");
+		telemetry.addData("testLoopAgain","loop works");
 		telemetry.update();
+
 	}
 }
