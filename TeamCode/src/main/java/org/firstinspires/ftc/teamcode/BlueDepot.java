@@ -162,6 +162,8 @@ public class BlueDepot extends LinearOpMode {
 			sleep(1000);
 			sleep(200);
 			if(color.equals("yellow")){
+				robot.moveLeftRight(0.2);
+				sleep(150);
 				robot.drive(29,true,0.6);
 				robot.stopMotors();
 				sleep(1500);
@@ -176,6 +178,8 @@ public class BlueDepot extends LinearOpMode {
 				robot.moveLeftRight(0.2);
 				sleep(1000);
 				robot.moveLeftRight(0.2, checkDistance);
+				robot.moveLeftRight(0.2);
+				sleep(150);
 					telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 					telemetry.update();
 				robot.stopMotors();
@@ -197,8 +201,8 @@ public class BlueDepot extends LinearOpMode {
 		}
 
 		//While the code is running it will constantly print the color, angle, lift height, and coordinates
-		robot.rotateToAngle(265);
-		robot.drive(63, true,0.8);
+		robot.rotateToAngle(255);
+		robot.drive(65, true,0.8);
 		robot.stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
