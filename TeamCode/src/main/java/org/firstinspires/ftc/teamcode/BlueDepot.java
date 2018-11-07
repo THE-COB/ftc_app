@@ -36,7 +36,7 @@ public class BlueDepot extends LinearOpMode {
 	float moveY;
 	float moveX;
 	float rotate;
-	int liftHeight;
+	int liftHeight = 0;
 	double sd;
 	String color;
 	Orientation angles;
@@ -45,6 +45,7 @@ public class BlueDepot extends LinearOpMode {
 		robot.init(hardwareMap);
 		waitForStart();
 		sleep(1);
+		//Deploys the robot down from when it is at the starting position
 		while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
 			robot.lift("up");
 			telemetry.clearAll();
@@ -54,6 +55,7 @@ public class BlueDepot extends LinearOpMode {
 		}
 		robot.lift("stop");
 
+		//Once the robot reaches the floor it moves to the left and goes up. It then resets the linear slide
 		robot.moveLeftRight(-0.75);
 		sleep(250);
 		robot.moveUpDown(1);
@@ -64,6 +66,8 @@ public class BlueDepot extends LinearOpMode {
 			robot.lift("down");
 		}
 		robot.lift("stop");
+
+		//Moves up to a point where it is able to rotate and find the Vuforia
 		robot.moveUpDown(1);
 		sleep(200);
 		robot.stopMotors();
@@ -71,6 +75,7 @@ public class BlueDepot extends LinearOpMode {
 		sleep(1500);
 		robot.rotate(0.1);
 		sleep(200);
+		//If the robot is unable to find the Vuforia it continues to rotate
 		while(!robot.resetCoordinates()&&opModeIsActive()){
 			robot.rotate(-0.1);
 			sleep(200);
@@ -79,6 +84,8 @@ public class BlueDepot extends LinearOpMode {
 		}
 		robot.stopMotors();
 		telemetry.clearAll();
+
+		//Uses information from Vuforia and prints it and sets variables to use Vuforia information and calibrates the REV imu
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 		telemetry.addData("angle", robot.rotation.thirdAngle);
 		telemetry.update();
@@ -108,26 +115,23 @@ public class BlueDepot extends LinearOpMode {
 			}
 		}
 		robot.stopMotors();
-		//robot.moveLeftRight(0.8);
+
+
 		sleep(10000);
 		Callable<Boolean> checkDistance=new Callable<Boolean>() {
 			public Boolean call() {
 				return !(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates();
 			}
 		};
-			robot.moveLeftRight(0.2, checkDistance);
+
+		//Reads color of the left material
+		robot.moveLeftRight(0.2, checkDistance);
 		sleep(100);
 		robot.stopMotors();
 		color=robot.checkColor();
-		/*while(opModeIsActive()&&!gamepad1.a){
-			telemetry.update();
-			telemetry.addData("ratio", robot.sensorColor.blue() / Math.pow(20 - robot.sensorDistance.getDistance(DistanceUnit.INCH), 1));
-		}*/
-		color=robot.checkColor();
 		robot.rotateToAngle(135);
-
-		//robot.moveLeftRight(0.8);
 		sleep(200);
+		//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 		if(color.equals("yellow")){
 			robot.drive(23,true,0.6);
 			sleep(700);
@@ -142,6 +146,7 @@ public class BlueDepot extends LinearOpMode {
 			robot.marker1.setPosition(1);
 			robot.stopMotors();
 		}
+		//If the mineral is not gold it will read color of the center mineral
 		else {
 			robot.moveLeftRight(0.2);
 			sleep(700);
@@ -152,6 +157,7 @@ public class BlueDepot extends LinearOpMode {
 			color=robot.checkColor();
 			robot.rotateToAngle(135);
 
+			//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 			robot.stopMotors();
 			sleep(1000);
 			sleep(200);
@@ -165,6 +171,7 @@ public class BlueDepot extends LinearOpMode {
 				sleep(1000);
 				robot.marker1.setPosition(1);
 			}
+			//If neither the left nor the center mineral is gold it will move to the right mineral
 			else {
 				robot.moveLeftRight(0.2);
 				sleep(1000);
@@ -172,6 +179,7 @@ public class BlueDepot extends LinearOpMode {
 					telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 					telemetry.update();
 				robot.stopMotors();
+				//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 				robot.drive(21, true,0.6);
 				robot.stopMotors();
 				sleep(1500);
@@ -184,9 +192,11 @@ public class BlueDepot extends LinearOpMode {
 
 
 			robot.stopMotors();
-			color = "hi";
+
 
 		}
+
+		//While the code is running it will constantly print the color, angle, lift height, and coordinates
 		robot.rotateToAngle(265);
 		robot.drive(63, true,0.8);
 		robot.stopMotors();
@@ -213,22 +223,6 @@ public class BlueDepot extends LinearOpMode {
 			}
 
 
-		}
-	}
-	public void printStuff(){
-		if (robot.resetCoordinates()) {
-			telemetry.addData("Target", robot.currentTrackable.getName());
-			// express position (translation) of robot in inches.
-			robot.translation = robot.lastLocation.getTranslation();
-			//ArrayList translation[x, y, z]
-			telemetry.addData("x", robot.getX());
-			telemetry.addData("y", robot.getY());
-
-			// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
-			robot.rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("Heading", robot.getAngle());
-		} else {
-			telemetry.addData("Target", "none");
 		}
 	}
 
