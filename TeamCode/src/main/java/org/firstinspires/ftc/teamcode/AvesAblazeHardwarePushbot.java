@@ -26,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -51,6 +52,7 @@ public class AvesAblazeHardwarePushbot {
 	private DcMotor lift2;
 
 	BNO055IMU imu1;
+	BNO055IMU imu;
 	ColorSensor sensorColor;
 	DistanceSensor sensorDistance;
 	int startingHeight;
@@ -64,6 +66,7 @@ public class AvesAblazeHardwarePushbot {
 	public static final float mmTargetHeight   = (6) * mmPerInch;
 	public static double angle=0;
 	int startingAngle=0;
+	double correction;
 	// the height of the center of the target image above the floor
 	VuforiaTrackables targetsRoverRuckus;
 	List<VuforiaTrackable> allTrackables;
@@ -94,6 +97,7 @@ public class AvesAblazeHardwarePushbot {
 
 		//Getting sensors from HardwareMap
 		imu1=hwMap.get(BNO055IMU.class, "imu 1");
+		imu=hwMap.get(BNO055IMU.class, "imu");
 		// get a reference to the color sensor.
 		sensorColor = hwMap.get(ColorSensor.class, "colorRange");
 
@@ -105,6 +109,18 @@ public class AvesAblazeHardwarePushbot {
 
 		//Getting motors from HardwareMap and initializing them
 		//names self explanatory
+
+
+		/*  \\0     1//
+			|		  |
+
+			|		  |
+
+			|		  |
+			//2		3\\
+		*/
+
+
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -283,14 +299,10 @@ public class AvesAblazeHardwarePushbot {
 	}
 	//Moves left-right based off power
 	public void moveLeftRight(double power){
-		//int angle = getAngle();
 		motor0.setPower(-power);
 		motor1.setPower(-power);
 		motor2.setPower(power);
 		motor3.setPower(power);
-		/*if(angle != getAngle()){
-			rotateToAngle(angle);
-		}*/
 	}
 	//Moves forward-back based off power
 	public void moveUpDown(double power){
@@ -327,6 +339,27 @@ public class AvesAblazeHardwarePushbot {
 			currPos = motor0.getCurrentPosition();
 		}
 		stopMotors();
+		rotateToAngle(angle);
+	}
+	public void moveLeftRight(double power, Callable<Boolean> condition){
+		 correction=0;
+		int angle=getAngle();
+		try {
+			while (condition.call()) {
+				motor0.setPower(-power+correction);
+				motor1.setPower(-power-correction);
+				motor2.setPower(power+correction);
+				motor3.setPower(power-correction);
+				if(getAngle()-angle>0.5&&Math.abs(correction)<1){
+					correction+=(getAngle()-angle)/100.0;
+				}
+			}
+		}
+		catch(Exception e){
+
+		}
+		stopMotors();
+
 	}
 	//Moves forward-back based off power(magnitude) and tics
 	public void moveUpDown(double power, int tics){
@@ -389,7 +422,17 @@ public class AvesAblazeHardwarePushbot {
 			}
 		return targetVisible;
 	}
-
+	public void calibrate() {
+		BNO055IMU.Parameters imuParameters;
+		imuParameters = new BNO055IMU.Parameters();
+		imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+		imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+		imuParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+		imuParameters.loggingEnabled = true;
+		imuParameters.loggingTag = "IMU";
+		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+		imu1.initialize(imuParameters);
+	}
 	//Returns x coordinate from vuforia
 	public int getX(){
 		if(!resetCoordinates()) return 10000;
@@ -445,31 +488,32 @@ public class AvesAblazeHardwarePushbot {
 	//Rotates to certain angle
 	public void rotateToAngle(int newAngle) {
 		int diff = newAngle - getAngle();
+		int diff1=Math.abs(diff-360);
 		if (newAngle == getAngle()) {
 			stopMotors();
 			return;
 		}
 		while (Math.abs(getAngle() - newAngle) > 1) {
 			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
-
-				if (Math.abs(getAngle() - newAngle) > 60) {
+				rotate(-(Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				/*if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(-0.5);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 20) {
 					rotate(-0.17);
 				} else  {
 					rotate(-0.07);
-				}
+				}*/
 			} else {
-
-				if (Math.abs(getAngle() - newAngle) > 60) {
+				rotate((Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				/*if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(0.4);
 				}
 				else if (Math.abs(getAngle() - newAngle) > 20) {
 					rotate(0.17);
 				} else {
 					rotate(0.1);
-				}
+				}*/
 			}
 
 		}
