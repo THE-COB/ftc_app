@@ -342,19 +342,16 @@ public class AvesAblazeHardwarePushbot {
 		rotateToAngle(angle);
 	}
 	public void moveLeftRight(double power, Callable<Boolean> condition){
-		 correction=0;
+		double correction=0;
 		int angle=getAngle();
 		try {
 			while (condition.call()) {
-				motor0.setPower(-power+correction);
-				motor1.setPower(-power-correction);
-				motor2.setPower(power+correction);
-				motor3.setPower(power-correction);
-				if(getAngle()-angle>0.5&&Math.abs(correction)<1){
-					correction+=(getAngle()-angle)/40.0;
-				}
-				if(Math.abs(correction)>1){
-
+				motor0.setPower(-power-correction);
+				motor1.setPower(-power+correction);
+				motor2.setPower(power-correction);
+				motor3.setPower(power+correction);
+				if(Math.abs(getAngle()-angle)>1) {
+					rotateTo(angle);
 				}
 			}
 		}
@@ -498,7 +495,7 @@ public class AvesAblazeHardwarePushbot {
 		}
 		while (Math.abs(getAngle() - newAngle) > 1) {
 			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
-				rotate(-(Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				rotate((Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
 				/*if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(-0.5);
 				}
@@ -508,7 +505,7 @@ public class AvesAblazeHardwarePushbot {
 					rotate(-0.07);
 				}*/
 			} else {
-				rotate((Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				rotate(-(Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
 				/*if (Math.abs(getAngle() - newAngle) > 60) {
 					rotate(0.4);
 				}
@@ -522,6 +519,38 @@ public class AvesAblazeHardwarePushbot {
 		}
 		stopMotors();
 
+	}
+	public void rotateTo(int newAngle) {
+		int diff = newAngle - getAngle();
+		int diff1=Math.abs(diff-360);
+		if (newAngle == getAngle()) {
+			stopMotors();
+			return;
+		}
+		while (Math.abs(getAngle() - newAngle) > 1) {
+			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
+				rotate((Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				/*if (Math.abs(getAngle() - newAngle) > 60) {
+					rotate(-0.5);
+				}
+				else if (Math.abs(getAngle() - newAngle) > 20) {
+					rotate(-0.17);
+				} else  {
+					rotate(-0.07);
+				}*/
+			} else {
+				rotate(-(Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
+				/*if (Math.abs(getAngle() - newAngle) > 60) {
+					rotate(0.4);
+				}
+				else if (Math.abs(getAngle() - newAngle) > 20) {
+					rotate(0.17);
+				} else {
+					rotate(0.1);
+				}*/
+			}
+
+		}
 	}
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
 	public void moveToCoord(int x, int y, int angle){
