@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 @TeleOp(name="Teleop", group="Pushbot")
 
-public class EverythingTest extends LinearOpMode {
+public class TeleOp0 extends LinearOpMode {
 
 	/* Declare OpMode members. */
 	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
