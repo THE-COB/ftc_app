@@ -46,7 +46,32 @@ public class StrafeCorrectionTest extends LinearOpMode {
 		waitForStart();
 		CheckGamepad c=new CheckGamepad();
 		while(opModeIsActive()){
-			robot.moveLeftRight(0.5, c);
+			//robot.moveLeftRight(0.2, c);
+			double correction=0;
+			double power=0.2;
+			int angle=robot.getAngle();
+			try {
+				while (c.call()) {
+					telemetry.addData("correction", correction);
+					telemetry.addData("old angle", angle);
+					telemetry.addData("new angle", robot.getAngle());
+					telemetry.update();
+					robot.motor0.setPower(-power+correction);
+					robot.motor1.setPower(-power-correction);
+					robot.motor2.setPower(power+correction);
+					robot.motor3.setPower(power-correction);
+					if(robot.getAngle()-angle>0.5&&Math.abs(correction)<1){
+						correction+=(robot.getAngle()-angle)/40.0;
+					}
+					if(Math.abs(correction)>1){
+
+					}
+				}
+			}
+			catch(Exception e){
+
+			}
+			robot.stopMotors();
 			telemetry.addData("angle", robot.getAngle());
 			telemetry.addData("correction", robot.correction);
 			telemetry.update();

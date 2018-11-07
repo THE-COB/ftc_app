@@ -351,7 +351,10 @@ public class AvesAblazeHardwarePushbot {
 				motor2.setPower(power+correction);
 				motor3.setPower(power-correction);
 				if(getAngle()-angle>0.5&&Math.abs(correction)<1){
-					correction+=(getAngle()-angle)/100.0;
+					correction+=(getAngle()-angle)/40.0;
+				}
+				if(Math.abs(correction)>1){
+
 				}
 			}
 		}

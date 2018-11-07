@@ -25,9 +25,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Deploy", group="Pushbot")
+@TeleOp(name="BlueDepot", group="Pushbot")
 
-public class Deploy extends LinearOpMode {
+public class BlueDepot extends LinearOpMode {
 
 	/* Declare OpMode members. */
 
