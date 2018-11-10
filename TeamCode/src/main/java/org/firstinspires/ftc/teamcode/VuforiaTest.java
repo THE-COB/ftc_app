@@ -30,8 +30,8 @@ public class VuforiaTest extends LinearOpMode {
 				// express position (translation) of robot in inches.
 				VectorF translation = robot.lastLocation.getTranslation();
 				//ArrayList translation[x, y, z]
-				telemetry.addData("x", translation.get(0) / robot.mmPerInch);
-				telemetry.addData("y", translation.get(1) / robot.mmPerInch);
+				telemetry.addData("x", translation.get(0) / vuforiaHardware.mmPerInch);
+				telemetry.addData("y", translation.get(1) / vuforiaHardware.mmPerInch);
 
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);

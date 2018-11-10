@@ -27,11 +27,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 @TeleOp(name="BlueCrater", group="Pushbot")
 
-public class BlueCrater extends LinearOpMode {
+public class BlueCrater extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 
-	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
+	AvesAblazeHardware robot   = new AvesAblazeHardware();   // Use a Pushbot's hardware
 	private ElapsedTime runtime = new ElapsedTime();
 	float moveY;
 	float moveX;
@@ -46,43 +46,43 @@ public class BlueCrater extends LinearOpMode {
 		waitForStart();
 		sleep(1);
 		//Deploys the robot down from when it is at the starting position
-		while(Math.abs(liftHeight-robot.getLiftHeight())<3450&&!gamepad1.a){
-			robot.lift("up");
+		while(Math.abs(liftHeight-getLiftHeight())<3450&&!gamepad1.a){
+			lift("up");
 			telemetry.clearAll();
-			telemetry.addData("liftHeight", robot.getLiftHeight());
+			telemetry.addData("liftHeight", getLiftHeight());
 			telemetry.addData("startingHeight", liftHeight);
 			telemetry.update();
 		}
-		robot.lift("stop");
+		lift("stop");
 
 		//Once the robot reaches the floor it moves to the left and goes up. It then resets the linear slide
-		robot.moveLeftRight(0.75);
+		moveLeftRight(0.75);
 		sleep(250);
-		robot.moveUpDown(1);
+		moveUpDown(1);
 		sleep(100);
-		robot.stopMotors();
-		liftHeight=robot.getLiftHeight();
-		while(Math.abs(liftHeight-robot.getLiftHeight())<3300&&!gamepad1.a){
-			robot.lift("down");
+		stopMotors();
+		liftHeight=getLiftHeight();
+		while(Math.abs(liftHeight-getLiftHeight())<3300&&!gamepad1.a){
+			lift("down");
 		}
-		robot.lift("stop");
+		lift("stop");
 
 		//Moves up to a point where it is able to rotate and find the Vuforia
-		robot.moveUpDown(1);
+		moveUpDown(1);
 		sleep(200);
-		robot.stopMotors();
-		robot.moveLeftRight(-0.3);
+		stopMotors();
+		moveLeftRight(-0.3);
 		sleep(1500);
-		robot.rotate(-0.1);
+		rotate(-0.1);
 		sleep(200);
 		//If the robot is unable to find the Vuforia it continues to rotate
-		while(!robot.resetCoordinates()&&opModeIsActive()){
-			robot.rotate(0.1);
+		while(!resetCoordinates()&&opModeIsActive()){
+			rotate(0.1);
 			sleep(200);
-			robot.stopMotors();
+			stopMotors();
 			sleep(200);
 		}
-		robot.stopMotors();
+		stopMotors();
 		telemetry.clearAll();
 
 		//Uses information from Vuforia and prints it and sets variables to use Vuforia information and calibrates the REV imu
@@ -91,45 +91,45 @@ public class BlueCrater extends LinearOpMode {
 		telemetry.update();
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 		robot.translation=robot.lastLocation.getTranslation();
-		robot.rotateToAngle(135);
-		robot.calibrate();
+		rotateToAngle(135);
+		calibrate();
 		robot.startingAngle=135;
-		while(robot.resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(robot.getY())+Math.abs(robot.getX()))<59){
-			robot.moveUpDown(0.1);
+		while(resetCoordinates()&&opModeIsActive()&&Math.abs(Math.abs(getY())+Math.abs(getX()))<59){
+			moveUpDown(0.1);
 			robot.translation=robot.lastLocation.getTranslation();
-			telemetry.addData("x", robot.getX());
-			telemetry.addData("y", robot.getY());
+			telemetry.addData("x", getX());
+			telemetry.addData("y", getY());
 			telemetry.update();
 			while(gamepad1.a){
-				robot.stopMotors();
+				stopMotors();
 			}
 			while(gamepad1.a){
-				robot.stopMotors();
+				stopMotors();
 			}
 			robot.translation=robot.lastLocation.getTranslation();
 			telemetry.addData("x", robot.translation.get(0));
 			telemetry.addData("y", robot.translation.get(1));
 			telemetry.update();
 			while(gamepad1.a){
-				robot.stopMotors();
+				stopMotors();
 			}
 		}
-		robot.stopMotors();
+		stopMotors();
 
 
 		sleep(10000);
 		Callable<Boolean> checkDistance=new Callable<Boolean>() {
 			public Boolean call() {
-				return !(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&robot.resetCoordinates();
+				return !(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20)&&opModeIsActive()&&resetCoordinates();
 			}
 		};
 
 		//Reads color of the left material
-		robot.moveLeftRight(0.2, checkDistance);
+		moveLeftRight(0.2, checkDistance);
 		sleep(100);
-		robot.stopMotors();
-		color=robot.checkColor();
-		robot.rotateToAngle(135);
+		stopMotors();
+		color=checkColor();
+		rotateToAngle(135);
 		sleep(200);
 		//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 
@@ -152,17 +152,17 @@ public class BlueCrater extends LinearOpMode {
 
 		//If the mineral is not gold it will read color of the center mineral
 		else {
-			robot.moveLeftRight(0.2);
+			moveLeftRight(0.2);
 			sleep(700);
-			robot.moveLeftRight(0.2, checkDistance);
+			moveLeftRight(0.2, checkDistance);
 			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 			telemetry.update();
 			sleep(100);
-			color=robot.checkColor();
-			robot.rotateToAngle(135);
+			color=checkColor();
+			rotateToAngle(135);
 
 			//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
-			robot.stopMotors();
+			stopMotors();
 			sleep(1000);
 			sleep(200);
 			if(color.equals("yellow")){
@@ -179,12 +179,12 @@ public class BlueCrater extends LinearOpMode {
 			}
 			//If neither the left nor the center mineral is gold it will move to the right mineral
 			else {
-				robot.moveLeftRight(0.2);
+				moveLeftRight(0.2);
 				sleep(1000);
-				robot.moveLeftRight(0.2, checkDistance);
+				moveLeftRight(0.2, checkDistance);
 				telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
 				telemetry.update();
-				robot.stopMotors();
+				stopMotors();
 				//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 				/*
 				robot.drive(21, true,0.6);
@@ -199,7 +199,7 @@ public class BlueCrater extends LinearOpMode {
 			}
 
 
-			robot.stopMotors();
+			stopMotors();
 
 
 		}
@@ -207,21 +207,21 @@ public class BlueCrater extends LinearOpMode {
 		//While the code is running it will constantly print the color, angle, lift height, and coordinates
 		// robot.rotateToAngle(265);
 		// robot.drive(63, true,0.8);
-		robot.stopMotors();
+		stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();
 			angles   = robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			telemetry.addData("angle", angles.firstAngle);
-			telemetry.addData("height", robot.getLiftHeight());
+			telemetry.addData("height", getLiftHeight());
 			//Display coordinates and trackable
-			if (robot.resetCoordinates()) {
+			if (resetCoordinates()) {
 				telemetry.addData("Target", robot.currentTrackable.getName());
 				// express position (translation) of robot in inches.
 				robot.translation = robot.lastLocation.getTranslation();
 				//ArrayList translation[x, y, z]
-				telemetry.addData("x", robot.getX());
-				telemetry.addData("y", robot.getY());
+				telemetry.addData("x", getX());
+				telemetry.addData("y", getY());
 
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				robot.rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);

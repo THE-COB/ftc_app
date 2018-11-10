@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -19,13 +16,12 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="CheckColor", group="Pushbot")
+@TeleOp(name="RotationTest", group="Pushbot")
 
-public class CheckColor extends AvesAblazeOpmode {
+public class RotationTest extends AvesAblazeOpmode{
 //
 	/* Declare OpMode members. */
-
-	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
+	// Use a Pushbot's hardware
 	private ElapsedTime runtime = new ElapsedTime();
 	float moveY;
 	float moveX;
@@ -37,20 +33,32 @@ public class CheckColor extends AvesAblazeOpmode {
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
+		calibrate();
+		telemetry.addData("calibrated", "yes");
+		telemetry.update();
 		waitForStart();
-
-		while(opModeIsActive()){
-			if(gamepad1.a) {
-				color=checkColor();
-			}
-			telemetry.addData("color",color);
-			telemetry.addData("sd",sd);
-			telemetry.addData("distance", robot.sensorDistance.getDistance(DistanceUnit.INCH));
-			telemetry.addData("alpha", robot.sensorColor.alpha());
-			telemetry.addData("blue", robot.sensorColor.blue());
-			telemetry.addData("ratio", robot.sensorColor.blue()/Math.pow(20-robot.sensorDistance.getDistance(DistanceUnit.INCH),1));
-			telemetry.update();
+		rotateToAngle(180);
+		try {
+			wait(1000);
 		}
+		catch(Exception e){
+			stopMotors();
+		}
+		rotateToAngle(270);
+		try {
+			wait(1000);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		rotateToAngle(264);
+		try {
+			wait(1000);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		drive(40, true, 0.2);
 	}
 	public void printStuff(){
 		if (resetCoordinates()) {

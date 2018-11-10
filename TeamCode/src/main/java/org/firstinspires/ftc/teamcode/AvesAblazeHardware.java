@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,10 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -26,9 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
@@ -39,7 +31,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * Created by Rohan Mathur on 9/17/18.
  */
-public class AvesAblazeHardwarePushbot {
+public class AvesAblazeHardware {
 	private static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
 	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
 
@@ -51,6 +43,8 @@ public class AvesAblazeHardwarePushbot {
 	public DcMotor lift1;
 	public DcMotor lift2;
 
+	DcMotor arm;
+
 	BNO055IMU imu1;
 	BNO055IMU imu;
 	ColorSensor sensorColor;
@@ -59,6 +53,7 @@ public class AvesAblazeHardwarePushbot {
 
 	Servo marker1;
 	Servo marker2;
+	CRServo servo0;
 
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -91,6 +86,7 @@ public class AvesAblazeHardwarePushbot {
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
 		marker2=hwMap.get(Servo.class, "marker2");
+		servo0=hwMap.get(CRServo.class, "servo0");
 		marker1.setPosition(1);
 
 
@@ -145,6 +141,7 @@ public class AvesAblazeHardwarePushbot {
 		lift2.setDirection(DcMotor.Direction.REVERSE);
 		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+		arm=hwMap.get(DcMotor.class, "arm");
 		startingHeight=lift1.getCurrentPosition();
 
 		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
@@ -283,345 +280,5 @@ public class AvesAblazeHardwarePushbot {
 	}
 
 
-	//Stop motors
-	public  void stopMotors(){
-		motor0.setPower(0);
-		motor1.setPower(0);
-		motor2.setPower(0);
-		motor3.setPower(0);
-	}
-	//rotates from power
-	public void rotate(double power){
-		motor0.setPower(-power);
-		motor1.setPower(-power);
-		motor2.setPower(-power);
-		motor3.setPower(-power);
-	}
-	//Moves left-right based off power
-	public void moveLeftRight(double power){
-		motor0.setPower(-power);
-		motor1.setPower(-power);
-		motor2.setPower(power);
-		motor3.setPower(power);
-	}
-	//Moves forward-back based off power
-	public void moveUpDown(double power){
-		motor0.setPower(-power);
-		motor1.setPower(power);
-		motor2.setPower(-power);
-		motor3.setPower(power);
-	}
-	//Rotate based off power and tics
-	public void rotate(double power, int tics){
-		if(tics < 0) power = power*-1;
-		int initPos = motor0.getCurrentPosition();
-		int currPos = initPos;
-		while(currPos != initPos+tics){
-			motor0.setPower(-power);
-			motor1.setPower(-power);
-			motor2.setPower(-power);
-			motor3.setPower(-power);
-			currPos = motor0.getCurrentPosition();
-		}
-		stopMotors();
-	}
-	//Moves left-right based off power(magnitude) and tics
-	public void moveLeftRight(double power, int tics){
-		int angle = getAngle();
-		if(tics<0) power = power*-1;
-		int initPos = motor0.getCurrentPosition();
-		int currPos = initPos;
-		while(Math.abs(currPos) < initPos+tics){
-			motor0.setPower(-power);
-			motor1.setPower(-power);
-			motor2.setPower(power);
-			motor3.setPower(power);
-			currPos = motor0.getCurrentPosition();
-		}
-		stopMotors();
-		rotateToAngle(angle);
-	}
-	public void moveLeftRight(double power, Callable<Boolean> condition){
-		double correction=0;
-		int angle=getAngle();
-		try {
-			while (condition.call()) {
-				motor0.setPower(-power-correction);
-				motor1.setPower(-power+correction);
-				motor2.setPower(power-correction);
-				motor3.setPower(power+correction);
-				if(Math.abs(getAngle()-angle)>2) {
-					rotateTo(angle);
-				}
-			}
-		}
-		catch(Exception e){
 
-		}
-		stopMotors();
-
-	}
-	//Moves forward-back based off power(magnitude) and tics
-	public void moveUpDown(double power, int tics){
-		if(tics<0) power = power*-1;
-		int initPos = (Math.abs(motor0.getCurrentPosition())+Math.abs(motor1.getCurrentPosition())+Math.abs(motor2.getCurrentPosition())+Math.abs(motor3.getCurrentPosition()))/4;
-		int currPos = initPos;
-		while(Math.abs(currPos) < initPos+tics){
-			motor0.setPower(power);
-			motor1.setPower(-power);
-			motor2.setPower(power);
-			motor3.setPower(-power);
-			currPos = (Math.abs(motor0.getCurrentPosition())+Math.abs(motor1.getCurrentPosition())+Math.abs(motor2.getCurrentPosition())+Math.abs(motor3.getCurrentPosition()))/4;
-
-		}
-		stopMotors();
-	}
-
-	//Moves forward-back based off inches, if it's moving forward and power(magnitude)
-	public void drive(double inches, boolean forward, double power){
-		double val = 85;
-		if(power>0.5) val = 65;
-		if(forward)
-			moveUpDown(-power,(int)Math.round(val*inches));
-		else{
-			moveUpDown(power,(int)Math.round(val*inches));
-		}
-
-	}
-
-	//Returns encoder value for motor based on motor number
-	public int getMotorVal(int motorNum){
-		switch (motorNum){
-			case 0: return motor0.getCurrentPosition();
-			case 1: return motor1.getCurrentPosition();
-			case 2: return motor2.getCurrentPosition();
-			case 3: return motor3.getCurrentPosition();
-			default: return 0;
-		}
-	}
-	public boolean resetCoordinates(){
-		targetsRoverRuckus.activate();
-		targetVisible=false;
-
-		// check all the trackable target to see which one (if any) is visible.
-		for (VuforiaTrackable trackable : allTrackables) {
-			if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-				targetVisible = true;
-				currentTrackable = trackable;
-				// getUpdatedRobotLocation() will return null if no new information is available since
-				// the last time that call was made, or if the trackable is not currently visible.
-				OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
-				if (robotLocationTransform != null) {
-					lastLocation = robotLocationTransform;
-
-				}
-				translation = lastLocation.getTranslation();
-				rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-				return targetVisible;
-			}
-		}
-		return targetVisible;
-	}
-	public void calibrate() {
-		BNO055IMU.Parameters imuParameters;
-		imuParameters = new BNO055IMU.Parameters();
-		imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-		imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-		imuParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-		imuParameters.loggingEnabled = true;
-		imuParameters.loggingTag = "IMU";
-		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-		imu1.initialize(imuParameters);
-	}
-	//Returns x coordinate from vuforia
-	public int getX(){
-		if(!resetCoordinates()) return 10000;
-		return Math.round(translation.get(0)/mmPerInch);
-	}
-	//Returns y coordinate from vuforia
-	public int getY(){
-		if(!resetCoordinates()) return 10000;
-		return Math.round(translation.get(1)/mmPerInch);
-	}
-	//Returns angle based off vuforia or rev hub imu
-	public int getAngle(){
-		if(!resetCoordinates()&&imu1.isGyroCalibrated()){
-			angles=imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			double currentAngle=angles.firstAngle;
-			int finalAngle= startingAngle+(int)Math.round(currentAngle);
-			if(finalAngle<0){
-				return 360+finalAngle;
-			}
-			return finalAngle;
-
-		}
-		else if(resetCoordinates()){
-			double oldAngle = rotation.thirdAngle;
-			double posAngle = oldAngle;
-			int finalAngle;
-			if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
-			if((int) (Math.round(posAngle)) - 45 < 0){
-				finalAngle = 360-(int)Math.round(posAngle);
-			}
-			else{
-				finalAngle = (int) (Math.round(posAngle)) - 45;
-			}
-			return finalAngle;
-		}
-		else{
-			return 10000;
-		}
-	}
-
-	//Runs lift motors
-	public void lift(String direction){
-		if(direction.equals("up")){
-			lift1.setPower(-1);
-			lift2.setPower(-1);
-		}
-		else if(direction.equals("down")){
-			lift1.setPower(1);
-			lift2.setPower(1);
-		}
-		else if(direction.equals("stop")){
-			lift1.setPower(0);
-			lift2.setPower(0);
-		}
-	}
-	//Rotates to certain angle
-	public void rotateToAngle(int newAngle) {
-		int diff = newAngle - getAngle();
-		int diff1=Math.abs(diff-360);
-		if (newAngle == getAngle()) {
-			stopMotors();
-			return;
-		}
-		while (Math.abs(getAngle() - newAngle) > 1) {
-			diff1=Math.abs(getAngle() - newAngle);
-			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
-
-				if(Math.abs(diff1)<13)
-					rotate(-0.06);
-				else if(Math.abs(diff1)<40)
-					rotate(-0.1);
-				else
-					rotate(-(0.00928571*Math.abs(diff1))+0.128571);
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(-0.5);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(-0.17);
-				} else  {
-					rotate(-0.07);
-				}*/
-			} else {
-
-				if(Math.abs(diff1)<13)
-					rotate(0.06);
-				else if(Math.abs(diff1)<40)
-					rotate(0.1);
-				else
-					rotate((0.00928571*Math.abs(diff1))+0.128571);
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(0.4);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(0.17);
-				} else {
-					rotate(0.1);
-				}*/
-			}
-
-		}
-		stopMotors();
-
-	}
-	public void rotateTo(int newAngle) {
-		int diff = newAngle - getAngle();
-		int diff1=Math.abs(diff-360);
-		if (newAngle == getAngle()) {
-			stopMotors();
-			return;
-		}
-		while (Math.abs(getAngle() - newAngle) > 1) {
-			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
-				rotate((Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(-0.5);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(-0.17);
-				} else  {
-					rotate(-0.07);
-				}*/
-			} else {
-				rotate(-(Math.pow(0.0000251029*diff1,2)-0.000462963*diff1+0.07));
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(0.4);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(0.17);
-				} else {
-					rotate(0.1);
-				}*/
-			}
-
-		}
-	}
-	//Moves to vuforia coordinate from either vuforia or rev imu angle
-	public void moveToCoord(int x, int y, int angle){
-		int oldAngle = getAngle();
-		rotateToAngle(angle);
-		while(getX()!=x && getY()!=y){
-			moveUpDown(0.25);
-		}
-		stopMotors();
-	}
-
-	//More lift motors correctly
-	public void lift(){
-		while(lift1.getCurrentPosition()<3350+startingHeight){
-			lift("up");
-		}
-		lift("stop");
-	}
-	public void lower(){
-		while(lift1.getCurrentPosition()>startingHeight+50){
-			lift("down");
-		}
-		lift("stop");
-	}
-	public void liftAcc(int tics){
-		int initPos = lift1.getCurrentPosition();
-		int currPos = initPos;
-		while(currPos <= initPos+tics){
-			lift1.setPower(0.5);
-			lift2.setPower(0.5);
-		}
-		lift1.setPower(0);
-		lift2.setPower(0);
-	}
-
-	//Resets encoders
-	public void resetEncodes(){
-		motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-	}
-	//Really self explanatory
-	public int getLiftHeight(){
-		return lift1.getCurrentPosition();
-	}
-	//Again, super self explanatory
-	public String checkColor() {
-
-		if (sensorColor.blue() / Math.pow(20 - sensorDistance.getDistance(DistanceUnit.INCH), 1) < 1.2) {
-			return "yellow";
-		} else if (sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
-			return "white";
-		} else {
-			return "nothing";
-		}
-	}
 }

@@ -19,7 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 @TeleOp(name="StrafeCorrectionTest", group="Pushbot")
 
-public class StrafeCorrectionTest extends LinearOpMode {
+public class StrafeCorrectionTest extends AvesAblazeOpmode {
 //
 	/* Declare OpMode members. */
 
@@ -30,7 +30,7 @@ public class StrafeCorrectionTest extends LinearOpMode {
 	}
 }
 
-	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
+	AvesAblazeHardware robot   = new AvesAblazeHardware();   // Use a Pushbot's hardware
 	private ElapsedTime runtime = new ElapsedTime();
 	float moveY;
 	float moveX;
@@ -42,30 +42,30 @@ public class StrafeCorrectionTest extends LinearOpMode {
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
-		robot.calibrate();
+		calibrate();
 		telemetry.addData("calibrated", "yes");
 		telemetry.update();
 		waitForStart();
 		CheckGamepad c=new CheckGamepad();
 		while(opModeIsActive()){
-			robot.moveLeftRight(0.6, c);
-			telemetry.addData("angle", robot.getAngle());
+			moveLeftRight(0.6, c);
+			telemetry.addData("angle", getAngle());
 			telemetry.addData("correction", robot.correction);
 			telemetry.update();
 		}
 	}
 	public void printStuff(){
-		if (robot.resetCoordinates()) {
+		if (resetCoordinates()) {
 			telemetry.addData("Target", robot.currentTrackable.getName());
 			// express position (translation) of robot in inches.
 			robot.translation = robot.lastLocation.getTranslation();
 			//ArrayList translation[x, y, z]
-			telemetry.addData("x", robot.getX());
-			telemetry.addData("y", robot.getY());
+			telemetry.addData("x", getX());
+			telemetry.addData("y", getY());
 
 			// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 			robot.rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-			telemetry.addData("Heading", robot.getAngle());
+			telemetry.addData("Heading", getAngle());
 		} else {
 			telemetry.addData("Target", "none");
 		}

@@ -81,8 +81,8 @@ public class Sample extends LinearOpMode {
 				// express position (translation) of robot in inches.
 				robot.translation = robot.lastLocation.getTranslation();
 				//ArrayList translation[x, y, z]
-				telemetry.addData("x", robot.translation.get(0) / robot.mmPerInch);
-				telemetry.addData("y", robot.translation.get(1) / robot.mmPerInch);
+				telemetry.addData("x", robot.translation.get(0) / AvesAblazeHardwarePushbot.mmPerInch);
+				telemetry.addData("y", robot.translation.get(1) / AvesAblazeHardwarePushbot.mmPerInch);
 
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);

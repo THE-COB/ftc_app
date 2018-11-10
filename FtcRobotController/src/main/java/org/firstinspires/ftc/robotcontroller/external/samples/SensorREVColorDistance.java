@@ -130,9 +130,8 @@ public class SensorREVColorDistance extends LinearOpMode {
                 //public void run() {
               //      relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
                 //}
-            ;
 
-            telemetry.update();
+			telemetry.update();
         }
 
         // Set the panel back to the default color
