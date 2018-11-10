@@ -112,12 +112,12 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				robot.servo0.setPower(position);
 				while (opModeIsActive() && gamepad1.dpad_right) ;
 			}
-			if(gamepad1.left_trigger>0)
+			if(Math.abs(gamepad2.left_stick_y)>0.1)
 			robot.arm.setPower(gamepad1.left_trigger);
-			else if(gamepad1.right_trigger>0)
-				robot.arm.setPower(-gamepad1.right_trigger);
 			else
 				robot.arm.setPower(0);
+			robot.marker1.setPosition(1);
+			robot.marker2.setPosition(1);
 		}
 
 
