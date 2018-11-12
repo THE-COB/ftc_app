@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 11/9/18.
  */
 public abstract class AvesAblazeOpmode extends LinearOpMode {
-	public AvesAblazeHardware robot=new AvesAblazeHardware();
+	public AvesAblazeHardware robot= new AvesAblazeHardware();
 	public void deploy(){
 		lift();
 		moveLeftRight(-0.75);

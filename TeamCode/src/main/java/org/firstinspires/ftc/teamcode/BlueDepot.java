@@ -31,13 +31,14 @@ public class BlueDepot extends AvesAblazeOpmode {
 	/* Declare OpMode members. */
 	// Use a Pushbot's hardware
 	private ElapsedTime runtime = new ElapsedTime();
-	float moveY;
-	float moveX;
-	float rotate;
-	int liftHeight = 0;
-	double sd;
-	String color;
-	Orientation angles;
+	public float moveY;
+	public float moveX;
+	public float rotate;
+	public int liftHeight = 0;
+	public double sd;
+	public String color;
+	public Orientation angles;
+
 	@Override
 	public void runOpMode() {
 		telemetry.addData("status", "calibrating");
