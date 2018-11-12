@@ -97,12 +97,6 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 
 			//lift robot
-			if(gamepad2.x){
-				lift();
-			}
-			if(gamepad2.y){
-				lower();
-			}
 			if(gamepad2.a){
 				//dump minerals
 			}
@@ -110,6 +104,12 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				lift("up");
 			}
 			else if (gamepad2.dpad_down){
+				lift("down");
+			}
+			else if(gamepad1.y){
+				lift("up");
+			}
+			else if (gamepad1.x){
 				lift("down");
 			}
 			else{
