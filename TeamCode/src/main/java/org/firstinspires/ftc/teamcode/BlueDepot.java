@@ -48,7 +48,7 @@ public class BlueDepot extends AvesAblazeOpmode {
 		telemetry.update();
 			waitForStart();
 		//Deploys the robot down from when it is at the starting position
-		while(Math.abs(liftHeight-getLiftHeight())<3760&&!gamepad1.a&&opModeIsActive()){
+		while(Math.abs(liftHeight-getLiftHeight())<3460&&!gamepad1.a&&opModeIsActive()){
 			lift("up");
 			telemetry.clearAll();
 			telemetry.addData("liftHeight", getLiftHeight());
@@ -80,13 +80,13 @@ public class BlueDepot extends AvesAblazeOpmode {
 		lift("down");
 		moveUpDown(1);
 		try{
-			sleep(300);
+			sleep(340);
 		}
 		catch(Exception e){
 			stopMotors();
 		}
 		stopMotors();
-		while(Math.abs(liftHeight-getLiftHeight())<3000&&!gamepad1.a&&opModeIsActive()){
+		while(Math.abs(liftHeight-getLiftHeight())<2900&&!gamepad1.a&&opModeIsActive()){
 			lift("down");
 		}
 		lift("stop");
@@ -94,7 +94,7 @@ public class BlueDepot extends AvesAblazeOpmode {
 		stopMotors();
 		moveLeftRight(-1);
 		try{
-			sleep(600);
+			sleep(700);
 		}
 		catch(Exception e){
 			stopMotors();
@@ -155,8 +155,18 @@ public class BlueDepot extends AvesAblazeOpmode {
 		catch(Exception e){
 			stopMotors();
 		}
+		if(robot.sensorDistance.getDistance(DistanceUnit.INCH)>11){
+			moveUpDown(0.2);
+			try{
+				sleep(200);
+			}
+			catch(Exception e){
+				stopMotors();
+			}
+		}
+
 		color=checkColor();
-		rotateToAngle(135); //CHANGE ON RED DEPOT
+		rotateToAngle(127); //CHANGE ON RED DEPOT
 		//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 		if(color.equals("yellow")){
 			telemetry.addData("Gold", "left");
@@ -219,9 +229,17 @@ public class BlueDepot extends AvesAblazeOpmode {
 			catch(Exception e){
 				stopMotors();
 			}
-
+			if(robot.sensorDistance.getDistance(DistanceUnit.INCH)>11){
+				moveUpDown(0.2);
+				try{
+					sleep(200);
+				}
+				catch(Exception e){
+					stopMotors();
+				}
+			}
 			color=checkColor();
-			rotateToAngle(135); //CHANGE ON RED DEPOT
+			//rotateToAngle(135); //CHANGE ON RED DEPOT
 
 			//If the mineral is gold the robot will move forward towards the depot while pushing the gold mineral with it. It will then drop the marker.
 			stopMotors();
@@ -230,7 +248,7 @@ public class BlueDepot extends AvesAblazeOpmode {
 				telemetry.update();
 				moveLeftRight(0.2);
 				try{
-					sleep(400);
+					sleep(500);
 				}
 				catch(Exception e){
 					stopMotors();

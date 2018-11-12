@@ -61,22 +61,35 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				moveLeftRight(-moveX);
 			else if (Math.abs(rotate) > 0.25) {
 				rotate(-rotate);
-			} else {
-				moveUpDown(0);
-				moveLeftRight(0);
-				rotate(0);
 			}
-
-/*			if(moveY != 0 || moveX != 0){
-
-			}*/
+			else if(gamepad1.dpad_up){
+				moveUpDown(-0.3);
+			}
+			else if(gamepad1.dpad_down){
+				moveUpDown(-0.3);
+			}
+			else if(gamepad1.dpad_left){
+				moveLeftRight(0.3);
+			}
+			else if(gamepad1.dpad_right){
+				moveLeftRight(0.3);
+			}
+			else{
+				stopMotors();
+			}
 
 			//Move team marker mechanism
 			if(gamepad1.left_trigger>0.1){
-				robot.marker1.setPosition(0.7);
+				robot.marker1.setPosition(1);
 			}
 			if(gamepad1.right_trigger>0.1){
-				robot.marker1.setPosition(0);
+				robot.marker1.setPosition(0.3);
+			}
+			if(gamepad2.left_trigger>0.1){
+				robot.marker1.setPosition(1);
+			}
+			if(gamepad2.right_trigger>0.1){
+				robot.marker1.setPosition(0.3);
 			}
 
 			else{
@@ -84,16 +97,19 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 
 			//lift robot
-			if(gamepad1.x){
+			if(gamepad2.x){
 				lift();
 			}
-			if(gamepad1.y){
+			if(gamepad2.y){
 				lower();
 			}
-			if(gamepad1.dpad_up){
+			if(gamepad2.a){
+				//dump minerals
+			}
+			if(gamepad2.dpad_up){
 				lift("up");
 			}
-			else if (gamepad1.dpad_down){
+			else if (gamepad2.dpad_down){
 				lift("down");
 			}
 			else{
@@ -102,28 +118,27 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 			telemetry.addData("position", position);
 			robot.servo0.setPower(position);
-			if(gamepad1.dpad_left){
+			if(gamepad2.dpad_left){
 				position += 0.05;
 				robot.servo0.setPower(position);
 				while (opModeIsActive() && gamepad1.dpad_left) ;
 			}
-			else if(gamepad1.dpad_right) {
+			else if(gamepad2.dpad_right) {
 				position += 0.05;
 				robot.servo0.setPower(position);
 				while (opModeIsActive() && gamepad1.dpad_right) ;
 			}
 			if(Math.abs(gamepad2.left_stick_y)>0.1)
-			robot.arm.setPower(gamepad1.left_trigger);
+			robot.arm.setPower(-gamepad2.left_stick_y/1.5);
 			else if(gamepad2.left_trigger>0.1){
-				robot.arm.setPower(gamepad1.left_trigger/4);
+				robot.arm.setPower(gamepad2.left_trigger/3.25);
 			}
 			else if(gamepad2.right_trigger>0.1){
-				robot.arm.setPower(-gamepad1.right_trigger/4);
+				robot.arm.setPower(-gamepad2.right_trigger/3.25);
 			}
 			else
 				robot.arm.setPower(0);
-			robot.marker1.setPosition(1);
-			robot.marker2.setPosition(1);
+			robot.marker2.setPosition(-1);
 		}
 
 
