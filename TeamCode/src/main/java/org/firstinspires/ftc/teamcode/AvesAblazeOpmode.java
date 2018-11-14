@@ -207,10 +207,20 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		if(!resetCoordinates()) return 10000;
 		return Math.round(robot.translation.get(0)/ AvesAblazeHardware.mmPerInch);
 	}
+	public double getExactX(){
+		if(!resetCoordinates()) return 10000;
+			return (double)robot.translation.get(0) / AvesAblazeHardware.mmPerInch;
+
+	}
 	//Returns y coordinate from vuforia
 	public int getY(){
 		if(!resetCoordinates()) return 10000;
 		return Math.round(robot.translation.get(1)/ AvesAblazeHardware.mmPerInch);
+	}
+	public double getExactY(){
+		if(!resetCoordinates()) return 10000;
+		return (double)robot.translation.get(1) / AvesAblazeHardware.mmPerInch;
+
 	}
 	//Returns angle based off vuforia or rev hub imu
 	public int getAngle(){
@@ -242,6 +252,34 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		}
 	}
 
+	public double getExactAngle(){
+		if(!resetCoordinates()&&robot.imu1.isGyroCalibrated()){
+			robot.angles=robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			double currentAngle=robot.angles.firstAngle;
+			double finalAngle= (double)robot.startingAngle+currentAngle;
+			if(finalAngle<0){
+				return 360+finalAngle;
+			}
+			return finalAngle;
+
+		}
+		else if(resetCoordinates()){
+			double oldAngle = robot.rotation.thirdAngle;
+			double posAngle = oldAngle;
+			double finalAngle;
+			if (oldAngle < 0) posAngle = 360 - Math.abs(oldAngle);
+			if((int) (Math.round(posAngle)) - 45 < 0){
+				finalAngle = 360-posAngle;
+			}
+			else{
+				finalAngle = posAngle - 45;
+			}
+			return finalAngle;
+		}
+		else{
+			return 10000;
+		}
+	}
 	//Runs lift motors
 	public void lift(String direction){
 		if(direction.equals("up")){

@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@Autonomous(name="BlueDepot", group="Pushbot")
+@Autonomous(name="BlueDepot", group="Competition")
 
 public class BlueDepot extends AvesAblazeOpmode {
 

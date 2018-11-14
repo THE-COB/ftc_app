@@ -15,8 +15,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 9/17/18.
  */
 @TeleOp(name="TestVuforia", group="Pushbot")
-public class VuforiaTest extends LinearOpMode {
-	vuforiaHardware robot= new vuforiaHardware();
+public class VuforiaTest extends AvesAblazeOpmode {
+	AvesAblazeHardware robot= new AvesAblazeHardware();
 	public void runOpMode(){
 		robot.init(hardwareMap);
 		telemetry.addData("does this work?", "yes");
@@ -25,17 +25,17 @@ public class VuforiaTest extends LinearOpMode {
 		while(opModeIsActive()) {
 			telemetry.addData("worko?", "yes");
 			telemetry.update();
-			if (robot.resetCoordinates()) {
+			if (resetCoordinates()) {
 				telemetry.addData("Target", robot.currentTrackable.getName());
 				// express position (translation) of robot in inches.
 				VectorF translation = robot.lastLocation.getTranslation();
 				//ArrayList translation[x, y, z]
-				telemetry.addData("x", translation.get(0) / vuforiaHardware.mmPerInch);
-				telemetry.addData("y", translation.get(1) / vuforiaHardware.mmPerInch);
+				telemetry.addData("x", getExactX());
+				telemetry.addData("y", getExactY());
 
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-				telemetry.addData("Heading", rotation.thirdAngle);
+				telemetry.addData("Heading", getExactAngle());
 			}
 			else {
 				telemetry.addData("Target", "none");

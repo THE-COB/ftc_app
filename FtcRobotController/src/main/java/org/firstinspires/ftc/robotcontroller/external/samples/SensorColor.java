@@ -94,7 +94,7 @@ public class SensorColor extends LinearOpMode {
       }
   }
 
-  protected void runSample() {
+  protected void runSample() throws InterruptedException {
 
     // values is a reference to the hsvValues array.
     float[] hsvValues = new float[3];

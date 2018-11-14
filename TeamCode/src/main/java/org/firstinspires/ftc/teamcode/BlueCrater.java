@@ -25,7 +25,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="BlueCrater", group="Pushbot")
+@TeleOp(name="BlueCrater", group="Competition")
 
 public class BlueCrater extends AvesAblazeOpmode {
 

@@ -15,7 +15,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Teleop", group="Pushbot")
+@TeleOp(name="Teleop", group="Competition")
 
 public class TeleOp0 extends AvesAblazeOpmode {
 
@@ -63,13 +63,13 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				rotate(-rotate);
 			}
 			else if(gamepad1.dpad_up){
-				moveUpDown(-0.3);
+				moveUpDown(0.3);
 			}
 			else if(gamepad1.dpad_down){
 				moveUpDown(-0.3);
 			}
 			else if(gamepad1.dpad_left){
-				moveLeftRight(0.3);
+				moveLeftRight(-0.3);
 			}
 			else if(gamepad1.dpad_right){
 				moveLeftRight(0.3);

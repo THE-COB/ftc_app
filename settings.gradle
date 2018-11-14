@@ -1,3 +1,2 @@
-include ':FtcRobotController', ':openCVLibrary3', "endercv"
+include ':FtcRobotController'
 include ':TeamCode'
-project(':openCVLibrary3').projectDir = new File('endercv/openCVLibrary3')
