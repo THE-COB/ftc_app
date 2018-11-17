@@ -48,6 +48,84 @@ public class BasicDepot extends AvesAblazeOpmode {
 		telemetry.update();
 			waitForStart();
 		//Deploys the robot down from when it is at the starting position
+		robot.arm.setPower(-6);
+		try{
+			sleep(400);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		robot.arm.setPower(0);
+		while(Math.abs(liftHeight-getLiftHeight())<3600&&!gamepad1.a&&opModeIsActive()){	//Change to 3600
+			lift("up");
+			telemetry.clearAll();
+			telemetry.addData("liftHeight", getLiftHeight());
+			telemetry.addData("startingHeight", liftHeight);
+			telemetry.update();
+		}
+		lift("stop");
+
+		//Once the robot reaches the floor it moves to the left and goes up. It then resets the linear slide
+		moveLeftRight(-0.75);
+		try{
+			sleep(250);
+		}
+		catch(Exception e)
+
+		{
+			stopMotors();
+		}
+		moveUpDown(1);
+		try{
+			sleep(100);
+		}
+		catch(Exception e){
+
+			stopMotors();
+		}
+		stopMotors();
+		liftHeight=getLiftHeight();
+		lift("down");
+		moveUpDown(1);
+		try{
+			sleep(340);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		stopMotors();
+		while(Math.abs(liftHeight-getLiftHeight())<2900&&!gamepad1.a&&opModeIsActive()){
+			lift("down");
+		}
+		lift("stop");
+
+		stopMotors();
+		moveLeftRight(-1);
+		try{
+			sleep(700);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		//If the robot is unable to find the Vuforia it continues to rotate
+		while(!resetCoordinates()&&opModeIsActive()){
+			rotate(-0.1);
+			try{
+				sleep(200);
+			}
+			catch(Exception e){
+				stopMotors();
+			}
+			stopMotors();
+			try{
+				sleep(200);
+			}
+			catch(Exception e){
+				stopMotors();
+			}
+		}
+		stopMotors();
+		telemetry.clearAll();
 
 		robot.startingAngle=45;
 		drive(47, true, 1);
