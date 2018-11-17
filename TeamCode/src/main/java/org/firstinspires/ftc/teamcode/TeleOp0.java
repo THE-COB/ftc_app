@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 
 /**
  * Created by Rohan Mathur on 9/26/18.
@@ -24,13 +26,33 @@ public class TeleOp0 extends AvesAblazeOpmode {
 	float moveY;
 	float moveX;
 	float rotate;
-	double position;
+	double position=0.8;
+	double startingPosition;
+	int goldMinerals;
+	int silverMinerals;
 	@Override
 	public void runOpMode() {
+
 		robot.init(hardwareMap);
+		position=robot.extension.getPosition();
+		startingPosition=robot.extension.getPosition();
 		waitForStart();
+		robot.tfod.activate();
 		while(opModeIsActive()) {
             telemetry.update();
+			if (updatedRecognitions != null) {
+				silverMinerals=0;
+				goldMinerals=0;
+				for (Recognition recognition : updatedRecognitions) {
+					if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+						goldMinerals = 1;
+					} else {
+						silverMinerals++;
+					}
+				}
+			}
+			telemetry.addData("gold mineral", goldMinerals);
+			telemetry.addData("silver mineral", silverMinerals);
             telemetry.addData("height", getLiftHeight());
             //Display coordinates and trackable
             if (resetCoordinates()) {
@@ -97,7 +119,7 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 
 			//lift robot
-			if(gamepad2.a){
+			if(gamepad2.right_bumper){
 				//dump minerals
 			}
 			if(gamepad2.dpad_up){
@@ -117,16 +139,24 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 
 			telemetry.addData("position", position);
-			robot.servo0.setPower(position);
-			if(gamepad2.dpad_left){
-				position += 0.05;
-				robot.servo0.setPower(position);
-				while (opModeIsActive() && gamepad1.dpad_left) ;
+			telemetry.addData("actual position", robot.extension.getPosition());
+			telemetry.addData("starting position", startingPosition);
+			robot.extension.setPosition(Range.clip(position,startingPosition,startingPosition+0.46));
+			if(gamepad2.x){
+				position=startingPosition;
+				robot.extension.setPosition(position);
+				while (opModeIsActive() && gamepad1.x) ;
 			}
-			else if(gamepad2.dpad_right) {
-				position += 0.05;
-				robot.servo0.setPower(position);
-				while (opModeIsActive() && gamepad1.dpad_right) ;
+			else if(gamepad2.b&&!gamepad2.start) {
+				position =startingPosition+0.46;
+				robot.extension.setPosition(position);
+				while (opModeIsActive() && gamepad1.b) ;
+			}
+			else if(gamepad2.y){
+				position+=0.01;
+			}
+			else if(gamepad2.a&&!gamepad2.start){
+				position-=0.01;
 			}
 			if(Math.abs(gamepad2.left_stick_y)>0.1)
 			robot.arm.setPower(-gamepad2.left_stick_y/1.5);
@@ -138,7 +168,6 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 			else
 				robot.arm.setPower(0);
-			robot.marker2.setPosition(-1);
 		}
 
 

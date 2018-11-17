@@ -166,7 +166,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     /**
      * Initialize the Tensor Flow Object Detection engine.
      */
-    private void initTfod() {
+    public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);

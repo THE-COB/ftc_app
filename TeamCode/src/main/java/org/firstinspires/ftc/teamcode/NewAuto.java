@@ -1,26 +1,34 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@Autonomous(name="BlueDepot", group="Competition")
+@Autonomous(name="NewAuto", group="Competition")
 
-public class BlueDepot extends AvesAblazeOpmode {
+public class NewAuto extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 	// Use a Pushbot's hardware
@@ -32,6 +40,8 @@ public class BlueDepot extends AvesAblazeOpmode {
 	public double sd;
 	public String color;
 	public Orientation angles;
+	int silverMineralCount;
+	int goldMineralCount;
 
 	@Override
 	public void runOpMode() {
@@ -42,17 +52,9 @@ public class BlueDepot extends AvesAblazeOpmode {
 		telemetry.addData("status", "ready");
 		telemetry.update();
 			waitForStart();
+		robot.tfod.activate();
 		//Deploys the robot down from when it is at the starting position
-
-		robot.arm.setPower(-6);
-		try{
-			sleep(400);
-		}
-		catch(Exception e){
-			stopMotors();
-		}
-		robot.arm.setPower(0);
-		while(Math.abs(liftHeight-getLiftHeight())<3600&&!gamepad1.a&&opModeIsActive()){
+		while(Math.abs(liftHeight-getLiftHeight())<3460&&!gamepad1.a&&opModeIsActive()){
 			lift("up");
 			telemetry.clearAll();
 			telemetry.addData("liftHeight", getLiftHeight());
@@ -126,11 +128,15 @@ public class BlueDepot extends AvesAblazeOpmode {
 		//Uses information from Vuforia and prints it and sets variables to use Vuforia information and calibrates the REV imu
 		robot.rotation=Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 		robot.translation=robot.lastLocation.getTranslation();
-		rotateToAngle(135); //CHANGE ON RED DEPOT
+		rotateToAngle(315); //CHANGE ON RED DEPOT
 		calibrate();
 		while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
-		robot.startingAngle=135; //CHANGE ON RED DEPOT
+		robot.startingAngle=315; //CHANGE ON RED DEPOT
 		resetCoordinates();
+		rotateTo(220);
+		while(position.equals("none")&&opModeIsActive()){
+			rotate(0.05);
+		}
 		robot.translation=robot.lastLocation.getTranslation();
 		telemetry.addData("x", getX());
 		telemetry.update();

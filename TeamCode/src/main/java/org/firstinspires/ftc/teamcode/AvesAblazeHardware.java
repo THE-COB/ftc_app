@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 
 /**
  * Created by Rohan Mathur on 9/17/18.
@@ -34,7 +38,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public class AvesAblazeHardware {
 	private static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
 	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
-
+	TFObjectDetector tfod;
 	DcMotor motor0;
 	DcMotor motor1;
 	DcMotor motor2;
@@ -52,8 +56,7 @@ public class AvesAblazeHardware {
 	int startingHeight;
 
 	Servo marker1;
-	Servo marker2;
-	CRServo servo0;
+	Servo extension;
 
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -85,8 +88,7 @@ public class AvesAblazeHardware {
 		//Getting servos for HardwareMap
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
-		marker2=hwMap.get(Servo.class, "marker2");
-		servo0=hwMap.get(CRServo.class, "servo0");
+		extension=hwMap.get(Servo.class, "extension");
 		marker1.setPosition(1);
 
 
@@ -276,9 +278,15 @@ public class AvesAblazeHardware {
 
 		// Save reference to Hardware map
 		hwMap = ahwMap;
-
+		initTfod();
 	}
-
+	public void initTfod() {
+		int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
+				"tfodMonitorViewId", "id", hwMap.appContext.getPackageName());
+		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+	}
 
 
 }

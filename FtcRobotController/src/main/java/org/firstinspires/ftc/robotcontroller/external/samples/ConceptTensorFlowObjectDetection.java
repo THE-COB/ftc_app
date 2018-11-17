@@ -79,7 +79,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
      * Detection engine.
      */
-    private TFObjectDetector tfod;
+    public TFObjectDetector tfod;
 
     @Override
     public void runOpMode() {

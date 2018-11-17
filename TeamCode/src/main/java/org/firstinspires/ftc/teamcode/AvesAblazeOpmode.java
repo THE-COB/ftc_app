@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -13,18 +14,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 
 /**
  * Created by Rohan Mathur on 11/9/18.
  */
 public abstract class AvesAblazeOpmode extends LinearOpMode {
 	public AvesAblazeHardware robot= new AvesAblazeHardware();
+	List<Recognition> updatedRecognitions;
+	public String position="none";
 	public void deploy(){
 		lift();
 		moveLeftRight(-0.75);
@@ -153,7 +162,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		if(forward)
 			moveUpDown(-power,(int)Math.round(val*inches));
 		else{
-			moveUpDown(power,(int)Math.round(val*inches));
+			moveUpDown(power,(int)Math.round(Math.abs(val*inches)));
 		}
 
 	}
@@ -169,6 +178,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		}
 	}
 	public boolean resetCoordinates(){
+		updatedRecognitions = robot.tfod.getUpdatedRecognitions();
 		robot.targetsRoverRuckus.activate();
 		robot.targetVisible=false;
 
@@ -304,6 +314,9 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 			return;
 		}
 		while (Math.abs(getAngle() - newAngle) > 1&&opModeIsActive()) {
+			telemetry.addData("newangle", newAngle);
+			telemetry.addData("getangle()", getAngle());
+			telemetry.update();
 			diff1=Math.abs(getAngle() - newAngle);
 			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
 
@@ -387,13 +400,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 
 	//More lift motors correctly
 	public void lift(){
-		while(robot.lift1.getCurrentPosition()<3350+robot.startingHeight&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()>-3400+robot.startingHeight&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");
 	}
 	public void lower(){
-		while(robot.lift1.getCurrentPosition()>robot.startingHeight+50&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()<robot.startingHeight-200&&opModeIsActive()){
 			lift("down");
 		}
 		lift("stop");
@@ -431,5 +444,40 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 			return "nothing";
 		}
 	}
+	public void checkMinerals(){
+		if (robot.tfod != null) {
+			// getUpdatedRecognitions() will return null if no new information is available since
+			// the last time that call was made.
+			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			if (updatedRecognitions != null) {
+				telemetry.addData("# Object Detected", updatedRecognitions.size());
+				if (updatedRecognitions.size() == 3) {
+					int goldMineralX = -1;
+					int silverMineral1X = -1;
+					int silverMineral2X = -1;
+					for (Recognition recognition : updatedRecognitions) {
+						if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+							goldMineralX = (int) recognition.getLeft();
+						} else if (silverMineral1X == -1) {
+							silverMineral1X = (int) recognition.getLeft();
+						} else {
+							silverMineral2X = (int) recognition.getLeft();
+						}
+					}
+					if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+						if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+							position="left";
+						} else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+							position="right";
+						} else {
+							position="center";
+						}
+					}
+				}
+				telemetry.update();
+			}
+		}
+	}
+
 
 }
