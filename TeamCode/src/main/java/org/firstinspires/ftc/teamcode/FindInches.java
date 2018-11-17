@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "Find inches", group = "pushbot")
+@Disabled
 public class FindInches extends LinearOpMode {
 
 	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 @TeleOp(name="MRSuperSlow", group="pushbot")
+@Disabled
 public class MRSuperSlow extends AvesAblazeOpmode {
 	DcMotor motor0;
 	CRServo servo0;

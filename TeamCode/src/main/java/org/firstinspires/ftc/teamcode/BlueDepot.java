@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -19,7 +20,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="BlueDepot", group="Competition")
-
+@Disabled
 public class BlueDepot extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
@@ -60,6 +61,7 @@ public class BlueDepot extends AvesAblazeOpmode {
 			telemetry.update();
 		}
 		lift("stop");
+
 
 		//Once the robot reaches the floor it moves to the left and goes up. It then resets the linear slide
 		moveLeftRight(-0.75);

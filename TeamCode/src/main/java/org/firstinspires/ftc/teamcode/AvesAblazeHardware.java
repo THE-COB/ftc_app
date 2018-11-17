@@ -57,6 +57,7 @@ public class AvesAblazeHardware {
 
 	Servo marker1;
 	Servo extension;
+	Servo mineralDoor;
 
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -90,7 +91,6 @@ public class AvesAblazeHardware {
 		marker1=hwMap.get(Servo.class, "marker1");
 		extension=hwMap.get(Servo.class, "extension");
 		marker1.setPosition(1);
-
 
 
 		//Getting sensors from HardwareMap

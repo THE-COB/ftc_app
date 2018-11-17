@@ -48,7 +48,7 @@ public class BasicDepot extends AvesAblazeOpmode {
 		telemetry.update();
 			waitForStart();
 		//Deploys the robot down from when it is at the starting position
-		robot.arm.setPower(-6);
+		robot.arm.setPower(1);
 		try{
 			sleep(400);
 		}
@@ -56,7 +56,7 @@ public class BasicDepot extends AvesAblazeOpmode {
 			stopMotors();
 		}
 		robot.arm.setPower(0);
-		while(Math.abs(liftHeight-getLiftHeight())<3600&&!gamepad1.a&&opModeIsActive()){	//Change to 3600
+		/*while(Math.abs(liftHeight-getLiftHeight())<3600&&!gamepad1.a&&opModeIsActive()){
 			lift("up");
 			telemetry.clearAll();
 			telemetry.addData("liftHeight", getLiftHeight());
@@ -64,8 +64,6 @@ public class BasicDepot extends AvesAblazeOpmode {
 			telemetry.update();
 		}
 		lift("stop");
-
-		//Once the robot reaches the floor it moves to the left and goes up. It then resets the linear slide
 		moveLeftRight(-0.75);
 		try{
 			sleep(250);
@@ -84,6 +82,7 @@ public class BasicDepot extends AvesAblazeOpmode {
 			stopMotors();
 		}
 		stopMotors();
+
 		liftHeight=getLiftHeight();
 		lift("down");
 		moveUpDown(1);
@@ -98,34 +97,8 @@ public class BasicDepot extends AvesAblazeOpmode {
 			lift("down");
 		}
 		lift("stop");
-
-		stopMotors();
-		moveLeftRight(-1);
-		try{
-			sleep(700);
-		}
-		catch(Exception e){
-			stopMotors();
-		}
-		//If the robot is unable to find the Vuforia it continues to rotate
-		while(!resetCoordinates()&&opModeIsActive()){
-			rotate(-0.1);
-			try{
-				sleep(200);
-			}
-			catch(Exception e){
-				stopMotors();
-			}
-			stopMotors();
-			try{
-				sleep(200);
-			}
-			catch(Exception e){
-				stopMotors();
-			}
-		}
-		stopMotors();
-		telemetry.clearAll();
+		stopMotors();*/
+		deploy();
 
 		robot.startingAngle=45;
 		drive(47, true, 1);
@@ -135,7 +108,7 @@ public class BasicDepot extends AvesAblazeOpmode {
 		robot.marker1.setPosition(1);
 		drive(15,true,1);
 		rotateToAngle(176);
-		drive(65, true, 0.8);
+		drive(68, true, 0.8);
 		stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);

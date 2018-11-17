@@ -41,7 +41,10 @@ public class BasicCrater extends AvesAblazeOpmode {
 		telemetry.update();
 			waitForStart();
 		//Deploys the robot down from when it is at the starting position
-while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
+		deploy();
+
+		while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
+
 		robot.startingAngle=45;
 		drive(23, true, 1);
 		moveUpDown(-1);

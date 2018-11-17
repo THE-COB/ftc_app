@@ -54,8 +54,25 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 			stopMotors();
 		}
 		stopMotors();
+		try{
+			sleep(1000);
+		}
+		catch (Exception e){
+			stopMotors();
+		}
+
+		moveLeftRight(0.75);
+		try{
+			sleep(250);
+		}
+		catch(Exception e)
+		{
+			stopMotors();
+		}
+		stopMotors();
 		lower();
 	}
+
 	//Stop motors
 	public  void stopMotors(){
 		robot.motor0.setPower(0);
@@ -400,13 +417,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 
 	//More lift motors correctly
 	public void lift(){
-		while(robot.lift1.getCurrentPosition()>-3400+robot.startingHeight&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()>-4300+robot.startingHeight&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");
 	}
 	public void lower(){
-		while(robot.lift1.getCurrentPosition()<robot.startingHeight-200&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()<robot.startingHeight-1500&&opModeIsActive()){
 			lift("down");
 		}
 		lift("stop");
