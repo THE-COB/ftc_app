@@ -67,7 +67,7 @@ public class BasicCrater extends AvesAblazeOpmode {
 		sleep(800);
 		robot.marker1.setPosition(1);
 		rotateToAngle(355);
-		drive(58,true,1);
+		drive(62,true,1);
 		stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
