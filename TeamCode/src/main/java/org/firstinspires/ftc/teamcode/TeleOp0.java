@@ -160,7 +160,7 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			//	while (opModeIsActive() && gamepad1.x) ;
 			}
 			else if(gamepad2.b&&!gamepad2.start) {
-				position =startingPosition+0.08;
+				position =startingPosition+0.92;
 				robot.extension.setPosition(position);
 			//	while (opModeIsActive() && gamepad1.b) ;
 			}
