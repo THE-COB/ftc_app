@@ -108,6 +108,9 @@ public class BasicDepot extends AvesAblazeOpmode {
 		robot.marker1.setPosition(1);
 		drive(15,true,1);
 		rotateToAngle(176);
+		robot.marker1.setPosition(0.3);
+		sleep(800);
+		robot.marker1.setPosition(1);
 		drive(68, true, 0.8);
 		stopMotors();
 		while (opModeIsActive()){
