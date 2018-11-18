@@ -82,6 +82,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		robot.motor3.setPower(0);
 		robot.lift1.setPower(0);
 		robot.lift2.setPower(0);
+		robot.arm.setPower(0);
 	}
 	//rotates from power
 	public void rotate(double power){
@@ -418,7 +419,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 
 	//More lift motors correctly
 	public void lift(){
-		while(robot.lift1.getCurrentPosition()>-4300+robot.startingHeight&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()>-3930+robot.startingHeight&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");

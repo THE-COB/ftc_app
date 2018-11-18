@@ -39,38 +39,6 @@ public class TeleOp0 extends AvesAblazeOpmode {
 		waitForStart();
 		robot.tfod.activate();
 		while(opModeIsActive()) {
-            telemetry.update();
-			if (updatedRecognitions != null) {
-				silverMinerals=0;
-				goldMinerals=0;
-				for (Recognition recognition : updatedRecognitions) {
-					if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-						goldMinerals = 1;
-					} else {
-						silverMinerals++;
-					}
-				}
-			}
-			telemetry.addData("gold mineral", goldMinerals);
-			telemetry.addData("silver mineral", silverMinerals);
-            telemetry.addData("height", getLiftHeight());
-            //Display coordinates and trackable
-            if (resetCoordinates()) {
-                telemetry.addData("Target", robot.currentTrackable.getName());
-                // express position (translation) of robot in inches.
-                VectorF translation = robot.lastLocation.getTranslation();
-                //ArrayList translation[x, y, z]
-                telemetry.addData("x", translation.get(0) / AvesAblazeHardwarePushbot.mmPerInch);
-                telemetry.addData("y", translation.get(1) / AvesAblazeHardwarePushbot.mmPerInch);
-
-                // Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
-                Orientation rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Heading", rotation.thirdAngle);
-            }
-            else {
-                telemetry.addData("Target", "none");
-            }
-
             //Move Robot
 			moveY = Range.clip(-gamepad1.left_stick_y, -1, 1);
 			moveX = Range.clip(-gamepad1.left_stick_x, -1, 1);
@@ -126,13 +94,14 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 			//lift robot
 			if(gamepad2.right_bumper){
-				if(robot.lid.getPosition()==0.5)
-					robot.lid.setPosition(0.25);
-				else{
-					robot.lid.setPosition(0.5);
-				}
-				while(gamepad2.right_bumper);
+					robot.lid.setPosition(0.55);
+
 			}
+			else if(gamepad2.left_bumper){
+				robot.lid.setPosition(0.9);
+			}
+
+
 			if(gamepad2.dpad_up){
 				lift("up");
 			}

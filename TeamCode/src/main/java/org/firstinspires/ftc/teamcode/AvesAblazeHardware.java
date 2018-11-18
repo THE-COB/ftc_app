@@ -89,7 +89,7 @@ public class AvesAblazeHardware {
 		marker1=hwMap.get(Servo.class, "marker1");
 		extension=hwMap.get(Servo.class, "extension");
 		lid=hwMap.get(Servo.class, "lid");
-		lid.setPosition(0.5);
+		lid.setPosition(0.85);
 		marker1.setPosition(1);
 
 

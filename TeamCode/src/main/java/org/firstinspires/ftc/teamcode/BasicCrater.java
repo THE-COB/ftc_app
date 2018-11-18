@@ -36,7 +36,7 @@ public class BasicCrater extends AvesAblazeOpmode {
 		telemetry.update();
 		robot.init(hardwareMap);
 		telemetry.clearAll();
-		calibrate();
+
 		telemetry.addData("status", "ready");
 		telemetry.update();
 			waitForStart();
@@ -48,9 +48,9 @@ public class BasicCrater extends AvesAblazeOpmode {
 		catch(Exception e){
 			stopMotors();
 		}
-		stopMotors();
+		robot.arm.setPower(0);
 		deploy();
-
+		calibrate();
 		while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
 
 		robot.startingAngle=45;
