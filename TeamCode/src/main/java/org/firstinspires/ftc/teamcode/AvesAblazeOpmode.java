@@ -419,7 +419,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 
 	//More lift motors correctly
 	public void lift(){
-		while(robot.lift1.getCurrentPosition()>-3930+robot.startingHeight&&opModeIsActive()){
+		while(robot.lift1.getCurrentPosition()>-3965+robot.startingHeight&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");

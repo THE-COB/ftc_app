@@ -54,7 +54,7 @@ public class BasicCrater extends AvesAblazeOpmode {
 		while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
 
 		robot.startingAngle=45;
-		drive(23, true, 1);
+		drive(20, true, 1);
 		moveUpDown(-1);
 		sleep(390);
 		moveLeftRight(-1);
