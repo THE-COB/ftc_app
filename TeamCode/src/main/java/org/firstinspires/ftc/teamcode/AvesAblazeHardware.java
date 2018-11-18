@@ -51,13 +51,11 @@ public class AvesAblazeHardware {
 
 	BNO055IMU imu1;
 	BNO055IMU imu;
-	ColorSensor sensorColor;
-	DistanceSensor sensorDistance;
 	int startingHeight;
 
 	Servo marker1;
 	Servo extension;
-	Servo mineralDoor;
+	Servo lid;
 
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -90,17 +88,14 @@ public class AvesAblazeHardware {
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
 		extension=hwMap.get(Servo.class, "extension");
+		lid=hwMap.get(Servo.class, "lid");
+		lid.setPosition(0.5);
 		marker1.setPosition(1);
 
 
 		//Getting sensors from HardwareMap
 		imu1=hwMap.get(BNO055IMU.class, "imu 1");
 		imu=hwMap.get(BNO055IMU.class, "imu");
-		// get a reference to the color sensor.
-		sensorColor = hwMap.get(ColorSensor.class, "colorRange");
-
-		// get a reference to the distance sensor that shares the same name.
-		sensorDistance = hwMap.get(DistanceSensor.class, "colorRange");
 		/*
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
 		*/
@@ -142,6 +137,7 @@ public class AvesAblazeHardware {
 		lift2 = hwMap.get(DcMotor.class, "lift2");
 		lift2.setDirection(DcMotor.Direction.REVERSE);
 		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 		arm=hwMap.get(DcMotor.class, "arm");
 		startingHeight=lift1.getCurrentPosition();

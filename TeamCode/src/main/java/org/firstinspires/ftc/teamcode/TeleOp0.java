@@ -126,7 +126,12 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 			//lift robot
 			if(gamepad2.right_bumper){
-				//dump minerals
+				if(robot.lid.getPosition()==0.5)
+					robot.lid.setPosition(0.25);
+				else{
+					robot.lid.setPosition(0.5);
+				}
+				while(gamepad2.right_bumper);
 			}
 			if(gamepad2.dpad_up){
 				lift("up");

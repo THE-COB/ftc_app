@@ -41,6 +41,14 @@ public class BasicCrater extends AvesAblazeOpmode {
 		telemetry.update();
 			waitForStart();
 		//Deploys the robot down from when it is at the starting position
+		robot.arm.setPower(1);
+		try{
+			sleep(400);
+		}
+		catch(Exception e){
+			stopMotors();
+		}
+		stopMotors();
 		deploy();
 
 		while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
@@ -54,12 +62,12 @@ public class BasicCrater extends AvesAblazeOpmode {
 
 		rotateToAngle(268);
 		moveLeftRight(1);
-		sleep(220);
+		sleep(250);
 		robot.marker1.setPosition(0.3);
 		sleep(800);
 		robot.marker1.setPosition(1);
 		rotateToAngle(355);
-		drive(55,true,1);
+		drive(58,true,1);
 		stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);

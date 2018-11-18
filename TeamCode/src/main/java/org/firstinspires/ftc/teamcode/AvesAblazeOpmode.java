@@ -55,7 +55,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		}
 		stopMotors();
 		try{
-			sleep(1000);
+			sleep(2000);
 		}
 		catch (Exception e){
 			stopMotors();
@@ -451,16 +451,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode {
 		return robot.lift1.getCurrentPosition();
 	}
 	//Again, super self explanatory
-	public String checkColor() {
-
-		if (robot.sensorColor.blue() / Math.pow(20 - robot.sensorDistance.getDistance(DistanceUnit.INCH), 1) < 1.2) {
-			return "yellow";
-		} else if (robot.sensorDistance.getDistance(DistanceUnit.INCH) < 20) {
-			return "white";
-		} else {
-			return "nothing";
-		}
-	}
 	public void checkMinerals(){
 		if (robot.tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since

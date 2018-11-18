@@ -70,17 +70,7 @@ public class StrafeCorrectionTest extends AvesAblazeOpmode {
 		} else {
 			telemetry.addData("Target", "none");
 		}
-	}
-	public String checkColor() {
-		if(robot.sensorColor.blue()/Math.pow(20-robot.sensorDistance.getDistance(DistanceUnit.INCH),1)<1.2){
-			return "yellow";
-		}
-		else if(robot.sensorDistance.getDistance(DistanceUnit.INCH)<20){
-			return "white";
-		}
-		else{
-			return "nothing";
-		}
+
 
 		/*double[] distances = new double[5];
 		robot.stopMotors();

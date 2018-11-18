@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,8 +15,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@Autonomous(name="CraterDeploy", group="Competition")
-public class CraterDeploy extends AvesAblazeOpmode {
+@Autonomous(name="ArmTest", group="Competition")
+
+public class ArmTest extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 	// Use a Pushbot's hardware
@@ -36,29 +36,20 @@ public class CraterDeploy extends AvesAblazeOpmode {
 		telemetry.update();
 		robot.init(hardwareMap);
 		telemetry.clearAll();
-		calibrate();
+		//calibrate();
 		telemetry.addData("status", "ready");
 		telemetry.update();
-			waitForStart();
-		deploy();
-		/*
-while(!robot.imu1.isGyroCalibrated()&&opModeIsActive());
-		robot.startingAngle=45;
-		drive(23, true, 1);
-		moveUpDown(-1);
-		sleep(390);
-		moveLeftRight(-1);
-		sleep(1700);
+		waitForStart();
+		//Deploys the robot down from when it is at the starting position
+		int armPosition = robot.arm.getCurrentPosition();
+		while (Math.abs(armPosition - robot.arm.getCurrentPosition()) < 50&&opModeIsActive()){
+			telemetry.addData("postion", robot.arm.getCurrentPosition());
+			telemetry.addData("oldPosition", armPosition);
+			telemetry.update();
+			robot.arm.setPower(1);
+		}
 
-		rotateToAngle(268);
-		moveLeftRight(1);
-		sleep(220);
-		robot.marker1.setPosition(0.3);
-		sleep(800);
-		robot.marker1.setPosition(1);
-		rotateToAngle(355);
-		drive(55,true,1);*/
-		stopMotors();
+		robot.arm.setPower(0);
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();
