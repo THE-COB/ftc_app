@@ -31,10 +31,9 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD
  * Created by Rohan Mathur on 11/9/18.
  */
 //My name is Mada Greblep and I approve this message
-public abstract class AvesAblazeOpmode extends LinearOpMode {
-	public AvesAblazeHardware robot= new AvesAblazeHardware();
+public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeRobot {
 	List<Recognition> updatedRecognitions;
-	public String position="none";
+	String position="none";
 	public void deploy(){
 		lift();
 		moveLeftRight(-0.75);
