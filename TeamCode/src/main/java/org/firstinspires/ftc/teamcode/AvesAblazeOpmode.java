@@ -408,11 +408,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
 	public void moveToCoord(int x, int y, int angle){
-		int oldAngle = getAngle();
+		rotateToAngle(Math.tan((getExactY()-y)/(getExactX()-x)));
+		while(x!=getX())
+			moveUpDown(0.2);
 		rotateToAngle(angle);
-		while(getX()!=x && getY()!=y&&opModeIsActive()){
-			moveUpDown(0.25);
-		}
+
 		stopMotors();
 	}
 

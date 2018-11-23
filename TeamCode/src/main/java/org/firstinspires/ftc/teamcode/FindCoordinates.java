@@ -91,6 +91,7 @@ public class FindCoordinates extends LinearOpMode {
 
 
 
+
 		while (opModeIsActive()) {
 			telemetry.update();
 			telemetry.addData("height", robot.getLiftHeight());
