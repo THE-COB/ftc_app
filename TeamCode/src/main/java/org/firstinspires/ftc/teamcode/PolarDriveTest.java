@@ -58,9 +58,9 @@ public class PolarDriveTest extends AvesAblazeOpmode {
 	}
 public void polarDrive(double power, double angle){
 	angle=angle-(Math.PI/4);
-	robot.motor0.setPower(power*Math.cos(angle));
+	robot.motor0.setPower(power*-Math.cos(angle));
 	robot.motor1.setPower(power*Math.sin(angle));
-	robot.motor3.setPower(power*-Math.cos(angle));
+	robot.motor3.setPower(power*Math.cos(angle));
 	robot.motor2.setPower(power*-Math.sin(angle));
 }
 }
