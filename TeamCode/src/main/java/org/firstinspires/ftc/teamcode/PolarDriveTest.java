@@ -29,10 +29,10 @@ public class PolarDriveTest extends AvesAblazeOpmode {
            double angle=Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x)-(Math.PI/4);
            telemetry.addData("angle", angle/Math.PI+"pi");
            telemetry.update();
-			robot.motor0.setPower(c*Math.cos(angle));
-			robot.motor1.setPower(c*Math.sin(angle));
-			robot.motor2.setPower(c*Math.cos(angle));
-			robot.motor3.setPower(c*Math.sin(angle));
+			robot.motor0.setPower(Math.cos(angle));
+			robot.motor1.setPower(Math.sin(angle));
+			robot.motor3.setPower(-Math.cos(angle));
+			robot.motor2.setPower(-Math.sin(angle));
 		}
 
 
