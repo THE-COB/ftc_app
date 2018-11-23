@@ -85,8 +85,10 @@ public class CVTeleop extends AvesAblazeOpmode {
 				// Map rotation firstAngle: Roll; secondAngle: Pitch; thirdAngle: Heading
 				robot.rotation = Orientation.getOrientation(robot.lastLocation, EXTRINSIC, XYZ, DEGREES);
 				telemetry.addData("Heading", robot.rotation.thirdAngle);
+				telemetry.update();
 			} else {
 				telemetry.addData("Target", "none");
+				telemetry.update();
 			}
 
 
