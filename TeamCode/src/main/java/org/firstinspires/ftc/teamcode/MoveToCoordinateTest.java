@@ -40,7 +40,6 @@ public class MoveToCoordinateTest extends AvesAblazeOpmode {
 		telemetry.addData("status", "ready");
 		telemetry.update();
 			waitForStart();
-			moveToCoord(57,-2,60);
 		while (opModeIsActive()){
 			telemetry.addData("color", color);
 			telemetry.update();

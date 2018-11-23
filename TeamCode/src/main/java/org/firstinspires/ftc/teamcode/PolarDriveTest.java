@@ -25,17 +25,42 @@ public class PolarDriveTest extends AvesAblazeOpmode {
 		robot.init(hardwareMap);
 		waitForStart();
 		while(opModeIsActive()) {
-			double c = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-           double angle=Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x)-(Math.PI/4);
-           telemetry.addData("angle", angle/Math.PI+"pi");
-           telemetry.update();
-			robot.motor0.setPower(Math.cos(angle));
-			robot.motor1.setPower(Math.sin(angle));
-			robot.motor3.setPower(-Math.cos(angle));
-			robot.motor2.setPower(-Math.sin(angle));
+			if(gamepad1.dpad_right&&gamepad1.dpad_up){
+				polarDrive(0.5,Math.PI/4);
+			}
+			else if(gamepad1.dpad_right&&gamepad1.dpad_down){
+				polarDrive(0.5,-Math.PI/4);
+			}
+			else if(gamepad1.dpad_left&&gamepad1.dpad_down){
+				polarDrive(0.5,-3*Math.PI/4);
+			}
+			else if(gamepad1.dpad_left&&gamepad1.dpad_up){
+				polarDrive(0.5,3*Math.PI/4);
+			}
+			else if(gamepad1.dpad_right){
+				polarDrive(0.5,0);
+			}
+			else if(gamepad1.dpad_up){
+				polarDrive(0.5,Math.PI/2);
+			}
+			else if(gamepad1.dpad_down){
+				polarDrive(0.5,-Math.PI/2);
+			}
+			else if(gamepad1.dpad_left){
+				polarDrive(0.5,Math.PI);
+			}
+			else{
+				stopMotors();
+			}
 		}
 
 
 	}
-
+public void polarDrive(double power, double angle){
+	angle=angle-(Math.PI/4);
+	robot.motor0.setPower(power*Math.cos(angle));
+	robot.motor1.setPower(power*Math.sin(angle));
+	robot.motor3.setPower(power*-Math.cos(angle));
+	robot.motor2.setPower(power*-Math.sin(angle));
+}
 }
