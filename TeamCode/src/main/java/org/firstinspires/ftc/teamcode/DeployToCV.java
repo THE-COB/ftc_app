@@ -34,6 +34,8 @@ public class DeployToCV extends AvesAblazeOpmode {
 	public String color;
 	public Orientation angles;
 
+
+
 	@Override
 	public void runOpMode() {
 		telemetry.addData("status", "calibrating");
@@ -59,9 +61,16 @@ public class DeployToCV extends AvesAblazeOpmode {
 		robot.arm.setPower(0);
 
 		deploy();
+		polarDrive(0.25,-3);
+		int idkX = 0;
+		int idkY = 0;
+
+		moveToCoord(idkX,idkY,3,0.25);
 
 		checkMinerals();
 
+		telemetry.addData("CorrectPosition",position);
+		telemetry.update();
 
 		/*robot.startingAngle=45;
 		drive(47, true, 1);
