@@ -61,7 +61,7 @@ public class DeployToCV extends AvesAblazeOpmode {
 		robot.arm.setPower(0);
 
 		deploy();
-		polarDrive(0.25,-3);
+		polarDrive(0.5,2.7);
 
 		moveToCoord(60,-3,10,0.25);
 

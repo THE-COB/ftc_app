@@ -35,7 +35,7 @@ public class PolarDriveTest extends AvesAblazeOpmode {
 				polarDrive(0.5,-3*Math.PI/4);
 			}
 			else if(gamepad1.dpad_left&&gamepad1.dpad_up){
-				polarDrive(0.5,3*Math.PI/4);
+				polarDrive(0.5,3);
 			}
 			else if(gamepad1.dpad_right){
 				polarDrive(0.5,0);
