@@ -55,7 +55,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 		stopMotors();
 		try{
-			sleep(2000);
+			sleep(1000);
 		}
 		catch (Exception e){
 			stopMotors();

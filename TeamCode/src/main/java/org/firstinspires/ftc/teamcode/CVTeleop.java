@@ -70,6 +70,7 @@ public class CVTeleop extends AvesAblazeOpmode {
 					}
 					telemetry.update();
 				}
+
 			}
 			telemetry.addData("height", getLiftHeight());
 			//Display coordinates and trackable
