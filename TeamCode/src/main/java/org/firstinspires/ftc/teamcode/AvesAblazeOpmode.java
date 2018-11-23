@@ -174,11 +174,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 
 	public void polarDrive(double power, double angle){
-		telemetry.addData("message","Enjoy the drive");
-		telemetry.update();
+		angle=angle-(Math.PI/4);
+		robot.motor0.setPower(power*-Math.cos(angle));
+		robot.motor1.setPower(power*Math.sin(angle));
+		robot.motor3.setPower(power*Math.cos(angle));
+		robot.motor2.setPower(power*-Math.sin(angle));
 	}
 
-	//Moves forward-back based off inches, if it's moving forward and power(magnitude)
 	public void drive(double inches, boolean forward, double power){
 		double val = 85;
 		if(power>0.5) val = 65;
