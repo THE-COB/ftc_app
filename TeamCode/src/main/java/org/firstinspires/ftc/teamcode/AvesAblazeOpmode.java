@@ -31,7 +31,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD
  * Created by Rohan Mathur on 11/9/18.
  */
 //My name is Mada Greblep and I approve this message
-public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeRobot {
+public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeOpmodeSimplified {
 	List<Recognition> updatedRecognitions;
 	String position="none";
 	public void deploy(){
@@ -144,7 +144,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				robot.motor2.setPower(power-correction);
 				robot.motor3.setPower(power+correction);
 				if(Math.abs(getAngle()-angle)>10) {
-					rotateTo(angle);
+					rotateToAngle(angle);
 				}
 			}
 		}
@@ -167,7 +167,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			robot.motor3.setPower(-power);
 			currPos = (Math.abs(robot.motor0.getCurrentPosition())+Math.abs(robot.motor1.getCurrentPosition())+Math.abs(robot.motor2.getCurrentPosition())+Math.abs(robot.motor3.getCurrentPosition()))/4;
 			if(Math.abs(getAngle()-angle)>360) {
-				rotateTo(angle);
+				rotateToAngle(angle);
 			}
 		}
 		stopMotors();
@@ -374,9 +374,9 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		stopMotors();
 
 	}
-	public void rotateTo(int newAngle) {
-		int diff = newAngle - getAngle();
-		int diff1=Math.abs(diff-360);
+	public void rotateToAngle(double newAngle) {
+		double diff = newAngle - getAngle();
+		double diff1=Math.abs(diff-360);
 		if (newAngle == getAngle()) {
 			stopMotors();
 			return;

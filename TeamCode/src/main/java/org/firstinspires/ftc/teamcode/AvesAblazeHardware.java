@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -57,6 +58,7 @@ public class AvesAblazeHardware {
 	Servo extension;
 	Servo lid;
 
+	RevBlinkinLedDriver lights;
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
 	public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)

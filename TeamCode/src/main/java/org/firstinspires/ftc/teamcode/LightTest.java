@@ -1,25 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
 @TeleOp(name="Teleop", group="Competition")
 
-public class TeleOp0 extends AvesAblazeOpmode {
+public class LightTest extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 	private ElapsedTime runtime = new ElapsedTime();
@@ -30,8 +21,11 @@ public class TeleOp0 extends AvesAblazeOpmode {
 	double startingPosition;
 	int goldMinerals;
 	int silverMinerals;
+	RevBlinkinLedDriver.BlinkinPattern pattern;
 	@Override
 	public void runOpMode() {
+		pattern.next();
+		robot.lights.setPattern(pattern.next());
 		robot.init(hardwareMap);
 		position=robot.extension.getPosition();
 		startingPosition=robot.extension.getPosition();

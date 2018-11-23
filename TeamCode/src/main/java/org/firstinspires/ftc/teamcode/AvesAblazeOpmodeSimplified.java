@@ -26,10 +26,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 
-/**
- * Created by Rohan Mathur on 9/15/18.
- */
-public interface AvesAblazeRobot {
+
+public interface AvesAblazeOpmodeSimplified {
+	/**
+	 * The robot object required of every OpMode
+	 */
 	public AvesAblazeHardware robot= new AvesAblazeHardware();
 
 	/**
@@ -175,32 +176,55 @@ public interface AvesAblazeRobot {
 	 */
 	public double getExactAngle();
 
-	//Runs lift motors
+	/**
+	 * Runs both lift motors in a direction
+	 * "up", "down", and "stop" are the only Strings that change the motor power
+	 *
+	 * @param direction the String of the direction that you want to lift
+	 */
 	public void lift(String direction);
 
-	//Rotates to certain angle
+
+	/**
+	 * Rotates to an integer angle
+	 * @param newAngle the new Angle that the robot should rotate to
+	 */
 	public void rotateToAngle(int newAngle);
 
-	public void rotateTo(int newAngle);
+	/**
+	 * Rotates to an exact angle
+	 * @param newAngle the new Angle that the robot should rotate to
+	 */
+	public void rotateToAngle(double newAngle);
 
-	//Moves to vuforia coordinate from either vuforia or rev imu angle
+
+	/**
+	 * Moves to the coordinate and rotates to the angle specified
+	 * Does not move if Vuforia is not found
+	 *
+	 * @param x
+	 * @param y
+	 * @param angle
+	 */
 	public void moveToCoord(int x, int y, int angle);
 
-	//More lift motors correctly
+	/**
+	 * Raises Lift
+	 */
 	public void lift();
 
+	/**
+	 * Lowers lift
+	 */
 	public void lower();
 
-	public void liftAcc(int tics);
-
-	//Resets encoders
-	public void resetEncodes();
-
-	//Really self explanatory
+	/**
+	 * @return encoder value of the lift motors
+	 */
 	public int getLiftHeight();
 
-	//Again, super self explanatory
+	/**
+	 * Checks to see where the gold mineral is located and updates #position accordingly
+	 */
 	public void checkMinerals();
-
-
 }
