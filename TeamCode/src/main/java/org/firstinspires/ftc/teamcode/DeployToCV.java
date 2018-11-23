@@ -62,8 +62,15 @@ public class DeployToCV extends AvesAblazeOpmode {
 
 		deploy();
 		polarDrive(0.5,2.7);
-
-		moveToCoord(60,-3,10,0.25);
+		try {
+			sleep(2200);
+		} catch (Exception e) {
+			stopMotors();
+		}
+		stopMotors();
+		while(!resetCoordinates())
+			polarDrive(0.2, -2.7);
+		moveToCoord(-60,-3,10,0.25);
 
 		checkMinerals();
 
