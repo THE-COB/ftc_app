@@ -479,7 +479,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			// the last time that call was made.
 			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
-				telemetry.addData("# Object Detected", updatedRecognitions.size());
 				if (updatedRecognitions.size() == 3) {
 					int goldMineralX = -1;
 					int silverMineral1X = -1;
@@ -503,7 +502,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 						}
 					}
 				}
-				telemetry.update();
 			}
 		}
 	}
