@@ -40,9 +40,10 @@ public class CoordMoveTest extends AvesAblazeOpmode {
 		telemetry.update();
 		robot.init(hardwareMap);
 		telemetry.clearAll();
-		telemetry.addData("TheoreticalAngle", getAngle());
+		waitForStart();
 		resetCoordinates();
-		moveToCoord(getX()+5,getY()+5,45,0.25);
+		calibrate();
+		moveToCoord(getX()+5,getY()+5,45,0.1);
 		stopMotors();
 
 

@@ -236,6 +236,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		imuParameters.loggingTag = "IMU";
 		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 		robot.imu1.initialize(imuParameters);
+		robot.imu.initialize(imuParameters);
 	}
 	//Returns x coordinate from vuforia
 	public int getX(){
@@ -261,6 +262,16 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	public int getAngle(){
 		if(!resetCoordinates()&&robot.imu1.isGyroCalibrated()){
 			robot.angles=robot.imu1.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			double currentAngle=robot.angles.firstAngle;
+			int finalAngle= robot.startingAngle+(int)Math.round(currentAngle);
+			if(finalAngle<0){
+				return 360+finalAngle;
+			}
+			return finalAngle;
+
+		}
+		else if(!resetCoordinates()&&robot.imu.isGyroCalibrated()){
+			robot.angles=robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
 			double currentAngle=robot.angles.firstAngle;
 			int finalAngle= robot.startingAngle+(int)Math.round(currentAngle);
 			if(finalAngle<0){
@@ -421,9 +432,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		int yDist = y-oldY;
 
 		double moveTheta = Math.atan(yDist-xDist);
-
-		while(getX()!=x || getY()!=y){
-			polarDrive(power,moveTheta);
+		polarDrive(power,moveTheta);
+		while((Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1)&&opModeIsActive()){
+			telemetry.addData("theoretical angle",getAngle());
+			telemetry.addData("(x,y)","("+getX()+","+getY()+")");
+			telemetry.addData("(new x,new y","("+x+","+y+")" );
+			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);
+			telemetry.update();
 		}
 		stopMotors();
 		rotateToAngle(angle);
