@@ -173,6 +173,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		stopMotors();
 	}
 
+	public void polarDrive(double power, double angle){
+		telemetry.addData("message","Enjoy the drive");
+		telemetry.update();
+	}
+
 	//Moves forward-back based off inches, if it's moving forward and power(magnitude)
 	public void drive(double inches, boolean forward, double power){
 		double val = 85;
@@ -407,12 +412,19 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 	}
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
-	public void moveToCoord(int x, int y, int angle){
-		rotateToAngle(Math.tan((getExactY()-y)/(getExactX()-x)));
-		while(x!=getX())
-			moveUpDown(0.2);
-		rotateToAngle(angle);
+	public void moveToCoord(int x, int y, int angle, double power){
+		int oldX = getX();
+		int oldY = getY();
+		int xDist = x-oldX;
+		int yDist = y-oldY;
 
+		double moveTheta = Math.atan(yDist-xDist);
+
+		while(getX()!=x || getY()!=y){
+			polarDrive(power,moveTheta);
+		}
+		stopMotors();
+		rotateToAngle(angle);
 		stopMotors();
 	}
 
