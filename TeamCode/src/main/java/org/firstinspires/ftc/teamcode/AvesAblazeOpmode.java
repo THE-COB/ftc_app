@@ -412,7 +412,27 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
 	public void moveToCoord(int x, int y, int angle, double power){
 		resetCoordinates();
-		double moveAngle=Math.atan((getExactY()-y)/(getExactX()-x))-(Math.PI/2)-getAngle();
+		double moveAngle;
+		double thetaField;
+		double referenceTheta;
+		try {
+			referenceTheta = Math.atan(Math.abs(getY() - y) / (double)Math.abs(getX() - x));
+		}
+		catch(ArithmeticException e){
+			referenceTheta=Math.PI/2;
+			thetaField=0;
+		}
+			thetaField = referenceTheta;
+			if (getX() > x) thetaField = referenceTheta + (Math.PI / 2);
+			if (y < getY()) thetaField = -(Math.PI - referenceTheta);
+		//calculate what angle in reference to the robot that the robot should move
+		moveAngle=thetaField+(Math.PI/2)-Math.toRadians(getAngle());
+		if(Math.abs(moveAngle)>Math.PI&&moveAngle<0){
+			moveAngle=moveAngle+(2*Math.PI);
+		}
+		if(Math.abs(moveAngle)>Math.PI&&moveAngle>0){
+			moveAngle=moveAngle-(2*Math.PI);
+		}
 		polarDrive(0.25,moveAngle);
 		while((Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1)&&opModeIsActive()){
 			if(gamepad1.a)
@@ -420,8 +440,10 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			else{
 				polarDrive(0.25,moveAngle);
 			}
+			telemetry.addData("reference angle", Math.toDegrees(referenceTheta));
 			telemetry.addData("goal Angle", Math.toDegrees(moveAngle));
 			telemetry.addData("current angle",getAngle());
+			telemetry.addData("theta field",Math.toDegrees(thetaField));
 			telemetry.addData("(x,y)","("+getX()+","+getY()+")");
 			telemetry.addData("(new x,new y","("+x+","+y+")" );
 			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);

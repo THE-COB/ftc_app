@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Teleop", group="Competition")
+@TeleOp(name="LightsTeleop", group="Competition")
 
 public class LightTest extends AvesAblazeOpmode {
 

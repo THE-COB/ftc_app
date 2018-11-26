@@ -40,11 +40,17 @@ public class CoordMoveTest extends AvesAblazeOpmode {
 		telemetry.update();
 		robot.init(hardwareMap);
 		telemetry.clearAll();
-		robot.startingAngle=135;
-		waitForStart();
-		resetCoordinates();
+		robot.startingAngle=getAngle();
 		calibrate();
-		moveToCoord(getX()+5,getY()+5,45,0.1);
+		waitForStart();
+		while(!resetCoordinates()||!robot.imu1.isGyroCalibrated()&&!gamepad1.a);
+		moveToCoord(getX()+5,getY()+7,getAngle(),0.1);
+		sleep(1000);
+		moveToCoord(getX()-5,getY()-5,getAngle(),0.1);
+		sleep(1000);
+		moveToCoord(getX()+5,getY(),getAngle(),0.1);
+		sleep(1000);
+		moveToCoord(getX(),getY()-5,getAngle(),0.1);
 		stopMotors();
 
 
