@@ -19,7 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="DeployToCV", group="Competition")
+@Autonomous(name="DeployToCV", group="Competition")
 
 public class DeployToCV extends AvesAblazeOpmode {
 
@@ -42,7 +42,7 @@ public class DeployToCV extends AvesAblazeOpmode {
 		telemetry.update();
 		robot.init(hardwareMap);
 		telemetry.clearAll();
-
+		robot.startingAngle=135;
 		calibrate();
 		while(robot.imu1.isGyroCalibrated()&&opModeIsActive()){
 
@@ -58,21 +58,28 @@ public class DeployToCV extends AvesAblazeOpmode {
 		catch(Exception e){
 			stopMotors();
 		}
+		robot.arm.setPower(-1);
 		robot.arm.setPower(0);
 
 		deploy();
-		polarDrive(0.5,2.7);
+		moveUpDown(1);
+		sleep(200);
+		polarDrive(0.5,2.8);
 		try {
-			sleep(2200);
+			sleep(2050);
 		} catch (Exception e) {
 			stopMotors();
 		}
+		while (!resetCoordinates()&&opModeIsActive()){
+			rotate(0.1);
+		}
 		stopMotors();
-		while(!resetCoordinates())
-			polarDrive(0.2, -2.7);
-		moveToCoord(-60,-3,10,0.25);
-
-		checkMinerals();
+		calibrate();
+		while(!robot.imu.isGyroCalibrated()&&!robot.imu1.isGyroCalibrated()&&opModeIsActive());
+		robot.startingAngle=getAngle();
+		moveToCoord(-60,3,10,0.25);
+		while(position.equals("none"))
+			checkMinerals();
 
 		telemetry.addData("CorrectPosition",position);
 		telemetry.update();

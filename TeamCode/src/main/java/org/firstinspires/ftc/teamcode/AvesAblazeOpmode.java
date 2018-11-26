@@ -411,23 +411,27 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
 	public void moveToCoord(int x, int y, int angle, double power){
-		int oldX = getX();
-		int oldY = getY();
-		int xDist = x-oldX;
-		int yDist = y-oldY;
-
-		double moveTheta = Math.atan(yDist-xDist);
-		polarDrive(power,moveTheta);
+		resetCoordinates();
+		double moveAngle=Math.atan((getExactY()-y)/(getExactX()-x))-(Math.PI/2)-getAngle();
+		polarDrive(0.25,moveAngle);
 		while((Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1)&&opModeIsActive()){
-			telemetry.addData("theoretical angle",getAngle());
+			if(gamepad1.a)
+				stopMotors();
+			else{
+				polarDrive(0.25,moveAngle);
+			}
+			telemetry.addData("goal Angle", Math.toDegrees(moveAngle));
+			telemetry.addData("current angle",getAngle());
 			telemetry.addData("(x,y)","("+getX()+","+getY()+")");
 			telemetry.addData("(new x,new y","("+x+","+y+")" );
 			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);
 			telemetry.update();
 		}
-		stopMotors();
-		rotateToAngle(angle);
-		stopMotors();
+
+			stopMotors();
+			rotateToAngle(angle);
+			stopMotors();
+
 	}
 
 	//More lift motors correctly
@@ -472,6 +476,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			// the last time that call was made.
 			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
+				telemetry.addData("minerals", updatedRecognitions.size());
+				telemetry.update();
 				if (updatedRecognitions.size() == 3) {
 					int goldMineralX = -1;
 					int silverMineral1X = -1;
