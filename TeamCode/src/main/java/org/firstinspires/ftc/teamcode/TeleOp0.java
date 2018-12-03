@@ -30,6 +30,9 @@ public class TeleOp0 extends AvesAblazeOpmode {
 	double startingPosition;
 	int goldMinerals;
 	int silverMinerals;
+	boolean allDirDrive = false;
+
+
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
@@ -48,35 +51,42 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 
 			 */
-			if ((Math.abs(moveY) > 0.25)) {
-				moveUpDown(moveY);
+			if(!allDirDrive) {
+				if ((Math.abs(moveY) > 0.25)) {
+					moveUpDown(moveY);
 
-			}
-			else if (Math.abs(moveX) > 0.25)
-				moveLeftRight(-moveX);
-			else if (Math.abs(rotate) > 0.25) {
-				rotate(-rotate);
-			}
-			else if (gamepad1.left_bumper){
-				rotate(0.1);
-			}
-			else if (gamepad1.right_bumper){
-				rotate(-0.1);
-			}
-			else if(gamepad1.dpad_up){
-				moveUpDown(0.3);
-			}
-			else if(gamepad1.dpad_down){
-				moveUpDown(-0.3);
-			}
-			else if(gamepad1.dpad_left){
-				moveLeftRight(-0.3);
-			}
-			else if(gamepad1.dpad_right){
-				moveLeftRight(0.3);
+				} else if (Math.abs(moveX) > 0.25)
+					moveLeftRight(-moveX);
+				else if (Math.abs(rotate) > 0.25) {
+					rotate(-rotate);
+				} else if (gamepad1.left_bumper) {
+					rotate(0.1);
+				} else if (gamepad1.right_bumper) {
+					rotate(-0.1);
+				} else if (gamepad1.dpad_up) {
+					moveUpDown(0.3);
+				} else if (gamepad1.dpad_down) {
+					moveUpDown(-0.3);
+				} else if (gamepad1.dpad_left) {
+					moveLeftRight(-0.3);
+				} else if (gamepad1.dpad_right) {
+					moveLeftRight(0.3);
+				} else {
+					stopMotors();
+				}
 			}
 			else{
-				stopMotors();
+				if(Math.abs(moveX)>0.25 || Math.abs(moveY)>0.25) {
+					if(moveX == 0){
+						moveUpDown(moveY);
+					}
+					else if(moveY == 0){
+						moveLeftRight(moveX);
+					}
+					else {
+						polarDrive(Math.abs(Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2))), Math.atan(moveY / moveX));
+					}
+				}
 			}
 
 			//Move team marker mechanism
@@ -91,7 +101,6 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				//robot.marker.setPower(0.6);
 			}
 
-			//lift robot
 			if(gamepad2.right_bumper){
 					robot.lid.setPosition(0.55);
 
@@ -150,6 +159,9 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			else
 				robot.arm.setPower(0);
 
+			if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper && gamepad2.back && gamepad2.start && gamepad2.left_bumper && gamepad2.right_bumper){
+				allDirDrive = true;
+			}
 		}
 
 

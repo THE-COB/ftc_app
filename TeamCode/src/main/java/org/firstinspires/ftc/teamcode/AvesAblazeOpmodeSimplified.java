@@ -99,8 +99,8 @@ public interface AvesAblazeOpmodeSimplified {
 
 	/**
 	 * Sets the robot to move in any direction based off the angle and magnitude of the gamepad joystick
-	 * @param power the power the robot should move at
-	 * @param angle the angle the robot should move at
+	 * @param power the power the robot should move at (always positive)
+	 * @param angle the angle the robot should move at (-pi,pi)
 	 */
 	public void polarDrive(double power, double angle);
 
