@@ -314,12 +314,12 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	//Runs lift motors
 	public void lift(String direction){
 		if(direction.equals("up")){
-			robot.lift1.setPower(-1);
-			robot.lift2.setPower(-1);
+			robot.lift1.setPower(1);	//updated 12/5/2018
+			robot.lift2.setPower(1);
 		}
 		else if(direction.equals("down")){
-			robot.lift1.setPower(1);
-			robot.lift2.setPower(1);
+			robot.lift1.setPower(-1);
+			robot.lift2.setPower(-1);
 		}
 		else if(direction.equals("stop")){
 			robot.lift1.setPower(0);
