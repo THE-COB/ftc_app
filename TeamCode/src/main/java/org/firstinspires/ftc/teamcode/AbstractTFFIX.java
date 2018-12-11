@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -45,13 +46,17 @@ import org.athenian.ftc.ValueWriter;
  * Created by Rohan Mathur on 11/9/18.
  */
 //My name is Mada Greblep and I approve this message
-public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeOpmodeSimplified {
+public abstract class AbstractTFFIX extends LinearOpMode implements opmodeInterfaceTFFIX {
 	List<Recognition> updatedRecognitions;
 	String position="none";
-//	RobotValues fireVals;
+	//	RobotValues fireVals;
+
+	static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
+	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+	TFObjectDetector tfod;
 	public void extend(){
 		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<1600)
-		robot.extension.setPower(0.5);
+			robot.extension.setPower(0.5);
 	}
 	public void retract(){
 		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<100)
@@ -208,7 +213,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 	}
 	public boolean resetCoordinates(){
-		updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+		updatedRecognitions = tfod.getUpdatedRecognitions();
 		robot.targetsRoverRuckus.activate();
 		robot.targetVisible=false;
 
@@ -250,7 +255,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	public double getExactX(){
 		if(!resetCoordinates()) return 10000;
-			return (double)robot.translation.get(0) / AvesAblazeHardware.mmPerInch;
+		return (double)robot.translation.get(0) / AvesAblazeHardware.mmPerInch;
 
 	}
 	//Returns y coordinate from vuforia
@@ -442,7 +447,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		double referenceTheta;
 		//(-62,-3)
 		referenceTheta = Math.atan2(y-getY(),getX() - x);
-			thetaField = referenceTheta;
+		thetaField = referenceTheta;
 		//calculate what angle in reference to the robot that the robot should move
 		moveAngle=thetaField+(Math.PI/2)-Math.toRadians(getAngle());
 		if(Math.abs(moveAngle)>Math.PI&&moveAngle<0){
@@ -471,11 +476,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);
 			telemetry.update();
 		}
-if(!resetCoordinates())
-	throw new IOException("Vuforia not found");
-			stopMotors();
-			rotateToAngle(angle);
-			stopMotors();
+		if(!resetCoordinates())
+			throw new IOException("Vuforia not found");
+		stopMotors();
+		rotateToAngle(angle);
+		stopMotors();
 
 	}
 
@@ -516,10 +521,10 @@ if(!resetCoordinates())
 	}
 	//Again, super self explanatory
 	public void check2Minerals(){
-		if (robot.tfod != null) {
+		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 
 				float goldMineral;
@@ -530,8 +535,8 @@ if(!resetCoordinates())
 				}
 				else if (updatedRecognitions.size() >= 2) {
 					if(updatedRecognitions.get(0).getLabel().equals(LABEL_GOLD_MINERAL)) {
-						 goldMineral = updatedRecognitions.get(0).getLeft();
-						 silverMineral = updatedRecognitions.get(1).getLeft();
+						goldMineral = updatedRecognitions.get(0).getLeft();
+						silverMineral = updatedRecognitions.get(1).getLeft();
 					}
 					else if(updatedRecognitions.get(1).getLabel().equals(LABEL_GOLD_MINERAL)){
 						goldMineral = updatedRecognitions.get(1).getLeft();
@@ -565,10 +570,10 @@ if(!resetCoordinates())
 	}
 
 	public void checkMinerals(){
-		if (robot.tfod != null) {
+		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 				telemetry.addData("minerals", updatedRecognitions.size());
 				telemetry.update();
