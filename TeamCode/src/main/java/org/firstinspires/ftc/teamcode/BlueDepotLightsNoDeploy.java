@@ -120,7 +120,7 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 			moveUpDown(-1);
 			sleep(250);
 			moveLeftRight(-1);
-			sleep(250);
+			sleep(300);
 			moveUpDown(-1);
 			sleep(2250);
 			stopMotors();
