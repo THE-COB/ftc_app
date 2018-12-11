@@ -22,8 +22,9 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 	public void runOpMode() {
 		robot.init(hardwareMap);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+		initVuforia();
 
-		robot.tfod.activate();
+		tfod.activate();
 		waitForStart();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);

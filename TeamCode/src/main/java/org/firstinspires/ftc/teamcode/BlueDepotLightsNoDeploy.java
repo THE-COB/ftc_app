@@ -21,8 +21,9 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 	public void runOpMode() {
 		robot.init(hardwareMap);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+		initVuforia();
 
-		robot.tfod.activate();
+		tfod.activate();
 		waitForStart();
 		ElapsedTime scanTime = new ElapsedTime();
 		while(opModeIsActive()&&position.equals("nothing")&&scanTime.seconds()<3||(!robot.imu.isGyroCalibrated()&&!robot.imu1.isGyroCalibrated())) {
