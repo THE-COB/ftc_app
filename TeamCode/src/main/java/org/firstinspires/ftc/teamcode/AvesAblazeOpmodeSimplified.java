@@ -244,4 +244,14 @@ public interface AvesAblazeOpmodeSimplified {
 	 * Checks to see where the gold mineral is located and updates #position accordingly
 	 */
 	public void checkMinerals();
+
+	/**
+	 * Initializes Vuforia for use and calls the TensorFlow setup
+	 */
+	public void initVuforia();
+
+	/**
+	 * Sets up TensorFlow
+	 */
+	public void initTfod();
 }

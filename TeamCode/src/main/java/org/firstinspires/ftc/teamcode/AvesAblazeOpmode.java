@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -22,15 +23,19 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
+import static org.firstinspires.ftc.teamcode.TF_FIX_AVESABLAZEHARDWARE.CAMERA_CHOICE;
 
 import com.firebase.client.Firebase;
 import com.qualcomm.robotcore.robot.Robot;
@@ -48,10 +53,14 @@ import org.athenian.ftc.ValueWriter;
 public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeOpmodeSimplified {
 	List<Recognition> updatedRecognitions;
 	String position="none";
-//	RobotValues fireVals;
+	//	RobotValues fireVals;
+
+	static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
+	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+	TFObjectDetector tfod;
 	public void extend(){
 		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<1600)
-		robot.extension.setPower(0.5);
+			robot.extension.setPower(0.5);
 	}
 	public void retract(){
 		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<100)
@@ -208,7 +217,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 	}
 	public boolean resetCoordinates(){
-		updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+		updatedRecognitions = tfod.getUpdatedRecognitions();
 		robot.targetsRoverRuckus.activate();
 		robot.targetVisible=false;
 
@@ -250,7 +259,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	public double getExactX(){
 		if(!resetCoordinates()) return 10000;
-			return (double)robot.translation.get(0) / AvesAblazeHardware.mmPerInch;
+		return (double)robot.translation.get(0) / AvesAblazeHardware.mmPerInch;
 
 	}
 	//Returns y coordinate from vuforia
@@ -442,7 +451,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		double referenceTheta;
 		//(-62,-3)
 		referenceTheta = Math.atan2(y-getY(),getX() - x);
-			thetaField = referenceTheta;
+		thetaField = referenceTheta;
 		//calculate what angle in reference to the robot that the robot should move
 		moveAngle=thetaField+(Math.PI/2)-Math.toRadians(getAngle());
 		if(Math.abs(moveAngle)>Math.PI&&moveAngle<0){
@@ -471,11 +480,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);
 			telemetry.update();
 		}
-if(!resetCoordinates())
-	throw new IOException("Vuforia not found");
-			stopMotors();
-			rotateToAngle(angle);
-			stopMotors();
+		if(!resetCoordinates())
+			throw new IOException("Vuforia not found");
+		stopMotors();
+		rotateToAngle(angle);
+		stopMotors();
 
 	}
 
@@ -516,10 +525,10 @@ if(!resetCoordinates())
 	}
 	//Again, super self explanatory
 	public void check2Minerals(){
-		if (robot.tfod != null) {
+		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 
 				float goldMineral;
@@ -530,8 +539,8 @@ if(!resetCoordinates())
 				}
 				else if (updatedRecognitions.size() >= 2) {
 					if(updatedRecognitions.get(0).getLabel().equals(LABEL_GOLD_MINERAL)) {
-						 goldMineral = updatedRecognitions.get(0).getLeft();
-						 silverMineral = updatedRecognitions.get(1).getLeft();
+						goldMineral = updatedRecognitions.get(0).getLeft();
+						silverMineral = updatedRecognitions.get(1).getLeft();
 					}
 					else if(updatedRecognitions.get(1).getLabel().equals(LABEL_GOLD_MINERAL)){
 						goldMineral = updatedRecognitions.get(1).getLeft();
@@ -565,10 +574,10 @@ if(!resetCoordinates())
 	}
 
 	public void checkMinerals(){
-		if (robot.tfod != null) {
+		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 				telemetry.addData("minerals", updatedRecognitions.size());
 				telemetry.update();
@@ -614,6 +623,143 @@ if(!resetCoordinates())
 
 	public void rememberAngle(){
 
+	}
+	public void initVuforia(){
+		robot.parameters.vuforiaLicenseKey = VUFORIA_KEY ;
+		robot.parameters.cameraDirection   = CAMERA_CHOICE;
+
+		//  Instantiate the Vuforia engine
+		vuforia = ClassFactory.getInstance().createVuforia(robot.parameters);
+
+		// Load the data sets that for the trackable objects. These particular data
+		// sets are stored in the 'assets' part of our application.
+		robot.targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+		VuforiaTrackable blueRover = robot.targetsRoverRuckus.get(0);
+		blueRover.setName("Blue-Rover");
+		VuforiaTrackable redFootprint = robot.targetsRoverRuckus.get(1);
+		redFootprint.setName("Red-Footprint");
+		VuforiaTrackable frontCraters = robot.targetsRoverRuckus.get(2);
+		frontCraters.setName("Front-Craters");
+		VuforiaTrackable backSpace = robot.targetsRoverRuckus.get(3);
+		backSpace.setName("Back-Space");
+
+		// For convenience, gather together all the trackable objects in one easily-iterable collection */
+		robot.allTrackables = new ArrayList<VuforiaTrackable>();
+		robot.allTrackables.addAll(robot.targetsRoverRuckus);
+
+		/**
+		 * In order for localization to work, we need to tell the system where each target is on the field, and
+		 * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
+		 * Transformation matrices are a central, important concept in the math here involved in localization.
+		 * See <a href="https://en.wikipedia.org/wiki/Transformation_matrix">Transformation Matrix</a>
+		 * for detailed information. Commonly, you'll encounter transformation matrices as instances
+		 * of the {@link OpenGLMatrix} class.
+		 *
+		 * If you are standing in the Red Alliance Station looking towards the center of the field,
+		 *     - The X axis runs from your left to the right. (positive from the center to the right)
+		 *     - The Y axis runs from the Red Alliance Station towards the other side of the field
+		 *       where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+		 *     - The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
+		 *
+		 * This Rover Ruckus sample places a specific target in the middle of each perimeter wall.
+		 *
+		 * Before being transformed, each target image is conceptually located at the origin of the field's
+		 *  coordinate system (the center of the field), facing up.
+		 */
+
+		/**
+		 * To place the BlueRover target in the middle of the blue perimeter wall:
+		 * - First we rotate it 90 around the field's X axis to flip it upright.
+		 * - Then, we translate it along the Y axis to the blue perimeter wall.
+		 */
+		OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+				.translation(0, robot.mmFTCFieldWidth, robot.mmTargetHeight)
+				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+		blueRover.setLocation(blueRoverLocationOnField);
+
+		/**
+		 * To place the RedFootprint target in the middle of the red perimeter wall:
+		 * - First we rotate it 90 around the field's X axis to flip it upright.
+		 * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
+		 *   and facing inwards to the center of the field.
+		 * - Then, we translate it along the negative Y axis to the red perimeter wall.
+		 */
+		OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
+				.translation(0, -robot.mmFTCFieldWidth, robot.mmTargetHeight)
+				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+		redFootprint.setLocation(redFootprintLocationOnField);
+
+		/**
+		 * To place the FrontCraters target in the middle of the front perimeter wall:
+		 * - First we rotate it 90 around the field's X axis to flip it upright.
+		 * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
+		 *   and facing inwards to the center of the field.
+		 * - Then, we translate it along the negative X axis to the front perimeter wall.
+		 */
+		OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
+				.translation(-robot.mmFTCFieldWidth, 0, robot.mmTargetHeight)
+				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+		frontCraters.setLocation(frontCratersLocationOnField);
+
+		/**
+		 * To place the BackSpace target in the middle of the back perimeter wall:
+		 * - First we rotate it 90 around the field's X axis to flip it upright.
+		 * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
+		 *   and facing inwards to the center of the field.
+		 * - Then, we translate it along the X axis to the back perimeter wall.
+		 */
+		OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
+				.translation(robot.mmFTCFieldWidth, 0, robot.mmTargetHeight)
+				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
+		backSpace.setLocation(backSpaceLocationOnField);
+
+		/**
+		 * Create a transformation matrix describing where the phone is on the robot.
+		 *
+		 * The coordinate frame for the robot looks the same as the field.
+		 * The robot's "forward" direction is facing out along X axis, with the LEFT side facing out along the Y axis.
+		 * Z is UP on the robot.  This equates to a bearing angle of Zero degrees.
+		 *
+		 * The phone starts out lying flat, with the screen facing Up and with the physical top of the phone
+		 * pointing to the LEFT side of the Robot.  It's very important when you test this code that the top of the
+		 * camera is pointing to the left side of the  robot.  The rotation angles don't work if you flip the phone.
+		 *
+		 * If using the rear (High Res) camera:
+		 * We need to rotate the camera arouBACKnd it's long axis to bring the rear camera forward.
+		 * This requires a negative 90 degree rotation on the Y axis
+		 *
+		 * If using the Front (Low Res) camera
+		 * We need to rotate the camera around it's long axis to bring the FRONT camera forward.
+		 * This requires a Positive 90 degree rotation on the Y axis
+		 *
+		 * Next, translate the camera lens to where it is on the robot.
+		 * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
+		 */
+
+		final int CAMERA_FORWARD_DISPLACEMENT  = 0;   // eg: Camera is 110 mm in front of robot center
+		final int CAMERA_VERTICAL_DISPLACEMENT = 0;   // eg: Camera is 200 mm above ground
+		final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+
+		OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
+				.translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+				.multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
+						CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
+
+		/**  Let all the trackable listeners know where the phone is.  */
+		for (VuforiaTrackable trackable : robot.allTrackables)
+		{
+			((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, robot.parameters.cameraDirection);
+		}
+
+		initTfod();
+	}
+
+	public void initTfod() {
+		int tfodMonitorViewId = robot.hwMap.appContext.getResources().getIdentifier(
+				"tfodMonitorViewId", "id", robot.hwMap.appContext.getPackageName());
+		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
 	}
 
 
