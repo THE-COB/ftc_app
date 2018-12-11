@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,8 +18,8 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="AvesAblazeTeleop", group="Competition")
-
+@TeleOp(name="Rohan's Garbage Teleop", group="Competition")
+@Disabled
 public class TeleOp0 extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
@@ -31,13 +32,13 @@ public class TeleOp0 extends AvesAblazeOpmode {
 	int goldMinerals;
 	int silverMinerals;
 	boolean allDirDrive = false;
-
+	boolean relativeDrive = false;
 
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
-		position=robot.extension.getPosition();
-		startingPosition=robot.extension.getPosition();
+		//position=robot.extension.getPosition();
+		//startingPosition=robot.extension.getPosition();
 		waitForStart();
 		robot.tfod.activate();
 		while(opModeIsActive()) {
@@ -51,7 +52,7 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 
 			 */
-			if(!allDirDrive) {
+			if(!allDirDrive && !relativeDrive) {
 				if ((Math.abs(moveY) > 0.25)) {
 					moveUpDown(moveY);
 
@@ -74,6 +75,9 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				} else {
 					stopMotors();
 				}
+			}
+			else if(relativeDrive){
+
 			}
 			else{
 				if(Math.abs(moveX)>0.25 || Math.abs(moveY)>0.25) {
@@ -127,18 +131,18 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 
 			telemetry.addData("position", position);
-			telemetry.addData("actual position", robot.extension.getPosition());
+			//telemetry.addData("actual position", robot.extension.getPosition());
 			telemetry.addData("starting position", startingPosition);
-			robot.extension.setPosition(Range.clip(position,startingPosition,startingPosition+0.92));
+			//robot.extension.setPosition(Range.clip(position,startingPosition,startingPosition+0.92));
 
 			if(gamepad2.x){
 				position=startingPosition;
-				robot.extension.setPosition(position);
+				//robot.extension.setPosition(position);
 			//	while (opModeIsActive() && gamepad1.x) ;
 			}
 			else if(gamepad2.b&&!gamepad2.start) {
 				position =startingPosition+0.92;
-				robot.extension.setPosition(position);
+				//robot.extension.setPosition(position);
 			//	while (opModeIsActive() && gamepad1.b) ;
 			}
 			else if(gamepad2.y){
@@ -159,8 +163,13 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			else
 				robot.arm.setPower(0);
 
+			//Both controllers press back, start, and both bumpers
 			if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper && gamepad2.back && gamepad2.start && gamepad2.left_bumper && gamepad2.right_bumper){
 				allDirDrive = true;
+			}
+
+			if(gamepad1.back && gamepad1.start && gamepad1.left_trigger>0.5 && gamepad1.right_trigger>0.5 && gamepad2.back && gamepad2.start && gamepad2.left_trigger>0.5 && gamepad2.right_trigger>0.5){
+				relativeDrive = true;
 			}
 		}
 

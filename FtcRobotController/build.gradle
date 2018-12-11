@@ -16,6 +16,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 repositories {
@@ -23,5 +29,7 @@ repositories {
         dirs '../libs'
     }
 }
-
+dependencies {
+    api 'com.github.Jacobvs:ftc-firebase-robotics:1.0.1'
+}
 apply from: 'build.release.gradle'

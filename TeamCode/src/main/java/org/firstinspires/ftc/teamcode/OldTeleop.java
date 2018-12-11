@@ -5,22 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
-
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="CVTeleop", group="Competition")
-
-public class CVTeleop extends AvesAblazeOpmode {
+@TeleOp(name="AvesAblazeTeleop", group="Competition")
+//Rohan Don't touch this I swear to God
+public class OldTeleop extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 	private ElapsedTime runtime = new ElapsedTime();
@@ -33,25 +23,26 @@ public class CVTeleop extends AvesAblazeOpmode {
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
 		waitForStart();
 		runtime.reset();
 		position=57;
-		robot.tfod.activate();
 		while(opModeIsActive()) {
-			check2Minerals();
-			/*telemetry.addData("position", super.position);
-			telemetry.addData("x",getX());
-			telemetry.addData("y",getY());
-			telemetry.addData("angle",getExactAngle());*/
-			//telemetry.update();
-			if(runtime.seconds()>150){
+			telemetry.addData("time",Math.round(runtime.seconds()));
+			telemetry.addData("armLength", robot.extension.getCurrentPosition());
+			telemetry.addData("liftHeight", robot.lift1.getCurrentPosition());
+			telemetry.update();
+			if(runtime.seconds()>120){
 				position=97;
 			}
-			else if(runtime.seconds()>145){
+			else if(runtime.seconds()>115){
 				position=45;
 			}
-			else if(runtime.seconds()>139){
-				position=58;
+			else if(runtime.seconds()>105){
+				if(Math.round(runtime.seconds()*4)%2==0)
+				position=96;
+				else
+					position=100;
 			}
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(position-1));
 			//Move Robot
@@ -66,17 +57,17 @@ public class CVTeleop extends AvesAblazeOpmode {
 
 			if ((Math.abs(moveY) > 0.25)) {
 				moveUpDown(-moveY);
-				position=69;
+				position=57;
 
 			}
 			else if (Math.abs(moveX) > 0.25) {
 				moveLeftRight(-moveX);
-				position=70;
+				position=67;
 			}
 			else if (Math.abs(rotate) > 0.25) {
 				rotate(-rotate);
 				if(Math.round(runtime.seconds()*8)%2==0){
-					position=6;
+					position=3;
 				}
 				else{
 					position=100;
@@ -100,11 +91,11 @@ public class CVTeleop extends AvesAblazeOpmode {
 				}*/
 			}
 			else if (gamepad1.left_bumper){
-				rotate(0.1);
+				rotate(-0.1);
 				position=39;
 			}
 			else if (gamepad1.right_bumper){
-				rotate(-0.1);
+				rotate(0.1);
 				position=39;
 			}
 			else if(gamepad1.dpad_up){
@@ -141,28 +132,29 @@ public class CVTeleop extends AvesAblazeOpmode {
 			}
 
 			//lift robot
-			if(gamepad2.right_bumper){
+			if(gamepad2.left_bumper){
 				position=97;
-				robot.lid.setPosition(0.9);
+					robot.lid.setPosition(0.9);
 
 			}
-			else if(gamepad2.left_bumper){
+			else if(gamepad2.right_bumper){
 				robot.lid.setPosition(0.55);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
-				sleep(100);
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+				if(runtime.seconds()<110) {
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
+					sleep(100);
+					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
+				}
 			}
-
 
 			if(gamepad2.dpad_up){
 				lift("up");
@@ -187,20 +179,22 @@ public class CVTeleop extends AvesAblazeOpmode {
 
 
 			if(gamepad2.x){
+				//extends
 				extensionPosition=startingPosition;
-				robot.extension.setPower(0.3);
-				//	while (opModeIsActive() && gamepad1.x) ;
+				robot.extension.setPower(0.5);
+			//	while (opModeIsActive() && gamepad1.x) ;
 			}
 			else if(gamepad2.b&&!gamepad2.start) {
-
-				robot.extension.setPower(-0.3);
-				//	while (opModeIsActive() && gamepad1.b) ;
+				//retracts
+				robot.extension.setPower(-0.5);
+			//	while (opModeIsActive() && gamepad1.b) ;
 			}
 			else if(gamepad2.y){
-				//extend all the way
+				extend();
 			}
 			else if(gamepad2.a&&!gamepad2.start){
-				//retract all the way
+
+				retract();
 			}
 			else{
 				robot.extension.setPower(0);
@@ -220,7 +214,6 @@ public class CVTeleop extends AvesAblazeOpmode {
 			}
 			else
 				robot.arm.setPower(0);
-
 		}
 
 

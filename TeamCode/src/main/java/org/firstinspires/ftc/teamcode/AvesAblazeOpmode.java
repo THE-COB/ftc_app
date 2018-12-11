@@ -16,7 +16,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithContext;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -27,6 +29,15 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 
+import com.firebase.client.Firebase;
+import com.qualcomm.robotcore.robot.Robot;
+
+import org.athenian.ftc.ListenerAction;
+import org.athenian.ftc.RobotValues;
+import org.athenian.ftc.ValueListener;
+import org.athenian.ftc.ValueSource;
+import org.athenian.ftc.ValueWriter;
+
 /**
  * Created by Rohan Mathur on 11/9/18.
  */
@@ -34,6 +45,15 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD
 public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeOpmodeSimplified {
 	List<Recognition> updatedRecognitions;
 	String position="none";
+	RobotValues fireVals;
+	public void extend(){
+		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<1600)
+		robot.extension.setPower(0.5);
+	}
+	public void retract(){
+		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<100)
+			robot.extension.setPower(0.5);
+	}
 	public void deploy(){
 		lift();
 		moveLeftRight(-0.75);
@@ -54,7 +74,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			stopMotors();
 		}
 		stopMotors();
-		lower();
 		stopMotors();
 	}
 
@@ -64,8 +83,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		robot.motor1.setPower(0);
 		robot.motor2.setPower(0);
 		robot.motor3.setPower(0);
-		robot.lift1.setPower(0);
-		robot.lift2.setPower(0);
 		robot.arm.setPower(0);
 	}
 	//rotates from power
@@ -77,10 +94,10 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	//Moves left-right based off power
 	public void moveLeftRight(double power){
-		robot.motor0.setPower(-power);
-		robot.motor1.setPower(-power);
-		robot.motor2.setPower(power);
-		robot.motor3.setPower(power);
+		robot.motor0.setPower(power);
+		robot.motor1.setPower(power);
+		robot.motor2.setPower(-power);
+		robot.motor3.setPower(-power);
 	}
 	//Moves forward-back based off power
 	public void moveUpDown(double power){
@@ -314,7 +331,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	//Runs lift motors
 	public void lift(String direction){
 		if(direction.equals("up")){
-			robot.lift1.setPower(1);	//updated 12/5/2018
+			robot.lift1.setPower(1);
 			robot.lift2.setPower(1);
 		}
 		else if(direction.equals("down")){
@@ -338,13 +355,16 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			telemetry.addData("newangle", newAngle);
 			telemetry.addData("getangle()", getAngle());
 			telemetry.update();
+			diff = newAngle - getAngle();
 			diff1=Math.abs(getAngle() - newAngle);
 			if ((diff > 0 && diff < 180) || (diff < 0 && Math.abs(diff) > 180)) {
 
 				if(Math.abs(diff1)<13)
 					rotate(-0.06);
-				else if(Math.abs(diff1)<40)
+				else if(Math.abs(diff1)<50)
 					rotate(-0.1);
+				else if(Math.abs(diff1)<160)
+					rotate(-0.5);
 				else
 					rotate(-(0.00928571*Math.abs(diff1))+0.128571);
 				/*if (Math.abs(getAngle() - newAngle) > 60) {
@@ -359,8 +379,10 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 				if(Math.abs(diff1)<13)
 					rotate(0.06);
-				else if(Math.abs(diff1)<40)
+				else if(Math.abs(diff1)<50)
 					rotate(0.1);
+				else if(Math.abs(diff1)<160)
+					rotate(0.5);
 				else
 					rotate((0.00928571*Math.abs(diff1))+0.128571);
 				/*if (Math.abs(getAngle() - newAngle) > 60) {
@@ -410,21 +432,14 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 	}
 	//Moves to vuforia coordinate from either vuforia or rev imu angle
-	public void moveToCoord(int x, int y, int angle, double power){
+	public void moveToCoord(int x, int y, int angle, double power) throws IOException{
 		resetCoordinates();
 		double moveAngle;
 		double thetaField;
 		double referenceTheta;
-		try {
-			referenceTheta = Math.atan(Math.abs(getY() - y) / (double)Math.abs(getX() - x));
-		}
-		catch(ArithmeticException e){
-			referenceTheta=Math.PI/2;
-			thetaField=0;
-		}
+		//(-62,-3)
+		referenceTheta = Math.atan2(y-getY(),getX() - x);
 			thetaField = referenceTheta;
-			if (getX() > x) thetaField = referenceTheta + (Math.PI / 2);
-			if (y < getY()) thetaField = -(Math.PI - referenceTheta);
 		//calculate what angle in reference to the robot that the robot should move
 		moveAngle=thetaField+(Math.PI/2)-Math.toRadians(getAngle());
 		if(Math.abs(moveAngle)>Math.PI&&moveAngle<0){
@@ -433,23 +448,28 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		if(Math.abs(moveAngle)>Math.PI&&moveAngle>0){
 			moveAngle=moveAngle-(2*Math.PI);
 		}
-		polarDrive(0.25,moveAngle);
-		while((Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1)&&opModeIsActive()){
+		polarDrive(power,moveAngle);
+		while((Math.abs(getX()-x)>2 || Math.abs(getY()-y)>2)&&opModeIsActive()&&resetCoordinates()){
+			resetCoordinates();
 			if(gamepad1.a)
+
 				stopMotors();
 			else{
-				polarDrive(0.25,moveAngle);
+				polarDrive(power,moveAngle);
 			}
+			telemetry.addData("(x,y)","("+getX()+","+getY()+")");
+			telemetry.addData("(new x,new y","("+x+","+y+")" );
+			telemetry.addData("getX() > x",getX() > x);
+			telemetry.addData("y < getY()",y < getY());
 			telemetry.addData("reference angle", Math.toDegrees(referenceTheta));
 			telemetry.addData("goal Angle", Math.toDegrees(moveAngle));
 			telemetry.addData("current angle",getAngle());
 			telemetry.addData("theta field",Math.toDegrees(thetaField));
-			telemetry.addData("(x,y)","("+getX()+","+getY()+")");
-			telemetry.addData("(new x,new y","("+x+","+y+")" );
 			telemetry.addData("condition", Math.abs(getX()-x)>1 || Math.abs(getY()-y)>1);
 			telemetry.update();
 		}
-
+if(!resetCoordinates())
+	throw new IOException("Vuforia not found");
 			stopMotors();
 			rotateToAngle(angle);
 			stopMotors();
@@ -458,13 +478,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 	//More lift motors correctly
 	public void lift(){
-		while(robot.lift1.getCurrentPosition()>-4300+robot.startingHeight&&opModeIsActive()){
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4500&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");
 	}
 	public void lower(){
-		while(robot.lift1.getCurrentPosition()<robot.startingHeight-1500&&opModeIsActive()){
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)>1500&&opModeIsActive()){
 			lift("down");
 		}
 		lift("stop");
@@ -492,6 +512,55 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		return robot.lift1.getCurrentPosition();
 	}
 	//Again, super self explanatory
+	public void check2Minerals(){
+		if (robot.tfod != null) {
+			// getUpdatedRecognitions() will return null if no new information is available since
+			// the last time that call was made.
+			List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+			if (updatedRecognitions != null) {
+
+				float goldMineral;
+				float silverMineral;
+
+				if(updatedRecognitions.size()==3){
+					checkMinerals();
+				}
+				else if (updatedRecognitions.size() >= 2) {
+					if(updatedRecognitions.get(0).getLabel().equals(LABEL_GOLD_MINERAL)) {
+						 goldMineral = updatedRecognitions.get(0).getLeft();
+						 silverMineral = updatedRecognitions.get(1).getLeft();
+					}
+					else if(updatedRecognitions.get(1).getLabel().equals(LABEL_GOLD_MINERAL)){
+						goldMineral = updatedRecognitions.get(1).getLeft();
+						silverMineral = updatedRecognitions.get(0).getLeft();
+					}
+					else{
+						position="right";
+						return;
+					}
+
+
+					if(goldMineral<543){
+						position="center";
+					}
+					else if(goldMineral>543){
+						position="left";
+					}
+					else{
+						position="fix your damn method";
+					}
+					telemetry.clearAll();
+					telemetry.addData("minerals", updatedRecognitions.size());
+					telemetry.addData("goldMineral", goldMineral);
+					telemetry.addData("silverMineral", silverMineral);
+					telemetry.addData("position", position);
+					telemetry.update();
+
+				}
+			}
+		}
+	}
+
 	public void checkMinerals(){
 		if (robot.tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
@@ -500,6 +569,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			if (updatedRecognitions != null) {
 				telemetry.addData("minerals", updatedRecognitions.size());
 				telemetry.update();
+
 				if (updatedRecognitions.size() == 3) {
 					int goldMineralX = -1;
 					int silverMineral1X = -1;
@@ -523,8 +593,20 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 						}
 					}
 				}
+
 			}
 		}
+	}
+	public void doFirebase(){
+		final Firebase fb = new Firebase("http://localhost");
+		fireVals = new RobotValues(fb, 0.5);
+		fireVals.add(new ValueWriter("angleVal", new ValueSource() {
+			@Override
+			public Object getValue() {
+				return getAngle();
+			}
+		}));
+		fireVals.start();
 	}
 
 

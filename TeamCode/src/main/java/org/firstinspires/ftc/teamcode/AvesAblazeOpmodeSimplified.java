@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,15 @@ public interface AvesAblazeOpmodeSimplified {
 	 */
 	public void deploy();
 
+	/**
+	 * Extends the slide on the mineral arm
+	 */
+	public void extend();
+
+	/**
+	 * Retracts the slide on the mineral arm
+	 */
+	public void retract();
 
 	/**
 	 * Stops all DC Motors on the robot
@@ -207,13 +217,13 @@ public interface AvesAblazeOpmodeSimplified {
 
 	/**
 	 * Moves to the coordinate and rotates to the angle specified
-	 * Does not move if Vuforia is not found
+	 * Throws IOException if Vuforia is not found
 	 *
 	 * @param x
 	 * @param y
 	 * @param angle
 	 */
-	public void moveToCoord(int x, int y, int angle, double power);
+	public void moveToCoord(int x, int y, int angle, double power) throws IOException;
 
 	/**
 	 * Raises Lift

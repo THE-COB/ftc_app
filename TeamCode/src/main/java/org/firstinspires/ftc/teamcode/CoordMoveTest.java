@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -44,13 +45,40 @@ public class CoordMoveTest extends AvesAblazeOpmode {
 		calibrate();
 		waitForStart();
 		while(!resetCoordinates()||!robot.imu1.isGyroCalibrated()&&!gamepad1.a);
-		moveToCoord(getX()+5,getY()+7,getAngle(),0.1);
+		try {
+			moveToCoord(-59,-4,135,0.25);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		sleep(1000);
-		moveToCoord(getX()-5,getY()-5,getAngle(),0.1);
+		try {
+			moveToCoord(-27,26,141,0.4);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			moveToCoord(getX()+5,getY()+7,getAngle(),0.1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		sleep(1000);
-		moveToCoord(getX()+5,getY(),getAngle(),0.1);
+		try {
+			moveToCoord(getX()-5,getY()-5,getAngle(),0.1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		sleep(1000);
-		moveToCoord(getX(),getY()-5,getAngle(),0.1);
+		try {
+			moveToCoord(getX()+5,getY(),getAngle(),0.1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sleep(1000);
+		try {
+			moveToCoord(getX(),getY()-5,getAngle(),0.1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		stopMotors();
 
 

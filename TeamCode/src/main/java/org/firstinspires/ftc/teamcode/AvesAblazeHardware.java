@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -49,13 +50,14 @@ public class AvesAblazeHardware {
 	public DcMotor lift2;
 
 	DcMotor arm;
+	DcMotor extension;
 
 	BNO055IMU imu1;
 	BNO055IMU imu;
 	int startingHeight;
 
 	Servo marker1;
-	Servo extension;
+
 	Servo lid;
 
 	RevBlinkinLedDriver lights;
@@ -65,6 +67,7 @@ public class AvesAblazeHardware {
 	public static final float mmTargetHeight   = (6) * mmPerInch;
 	public static double angle=0;
 	int startingAngle=0;
+	int startingExtension=0;
 	double correction;
 	// the height of the center of the target image above the floor
 	VuforiaTrackables targetsRoverRuckus;
@@ -89,10 +92,11 @@ public class AvesAblazeHardware {
 		//Getting servos for HardwareMap
 		hwMap=ahwMap;
 		marker1=hwMap.get(Servo.class, "marker1");
-		extension=hwMap.get(Servo.class, "extension");
+		extension=hwMap.get(DcMotor.class, "extension");
 		lid=hwMap.get(Servo.class, "lid");
 		lid.setPosition(0.85);
 		marker1.setPosition(1);
+		lights=(RevBlinkinLedDriver)hwMap.get("lights");
 
 
 		//Getting sensors from HardwareMap
@@ -277,6 +281,7 @@ public class AvesAblazeHardware {
 		// Save reference to Hardware map
 		hwMap = ahwMap;
 		initTfod();
+		startingExtension=extension.getCurrentPosition();
 	}
 	public void initTfod() {
 		int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
