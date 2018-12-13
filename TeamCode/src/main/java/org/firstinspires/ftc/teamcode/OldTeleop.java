@@ -20,11 +20,14 @@ public class OldTeleop extends AvesAblazeOpmode {
 	double extensionPosition=1;
 	double startingPosition=0;
 	int position;
+	boolean allDirDrive = false;
+	boolean relativeDrive = false;
 	@Override
 	public void runOpMode() {
 		try {
 			robot.init(hardwareMap);
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
+			initVuforia();
 		} catch (Exception e){
 			tfod.shutdown();
 		}
