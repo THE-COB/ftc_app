@@ -21,7 +21,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 	double startingPosition=0;
 	int position;
 	boolean allDirDrive = false;
-	boolean relativeDrive = false;
+	int relativeDrive = 10000;
 	@Override
 	public void runOpMode() {
 		try {
@@ -61,43 +61,43 @@ public class OldTeleop extends AvesAblazeOpmode {
 
 
 			 */
+			if(!allDirDrive && relativeDrive == 10000) {
+				if ((Math.abs(moveY) > 0.25)) {
+					moveUpDown(-moveY);
+					position = 57;
 
-			if ((Math.abs(moveY) > 0.25)) {
-				moveUpDown(-moveY);
-				position=57;
-
+				} else if (Math.abs(moveX) > 0.25) {
+					moveLeftRight(-moveX);
+					position = 67;
+				}
 			}
-			else if (Math.abs(moveX) > 0.25) {
-				moveLeftRight(-moveX);
-				position=67;
+			else if(allDirDrive){
+				if(Math.abs(moveX)>0.25 || Math.abs(moveY)>0.25) {
+					if(moveX == 0){
+						moveUpDown(moveY);
+					}
+					else if(moveY == 0){
+						moveLeftRight(moveX);
+					}
+					else {
+						polarDrive(Math.abs(Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2))), Math.atan(moveY / moveX));
+					}
+				}
 			}
-			else if (Math.abs(rotate) > 0.25) {
-				rotate(-rotate);
-				if(Math.round(runtime.seconds()*8)%2==0){
-					position=3;
+			else if(relativeDrive != 10000){
+				int angleFacing = getAngle();
+				int angleWanted = 0;
+				if(Math.abs(moveX)>0.25){
+					if(moveX>0){
+						angleWanted = 0;
+					}
+					else{
+						angleWanted = 180;
+					}
+					polarDrive(Math.abs(moveX), 100);	//THIS PART IS NOT FINISHED
 				}
-				else{
-					position=100;
-				}
-				/*if(Math.round(runtime.seconds()*6)%6==0)
-					position=68;
-				else if(Math.round(runtime.seconds()*6+1)%6==0){
-					position=58;
-				}
-				else if(Math.round(runtime.seconds()*6+2)%6==0){
-					position=46;
-				}
-				else if(Math.round(runtime.seconds()*6+3)%6==0){
-					position=6;
-				}
-				else if(Math.round(runtime.seconds()*4)%2==0){
-					position=48;
-				}
-				else{
-					position=45;
-				}*/
 			}
-			else if (gamepad1.left_bumper){
+			if (gamepad1.left_bumper){
 				rotate(-0.1);
 				position=39;
 			}
@@ -221,6 +221,33 @@ public class OldTeleop extends AvesAblazeOpmode {
 			}
 			else
 				robot.arm.setPower(0);
+
+			//Controller 1 presses back, start, and both bumpers
+			if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper){
+				if(!allDirDrive) {
+					allDirDrive = true;
+				}
+				else allDirDrive = false;
+			}
+
+			if(gamepad1.back && gamepad1.start && gamepad1.left_trigger>0.5 && gamepad1.right_trigger>0.5){
+				if(relativeDrive == 10000) {
+					if (gamepad1.a) {
+						relativeDrive = 270;
+					} else if (gamepad1.b) {
+						relativeDrive = 0;
+					} else if (gamepad1.x) {
+						relativeDrive = 180;
+					} else if (gamepad1.y) {
+						relativeDrive = 90;
+					}
+					robot.startingAngle = relativeDrive;
+					calibrate();
+				}
+				else{
+					relativeDrive = 10000;
+				}
+			}
 		}
 
 
