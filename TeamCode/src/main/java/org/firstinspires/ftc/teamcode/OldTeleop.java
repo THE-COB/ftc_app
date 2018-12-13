@@ -26,7 +26,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 			robot.init(hardwareMap);
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
 		} catch (Exception e){
-			robot.tfod.shutdown();
+			tfod.shutdown();
 		}
 		waitForStart();
 		runtime.reset();

@@ -40,7 +40,7 @@ public class TeleOp0 extends AvesAblazeOpmode {
 		//position=robot.extension.getPosition();
 		//startingPosition=robot.extension.getPosition();
 		waitForStart();
-		robot.tfod.activate();
+		tfod.activate();
 		while(opModeIsActive()) {
             //Move Robot
 			moveY = Range.clip(-gamepad1.left_stick_y, -1, 1);

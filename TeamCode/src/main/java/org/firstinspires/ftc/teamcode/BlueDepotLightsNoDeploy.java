@@ -20,28 +20,44 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 	@Override
 	public void runOpMode() {
 		robot.init(hardwareMap);
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		initVuforia();
-
-		tfod.activate();
 		waitForStart();
 		ElapsedTime scanTime = new ElapsedTime();
-		while(opModeIsActive()&&position.equals("nothing")&&scanTime.seconds()<3||(!robot.imu.isGyroCalibrated()&&!robot.imu1.isGyroCalibrated())) {
-			check2Minerals();
+		while (opModeIsActive() &&  scanTime.seconds() < 4 || (!robot.imu.isGyroCalibrated() || !robot.imu1.isGyroCalibrated())) {
 			calibrate();
+			check2Minerals();
 
-			telemetry.addData("Gold Mineral", position);
-			telemetry.addData("position", position.equals("none"));
-			telemetry.update();
 		}
+		robot.startingAngle = 115;
+		if(position.equals("none")) {
+			tfod.activate();
+			rotate(0.5);
+			sleep(150);
+			 do{
+				rotate(0.05);
+				try{
+					updatedRecognitions.equals("something");
+				}
+				catch (Exception e){
+					updatedRecognitions=tfod.getUpdatedRecognitions();
+				}
+				 try{
+					 tfod.getUpdatedRecognitions().equals("something");
+					 updatedRecognitions=tfod.getUpdatedRecognitions();
+				 }
+				 catch (Exception e){
 
-		robot.startingAngle=120;
-		if(position.equals("none")){
-			position.equals("right");
-		}
-		while(opModeIsActive()&&!gamepad2.a&&!gamepad1.a){
-			telemetry.addData("position", position);
-			telemetry.update();
+				 }
+
+			}
+			while (tfod.getRecognitions().size() < 2);
+			 telemetry.addData("minerals", tfod.getRecognitions().size());
+			 telemetry.addData("first mineral", tfod.getRecognitions().get(0).getLabel());
+			 telemetry.addData("second mineral", tfod.getRecognitions().get(1).getLabel());
+			stopMotors();
+			check2Minerals();
+			rotateToAngle(115);
 		}
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(18-1));
 
@@ -77,7 +93,7 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 		}
 		else if(position.equals("right")){
 			polarDrive(1, Math.PI/3-0.2);
-			sleep(1500);
+			sleep(1600);
 			rotateToAngle(165);
 			moveUpDown(1);
 			sleep(1200);
@@ -115,15 +131,15 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 			robot.marker1.setPosition(0.3);
 			sleep(830);
 			robot.marker1.setPosition(1);
-			rotateToAngle(180);
+			rotateToAngle(176);
 			moveLeftRight(1);
 			sleep(150);
 			moveUpDown(-1);
 			sleep(250);
 			moveLeftRight(-1);
-			sleep(300);
+			sleep(400);
 			moveUpDown(-1);
-			sleep(2250);
+			sleep(2150);
 			stopMotors();
 			robot.extension.setPower(1);
 			sleep(1200);
@@ -135,7 +151,7 @@ public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 		}
 
 		stopMotors();
-
+		tfod.deactivate();
 
 	}
 

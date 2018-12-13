@@ -53,7 +53,7 @@ public class BlueDepot extends AvesAblazeOpmode {
 		telemetry.addData("status", "ready");
 		telemetry.update();
 		waitForStart();
-		robot.tfod.activate();
+		tfod.activate();
 		//Deploys the robot down from when it is at the starting position
 		robot.arm.setPower(1);
 		sleep(400);

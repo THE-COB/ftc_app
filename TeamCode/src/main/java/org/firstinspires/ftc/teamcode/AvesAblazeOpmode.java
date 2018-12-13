@@ -51,7 +51,9 @@ import org.athenian.ftc.ValueWriter;
  */
 //My name is Mada Greblep and I approve this message
 public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblazeOpmodeSimplified {
-	List<Recognition> updatedRecognitions;
+	String goldMineralLabel="";
+			String silverMineralLabel="";
+	List<Recognition> updatedRecognitions=null;
 	String position="none";
 	//	RobotValues fireVals;
 
@@ -490,7 +492,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 	//More lift motors correctly
 	public void lift(){
-		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4500&&opModeIsActive()){
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4800&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");
@@ -528,7 +530,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+			List<Recognition> updatedRecognitions = tfod.getRecognitions();
+
 			if (updatedRecognitions != null) {
 
 				float goldMineral;
@@ -550,23 +553,22 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 						position="right";
 						return;
 					}
-
-
-					if(goldMineral<543){
-						position="center";
-					}
-					else if(goldMineral>543){
-						position="left";
-					}
-					else{
-						position="fix your damn method";
-					}
 					telemetry.clearAll();
 					telemetry.addData("minerals", updatedRecognitions.size());
 					telemetry.addData("goldMineral", goldMineral);
 					telemetry.addData("silverMineral", silverMineral);
 					telemetry.addData("position", position);
 					telemetry.update();
+
+					if(goldMineral<silverMineral){
+						position="center";
+					}
+					else if(goldMineral>silverMineral){
+						position="left";
+					}
+					else{
+						position="fix your damn method";
+					}
 
 				}
 			}
@@ -597,9 +599,9 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					}
 					if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
 						if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-							position="left";
-						} else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
 							position="right";
+						} else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+							position="left";
 						} else {
 							position="center";
 						}
@@ -760,6 +762,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
 		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+		goldMineralLabel=LABEL_GOLD_MINERAL;
+		silverMineralLabel=LABEL_SILVER_MINERAL;
 	}
 
 

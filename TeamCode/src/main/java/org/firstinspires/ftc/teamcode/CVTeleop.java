@@ -36,7 +36,7 @@ public class CVTeleop extends AvesAblazeOpmode {
 		waitForStart();
 		runtime.reset();
 		position=57;
-		robot.tfod.activate();
+		tfod.activate();
 		while(opModeIsActive()) {
 			check2Minerals();
 			/*telemetry.addData("position", super.position);
