@@ -28,12 +28,27 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 		waitForStart();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
-		robot.arm.setPower(1);
-		sleep(700);
-		robot.arm.setPower(0);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(39-1));
-		lift();
+		//lift();
 		telemetry.addData("status", "deployed");
+		/*lift("up");
+		sleep(100);
+		lift("stop");
+		sleep(1000);
+		robot.lift1.setPower(0.5);
+		robot.lift2.setPower(0.5);
+		sleep(150);
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4000&&opModeIsActive()) {
+			robot.lift1.setPower(0.5);
+			robot.lift2.setPower(0.5);
+			telemetry.addData("starting height", robot.startingHeight);
+			telemetry.addData("height", getLiftHeight());
+			telemetry.update();
+		}
+		robot.lift1.setPower(0.5);
+		robot.lift2.setPower(0.5);
+		sleep(300);
+		lift("stop");
 
 		telemetry.update();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
@@ -49,35 +64,33 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 		sleep(320);
 		stopMotors();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(19-1));
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50-1));
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50-1));*/
 		ElapsedTime scanTime = new ElapsedTime();
-		rotate(-0.5);
 		sleep(300);
 		stopMotors();
 
 		boolean seesMinerals=false;
-		while (opModeIsActive() &&  scanTime.seconds() < 4 || (!robot.imu.isGyroCalibrated() && !robot.imu1.isGyroCalibrated())) {
-			calibrate();
-
-		}
-		rotate(0.04);
-		while(position.equals("none")&&opModeIsActive()||!gamepad1.a){
+		rotate(-0.5);
+		sleep(500);
+		rotate(0.03);
+		while(position.equals("none")&&opModeIsActive()){
 			check2Minerals();
-			try {
-				if (tfod.getRecognitions() != null) {
-					telemetry.addData("recognitions", tfod.getRecognitions());
-					telemetry.addData("label 0", tfod.getRecognitions().get(0).getLabel());
-					telemetry.addData("label 0", tfod.getRecognitions().get(1).getLabel());
-					telemetry.addData("position", position);
-					telemetry.update();
-				}
-			}
-			catch (Exception e){
-
-			}
 			if(!position.equals("none")&&opModeIsActive())
 				stopMotors();
 
+		}
+		stopMotors();
+		boolean indeterminable;
+		if(tfod.getRecognitions().get(0).getLabel().equals(goldMineralLabel)){
+			indeterminable=tfod.getRecognitions().get(0).getLeft()<533&&tfod.getRecognitions().get(0).getLeft()>526;
+		}
+		else {
+			indeterminable=tfod.getRecognitions().get(1).getLeft()<533&&tfod.getRecognitions().get(1).getLeft()>526;
+		}
+		if(indeterminable){
+			rotate(0.1);
+			sleep(100);
+			check2Minerals();
 		}
 		robot.startingAngle = 135;
 		stopMotors();
@@ -112,13 +125,6 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 			moveUpDown(-1);
 			sleep(2150);
 			stopMotors();
-			robot.extension.setPower(1);
-			sleep(1200);
-			robot.extension.setPower(0);
-			while(runtime.seconds()<28&&opModeIsActive());
-			robot.arm.setPower(1);
-			sleep(900);
-			robot.arm.setPower(0);
 		}
 		else if(position.equals("right")){
 			polarDrive(1, Math.PI/3-0.2);
@@ -141,42 +147,29 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 			moveUpDown(-1);
 			sleep(2150);
 			stopMotors();
-			robot.extension.setPower(1);
-			sleep(1200);
-			robot.extension.setPower(0);
-			while(runtime.seconds()<28&&opModeIsActive());
-			robot.arm.setPower(1);
-			sleep(900);
-			robot.arm.setPower(0);
 		}
 		else{
 			polarDrive(1, 2*Math.PI/2.7);
-			sleep(820);
+			sleep(920);
 			rotateToAngle(180);
 			moveUpDown(1);
-			sleep(420);
+			sleep(620);
 			moveLeftRight(-1);
-			sleep(350);
+			sleep(550);
 			robot.marker1.setPosition(0.3);
 			sleep(830);
 			robot.marker1.setPosition(1);
 			rotateToAngle(176);
 			moveLeftRight(1);
-			sleep(150);
+			sleep(250);
 			moveUpDown(-1);
 			sleep(250);
 			moveLeftRight(-1);
-			sleep(400);
+			sleep(700);
 			moveUpDown(-1);
-			sleep(2150);
+			sleep(2350);
 			stopMotors();
-			robot.extension.setPower(1);
-			sleep(1200);
-			robot.extension.setPower(0);
-			while(runtime.seconds()<28&&opModeIsActive());
-			robot.arm.setPower(1);
-			sleep(900);
-			robot.arm.setPower(0);
+
 		}
 
 		stopMotors();

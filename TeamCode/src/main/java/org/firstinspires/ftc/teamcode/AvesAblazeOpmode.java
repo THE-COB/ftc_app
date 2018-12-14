@@ -383,14 +383,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					rotate(-0.5);
 				else
 					rotate(-(0.00928571*Math.abs(diff1))+0.128571);
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(-0.5);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(-0.17);
-				} else  {
-					rotate(-0.07);
-				}*/
 			} else {
 
 				if(Math.abs(diff1)<13)
@@ -401,14 +393,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					rotate(0.5);
 				else
 					rotate((0.00928571*Math.abs(diff1))+0.128571);
-				/*if (Math.abs(getAngle() - newAngle) > 60) {
-					rotate(0.4);
-				}
-				else if (Math.abs(getAngle() - newAngle) > 20) {
-					rotate(0.17);
-				} else {
-					rotate(0.1);
-				}*/
 			}
 
 		}
@@ -494,7 +478,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 	//More lift motors correctly
 	public void lift(){
-		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4800&&opModeIsActive()){
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4600&&opModeIsActive()){
 			lift("up");
 		}
 		lift("stop");
@@ -562,14 +546,14 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					telemetry.addData("position", position);
 					telemetry.update();
 
-					if(goldMineral<silverMineral){
+					if(goldMineral<528){
 						position="center";
 					}
-					else if(goldMineral>silverMineral){
+					else if(goldMineral>528){
 						position="left";
 					}
 					else{
-						position="fix your damn method";
+						position="rotate";
 					}
 
 				}
