@@ -546,6 +546,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					telemetry.addData("position", position);
 					telemetry.update();
 
+					/*
+						THESE MAY
+						NEED TO BE
+						CHANGED
+					*/
 					if(goldMineral<528){
 						position="center";
 					}
