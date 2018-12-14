@@ -87,15 +87,26 @@ public class OldTeleop extends AvesAblazeOpmode {
 			else if(relativeDrive != 10000){
 				int angleFacing = getAngle();
 				int angleWanted = 0;
+				double powerControl = 0;
 				if(Math.abs(moveX)>0.25){
+					powerControl = Math.abs(moveX);
 					if(moveX>0){
 						angleWanted = 0;
 					}
 					else{
 						angleWanted = 180;
 					}
-					polarDrive(Math.abs(moveX), 100);	//THIS PART IS NOT FINISHED
 				}
+				else if(Math.abs(moveY)>0.25){
+					powerControl = Math.abs(moveY);
+					if(moveY>0){
+						angleWanted = 270;
+					}
+					else{
+						angleWanted = 90;
+					}
+				}
+				polarDrive(powerControl, Math.toRadians((360+angleWanted)-angleFacing));
 			}
 			if (gamepad1.left_bumper){
 				rotate(-0.1);
