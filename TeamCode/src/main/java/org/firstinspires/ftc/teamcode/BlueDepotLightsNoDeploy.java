@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @TeleOp(name="BlueDepotLightsNoDeploy", group="Competition")
 //Rohan Don't touch this I swear to God
+@Disabled
 public class BlueDepotLightsNoDeploy extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */

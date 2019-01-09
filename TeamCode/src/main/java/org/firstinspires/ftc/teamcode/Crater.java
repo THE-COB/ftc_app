@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Crater", group="AAA")
+@Autonomous(name="Crater", group="AAA")
 //Rohan Don't touch this I swear to God
 public class Crater extends AvesAblazeOpmode {
 
@@ -19,13 +20,14 @@ public class Crater extends AvesAblazeOpmode {
 	double extensionPosition=1;
 	@Override
 	public void runOpMode() {
-		robot.init(hardwareMap);
+
+/*		robot.init(hardwareMap);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 		initVuforia();
 
 		tfod.activate();
 		waitForStart();
-		/*robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
+		*//*robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);
 		sleep(700);
 		robot.arm.setPower(0);
@@ -64,12 +66,12 @@ public class Crater extends AvesAblazeOpmode {
 			while(opModeIsActive());
 		}
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(18-1));
-*/
+*//*
 		ElapsedTime scanTime = new ElapsedTime();
 		while (opModeIsActive() &&  scanTime.seconds() < 4 && !robot.imu.isGyroCalibrated() && !robot.imu1.isGyroCalibrated()) {
 			calibrate();
 			check2Minerals();
-		}
+		}*/
 		robot.startingAngle=29;
 		if(position.equals("center")||gamepad1.b){
 			polarDrive(1, 2*Math.PI/2.97);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -30,6 +31,7 @@ import static org.firstinspires.ftc.teamcode.TF_FIX_AVESABLAZEHARDWARE.CAMERA_CH
  */
 @TeleOp(name="ROHAN TOUCHED THIS", group="Test")
 //Rohan Don't touch this I swear to God
+@Disabled
 public class TF_FIX_TELEOP0 extends AbstractTFFIX {
 
 	/* Declare OpMode members. */

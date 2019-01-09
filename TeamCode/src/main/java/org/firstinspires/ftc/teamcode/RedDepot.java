@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,7 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="RedDepot", group="Competition")
-
+@Disabled
 public class RedDepot extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */

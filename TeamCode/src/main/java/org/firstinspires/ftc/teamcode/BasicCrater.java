@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,7 +17,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="BasicCrater", group="Competition")
-
+@Disabled
 public class BasicCrater extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
@@ -67,7 +68,7 @@ public class BasicCrater extends AvesAblazeOpmode {
 		sleep(800);
 		robot.marker1.setPosition(1);
 		rotateToAngle(355);
-		drive(62,true,1);
+		drive(60,true,1);
 		stopMotors();
 		while (opModeIsActive()){
 			telemetry.addData("color", color);

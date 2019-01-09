@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public class OldTeleop extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
-	private ElapsedTime runtime = new ElapsedTime();
+	private ElapsedTime runtime;
 	float moveY;
 	float moveX;
 	float rotate;
@@ -25,12 +25,13 @@ public class OldTeleop extends AvesAblazeOpmode {
 	@Override
 	public void runOpMode() {
 		try {
+			runtime = new ElapsedTime();
 			robot.init(hardwareMap);
-			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
-			initVuforia();
-		} catch (Exception e){
-			tfod.shutdown();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50)); }
+			catch (Exception e){
+//			tfod.shutdown();
 		}
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
 		waitForStart();
 		runtime.reset();
 		position=57;
@@ -61,7 +62,18 @@ public class OldTeleop extends AvesAblazeOpmode {
 
 
 			 */
-			if(!allDirDrive && relativeDrive == 10000) {
+			if ((Math.abs(moveY) > 0.25)) {
+				moveUpDown(-moveY);
+				position = 57;
+
+			} else if (Math.abs(moveX) > 0.25) {
+				moveLeftRight(-moveX);
+				position = 67;
+			}
+			else if(Math.abs(rotate)>0.25){
+				rotate(-rotate);
+			}
+			/*if(!allDirDrive && relativeDrive == 10000) {
 				if ((Math.abs(moveY) > 0.25)) {
 					moveUpDown(-moveY);
 					position = 57;
@@ -107,13 +119,13 @@ public class OldTeleop extends AvesAblazeOpmode {
 					}
 				}
 				polarDrive(powerControl, Math.toRadians((360+angleWanted)-angleFacing));
-			}
-			if (gamepad1.left_bumper){
-				rotate(-0.1);
+			}*/
+			else if (gamepad1.left_bumper){
+				rotate(-0.2);
 				position=39;
 			}
 			else if (gamepad1.right_bumper){
-				rotate(0.1);
+				rotate(0.2);
 				position=39;
 			}
 			else if(gamepad1.dpad_up){
@@ -234,7 +246,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 				robot.arm.setPower(0);
 
 			//Controller 1 presses back, start, and both bumpers
-			if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper){
+			/*if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper){
 				if(!allDirDrive) {
 					allDirDrive = true;
 				}
@@ -258,7 +270,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 				else{
 					relativeDrive = 10000;
 				}
-			}
+			}*/
 		}
 
 

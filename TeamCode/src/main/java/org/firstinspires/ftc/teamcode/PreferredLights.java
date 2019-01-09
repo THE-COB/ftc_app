@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Rohan Mathur on 9/24/18.
  */
 @TeleOp(name="PreferredLights", group="Pushbot")
-
+@Disabled
 public class PreferredLights extends LinearOpMode {
 
 	/* Declare OpMode members. */

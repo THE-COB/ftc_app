@@ -39,15 +39,6 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 import static org.firstinspires.ftc.teamcode.TF_FIX_AVESABLAZEHARDWARE.CAMERA_CHOICE;
 
-import com.firebase.client.Firebase;
-import com.qualcomm.robotcore.robot.Robot;
-
-import org.athenian.ftc.ListenerAction;
-import org.athenian.ftc.RobotValues;
-import org.athenian.ftc.ValueListener;
-import org.athenian.ftc.ValueSource;
-import org.athenian.ftc.ValueWriter;
-
 /**
  * Created by Rohan Mathur on 11/9/18.
  */
@@ -221,8 +212,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		}
 	}
 	public boolean resetCoordinates(){
-		updatedRecognitions = tfod.getUpdatedRecognitions();
-		robot.targetsRoverRuckus.activate();
+		//updatedRecognitions = tfod.getUpdatedRecognitions();
+		/*robot.targetsRoverRuckus.activate();
 		robot.targetVisible=false;
 
 		// check all the trackable target to see which one (if any) is visible.
@@ -242,7 +233,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				return robot.targetVisible;
 			}
 		}
-		return robot.targetVisible;
+		return robot.targetVisible;*/
+		return false;
 	}
 	public void calibrate() {
 		BNO055IMU.Parameters imuParameters;
@@ -478,8 +470,9 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 	//More lift motors correctly
 	public void lift(){
-		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<4600&&opModeIsActive()){
-			lift("up");
+		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<3900&&opModeIsActive()){
+			robot.lift1.setPower(0.5);
+			robot.lift2.setPower(0.5);
 		}
 		lift("stop");
 	}
@@ -513,7 +506,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	//Again, super self explanatory
 	public void check2Minerals(){
-		if (tfod != null) {
+		/*if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
 			List<Recognition> updatedRecognitions = tfod.getRecognitions();
@@ -546,11 +539,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					telemetry.addData("position", position);
 					telemetry.update();
 
-					/*
-						THESE MAY
-						NEED TO BE
-						CHANGED
-					*/
+
 					if(goldMineral<528){
 						position="center";
 					}
@@ -559,15 +548,15 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					}
 					else{
 						position="rotate";
-					}
+					}*/
 
-				}
-			}
-		}
+		//		}
+		//	}
+		//}
 	}
 
 	public void checkMinerals(){
-		if (tfod != null) {
+		/*if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
 			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -600,7 +589,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				}
 
 			}
-		}
+		}*/
 	}
 /*	public void doFirebase(){
 		final Firebase fb = new Firebase("http://localhost");
@@ -748,13 +737,13 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 
 	public void initTfod() {
-		int tfodMonitorViewId = robot.hwMap.appContext.getResources().getIdentifier(
+		/*int tfodMonitorViewId = robot.hwMap.appContext.getResources().getIdentifier(
 				"tfodMonitorViewId", "id", robot.hwMap.appContext.getPackageName());
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
 		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
 		goldMineralLabel=LABEL_GOLD_MINERAL;
-		silverMineralLabel=LABEL_SILVER_MINERAL;
+		silverMineralLabel=LABEL_SILVER_MINERAL;*/
 	}
 
 
