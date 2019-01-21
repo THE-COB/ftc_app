@@ -27,7 +27,7 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 			calibrate();
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
+		/*robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);
 		sleep(400);
 		robot.arm.setPower(0);
@@ -51,10 +51,10 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 		sleep(370);
 		stopMotors();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(19-1));
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50-1));
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50-1));*/
 		ElapsedTime scanTime = new ElapsedTime();
 		stopMotors();
-position="center";
+position="right";
 while(opModeIsActive()&&(!robot.imu.isGyroCalibrated()||!robot.imu1.isGyroCalibrated())&&scanTime.seconds()<6){
 	calibrate();
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(38-1));
@@ -93,7 +93,7 @@ rotateToAngle(135);
 		}
 		else if(position.equals("right")){
 			polarDrive(1, Math.PI/3-0.2);
-			sleep(1500);
+			sleep(1650);
 			rotateToAngle(165);
 			moveUpDown(1);
 			sleep(1200);
@@ -117,8 +117,8 @@ rotateToAngle(135);
 
 			moveLeftRight(-1);
 			sleep(550);
-			polarDrive(1, 2*Math.PI/2.7);
-			sleep(920);
+			polarDrive(1, 2*Math.PI/2.6);
+			sleep(1200);
 			rotateToAngle(180);
 			moveUpDown(1);
 			sleep(620);
@@ -131,11 +131,11 @@ rotateToAngle(135);
 			moveLeftRight(1);
 			sleep(250);
 			moveUpDown(-1);
-			sleep(250);
+			sleep(400);
 			moveLeftRight(-1);
-			sleep(700);
+			sleep(250);
 			moveUpDown(-1);
-			sleep(2300);
+			sleep(2600);
 			stopMotors();
 
 		}

@@ -146,8 +146,8 @@ public class AvesAblazeHardware {
 		arm=hwMap.get(DcMotor.class, "arm");
 		startingHeight=lift1.getCurrentPosition();
 
-		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-		parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+		//int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+		//parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
 		startingExtension=extension.getCurrentPosition();
 	}
