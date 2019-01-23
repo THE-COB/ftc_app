@@ -594,17 +594,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			}
 		}*/
 	}
-/*	public void doFirebase(){
-		final Firebase fb = new Firebase("http://localhost");
-		fireVals = new RobotValues(fb, 0.5);
-		fireVals.add(new ValueWriter("angleVal", new ValueSource() {
-			@Override
-			public Object getValue() {
-				return getAngle();
-			}
-		}));
-		fireVals.start();
-	}*/
 
 	public void rememberAngle(){
 
@@ -640,19 +629,14 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 	public void finalMinFinder(){
 		if (opModeIsActive()) {
-			initVuforia();
+			/*initVuforia();
 
 
 			if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 				initTfod();
 			} else {
 				telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-			}
-
-			/** Wait for the game to begin */
-			telemetry.addData(">", "Press Play to start tracking");
-			telemetry.update();
-			waitForStart();
+			}*/
 
 			if (opModeIsActive()) {
 				/** Activate Tensor Flow Object Detection. */
@@ -660,7 +644,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					tfod.activate();
 				}
 
-				while (opModeIsActive()) {
 					if (tfod != null) {
 						// getUpdatedRecognitions() will return null if no new information is available since
 						// the last time that call was made.
@@ -694,23 +677,31 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 									rec0 = updatedRecognitions.get(0);
 									rec1 = updatedRecognitions.get(1);
 								}
+
 								if (rec0.getLabel().equals(LABEL_GOLD_MINERAL)) {
-									if (rec0.getLeft() > rec1.getLeft()) {
-										position = "Center";
+									telemetry.addData("rec0", rec0.getLeft());
+									telemetry.addData("rec1", rec1.getLeft());
+									telemetry.update();
+									if (rec0.getTop() > rec1.getTop()) {
+										position = "left";
 									} else {
-										position = "Left";
+										position = "center";
 									}
 								} else if (rec1.getLabel().equals(LABEL_GOLD_MINERAL)) {
-									if (rec1.getLeft() > rec0.getLeft()) {
-										position = "Center";
+									telemetry.addData("rec0", rec0.getLeft());
+									telemetry.addData("rec1", rec1.getLeft());
+									telemetry.update();
+									if (rec1.getTop() > rec0.getTop()) {
+										position = "left";
 									} else {
-										position = "Left";
+										position = "center";
 									}
 								} else {
-									position = "Right";
+									position = "right";
 								}
 							}
 							telemetry.addData("Gold Mineral Position", position);
+
 							telemetry.update();
 							if (updatedRecognitions.size() == 1) {
 								rotate(0.01);
@@ -720,11 +711,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 					}
 
 				}
-			}
-
-			if (tfod != null) {
-				tfod.shutdown();
-			}
 		}
 	}
 

@@ -1,25 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 
 /**
- * Created by Rohan Mathur on 9/26/18.
+ * Created by Rohan Mathur on 1/22/19.
  */
-@Autonomous(name="Crater", group="AAA")
-//Rohan Don't touch this I swear to God
-public class Crater extends AvesAblazeOpmode {
 
-	/* Declare OpMode members. */
-	private ElapsedTime runtime = new ElapsedTime();
+@TeleOp(name = "Jan22", group = "AAA")
+public class Jan22_MineralTest extends  AvesAblazeOpmode {
+
+	private ElapsedTime runtime;
 	float moveY;
 	float moveX;
 	float rotate;
 	double extensionPosition=1;
+
 	@Override
 	public void runOpMode() {
 		runtime = new ElapsedTime();
@@ -42,10 +41,7 @@ public class Crater extends AvesAblazeOpmode {
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29-1));
 			finalMinFinder();
 		}
-		while(opModeIsActive()&&position.equals("none")){
-			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29-1));
-			finalMinFinder();
-		}
+		sleep(600);
 		while(opModeIsActive()&&position.equals("none")){
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29-1));
 			finalMinFinder();
@@ -59,6 +55,8 @@ public class Crater extends AvesAblazeOpmode {
 			finalMinFinder();
 		}
 		finalMinFinder();
+
+
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);
 		sleep(500);
@@ -107,44 +105,87 @@ public class Crater extends AvesAblazeOpmode {
 
 
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(91-1));
-
-		if(position.equals("left")||gamepad1.b){
-			polarDrive(1, 2*Math.PI/2.97);
-			sleep(1420);
-			polarDrive(1, -(Math.PI-(2*Math.PI/2.9)));
-			sleep(1120);
-
+		if(position.equals("center")){
+			moveLeftRight(-1);
+			sleep(250);
+			polarDrive(1,Math.PI/2-0.15);
+			sleep(400);
+			rotateToAngle(135);
+			moveUpDown(1);
+			sleep(1400);
+			rotate(-1);
+			sleep(700);
+			robot.marker1.setPosition(0.3);
+			moveLeftRight(-1);
+			sleep(200);
+			moveLeftRight(1);
+			rotateToAngle(180);
+			rotate(1);
+			sleep(60);
+			robot.marker1.setPosition(1);
+			moveUpDown(-1);
+			sleep(100);
+			moveLeftRight(-1);
+			sleep(520);
+			moveUpDown(-1);
+			sleep(2150);
+			stopMotors();
 		}
-		else if(position.equals("right")||gamepad1.a){
-			polarDrive(1, Math.PI/4.4);
-			sleep(1750);
-			polarDrive(1, -(Math.PI-(Math.PI/4.4)));
-			sleep(970);
-
+		else if(position.equals("right")){
+			polarDrive(1, Math.PI/3-0.35);
+			sleep(1650);
+			rotateToAngle(165);
+			moveUpDown(1);
+			sleep(1200);
+			rotate(-1);
+			sleep(700);
+			robot.marker1.setPosition(0.3);
+			moveLeftRight(-1);
+			sleep(200);
+			moveLeftRight(1);
+			rotateToAngle(180);
+			robot.marker1.setPosition(1);
+			moveUpDown(-1);
+			sleep(100);
+			moveLeftRight(-1);
+			sleep(450);
+			moveUpDown(-1);
+			sleep(2150);
+			stopMotors();
 		}
 		else{
-			polarDrive(1, Math.PI/2.7);
-			sleep(1120);
-			polarDrive(1, -(Math.PI-(Math.PI/2.7)));
-			sleep(720);
+
+			moveLeftRight(-1);
+			sleep(550);
+			polarDrive(1, 2*Math.PI/2.5);
+			sleep(1200);
+			rotateToAngle(180);
+			moveUpDown(1);
+			sleep(620);
+			moveLeftRight(-1);
+			sleep(550);
+			robot.marker1.setPosition(0.3);
+			sleep(830);
+			robot.marker1.setPosition(1);
+			rotateToAngle(176);
+			moveLeftRight(1);
+			sleep(250);
+			moveUpDown(-1);
+			sleep(400);
+			moveLeftRight(-1);
+			sleep(250);
+			moveUpDown(-1);
+			sleep(2600);
+			stopMotors();
+
 		}
-		polarDrive(1,2*Math.PI/2.32);
-		sleep(1900);
-		robot.startingAngle=45;
-		rotateToAngle(275);
-		moveLeftRight(-1);
-		sleep(1400);
-		robot.marker1.setPosition(0.3);
-		sleep(830);
-		robot.marker1.setPosition(1);
-		moveLeftRight(1);
-		sleep(400);
-		rotateToAngle(185);
-		moveUpDown(-1);
-		sleep(2250);
+
 		stopMotors();
-	//	tfod.deactivate();
-
+		while(opModeIsActive()){
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+			sleep(100);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
+			sleep(100);
+		}
 	}
-
 }

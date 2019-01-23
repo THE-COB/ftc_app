@@ -21,11 +21,11 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 	double extensionPosition=1;
 	@Override
 	public void runOpMode() {
-			runtime = new ElapsedTime();
-			robot.init(hardwareMap);
-			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
-			calibrate();
-			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
+		runtime = new ElapsedTime();
+		robot.init(hardwareMap);
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
+		calibrate();
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
 		/*robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);
@@ -54,16 +54,17 @@ public class BlueDepotLights extends AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50-1));*/
 		ElapsedTime scanTime = new ElapsedTime();
 		stopMotors();
-position="right";
-while(opModeIsActive()&&(!robot.imu.isGyroCalibrated()||!robot.imu1.isGyroCalibrated())&&scanTime.seconds()<6){
-	calibrate();
-	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(38-1));
 
-}
+		while(opModeIsActive()&&(!robot.imu.isGyroCalibrated()||!robot.imu1.isGyroCalibrated())&&scanTime.seconds()<6){
+			calibrate();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(38-1));
+
+		}
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
 robot.startingAngle=135;
 rotateToAngle(135);
 
+		finalMinFinder();
 
 		if(position.equals("center")){
 			moveLeftRight(-1);
