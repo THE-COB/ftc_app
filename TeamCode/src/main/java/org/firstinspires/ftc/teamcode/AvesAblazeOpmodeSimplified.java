@@ -259,4 +259,5 @@ public interface AvesAblazeOpmodeSimplified {
 	 * Uses vuforia and tensorflow to find position of the gold mineral and store it in the position variable
 	 */
 	public void finalMinFinder();
+	
 }
