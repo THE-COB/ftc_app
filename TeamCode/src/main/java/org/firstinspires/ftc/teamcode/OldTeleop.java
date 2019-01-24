@@ -36,9 +36,11 @@ public class OldTeleop extends AvesAblazeOpmode {
 		runtime.reset();
 		position=57;
 		while(opModeIsActive()) {
+
 			telemetry.addData("time",Math.round(runtime.seconds()));
 			telemetry.addData("armLength", robot.extension.getCurrentPosition());
 			telemetry.addData("liftHeight", robot.lift1.getCurrentPosition());
+			telemetry.addData("armPosition",robot.arm.getCurrentPosition());
 			telemetry.update();
 			if(runtime.seconds()>120){
 				position=97;
