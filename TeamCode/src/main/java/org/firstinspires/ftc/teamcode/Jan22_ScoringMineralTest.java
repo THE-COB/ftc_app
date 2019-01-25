@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
  * Created by Rohan Mathur on 1/22/19.
  */
 
-@Autonomous(name = "ScoringMinerals", group = "AAA")
+@Autonomous(name = "DepotScoringMinerals", group = "AAA")
 public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 
 	private ElapsedTime runtime;

@@ -111,36 +111,53 @@ public class Crater extends AvesAblazeOpmode {
 			if (position.equals("left") || gamepad1.b) {
 				polarDrive(1, 2 * Math.PI / 2.97);
 				sleep(1420);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
 				polarDrive(1, -(Math.PI - (2 * Math.PI / 2.9)));
 				sleep(1120);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 
 			} else if (position.equals("right") || gamepad1.a) {
 				polarDrive(1, Math.PI / 4.4);
 				sleep(2020);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
 				polarDrive(1, -(Math.PI - (Math.PI / 4.4)));
 				sleep(1450);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 
 			} else {
 				polarDrive(1, Math.PI / 2.7);
 				sleep(1120);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
 				polarDrive(1, -(Math.PI - (Math.PI / 2.7)));
 				sleep(800);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 			}
 			polarDrive(1, 2 * Math.PI / 2.32);
 			sleep(1900);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(3-1));
 			robot.startingAngle = 45;
 			rotateToAngle(275);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 			moveLeftRight(-1);
 			sleep(1400);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1-1));
 			robot.marker1.setPosition(0.3);
-			sleep(830);
+			sleep(830);robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(91-1));
 			robot.marker1.setPosition(1);
 			moveLeftRight(1);
 			sleep(400);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
 			rotateToAngle(185);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(94-1));
 			moveUpDown(-1);
 			sleep(2250);
 			stopMotors();
+			while(opModeIsActive()){
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+				sleep(100);
+				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
+				sleep(100);
+			}
 			//	tfod.deactivate();
 
 		}

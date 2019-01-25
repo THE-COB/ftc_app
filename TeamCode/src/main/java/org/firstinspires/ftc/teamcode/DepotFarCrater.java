@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @Autonomous(name="DepotFarCrater", group="AAA")
 //Rohan Don't touch this I swear to God
+@Disabled
 public class DepotFarCrater extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
@@ -18,6 +20,7 @@ public class DepotFarCrater extends AvesAblazeOpmode {
 	float rotate;
 	double extensionPosition=1;
 	@Override
+
 	public void runOpMode() {
 
 			runtime = new ElapsedTime();
