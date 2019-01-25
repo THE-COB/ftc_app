@@ -142,6 +142,7 @@ public class AvesAblazeHardware {
 		lift2.setDirection(DcMotor.Direction.REVERSE);
 		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+		extension.setDirection(DcMotor.Direction.REVERSE);
 
 		arm=hwMap.get(DcMotor.class, "arm");
 		startingHeight=lift1.getCurrentPosition();

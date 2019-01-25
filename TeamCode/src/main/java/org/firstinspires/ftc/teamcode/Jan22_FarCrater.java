@@ -27,7 +27,7 @@ public class Jan22_FarCrater extends  AvesAblazeOpmode {
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
-
+if(opModeIsActive()){
 		initVuforia();
 
 
@@ -181,5 +181,5 @@ public class Jan22_FarCrater extends  AvesAblazeOpmode {
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
 			sleep(100);
 		}
-	}
+	}}
 }

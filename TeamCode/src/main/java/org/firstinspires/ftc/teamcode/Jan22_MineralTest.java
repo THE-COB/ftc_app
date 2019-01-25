@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
  * Created by Rohan Mathur on 1/22/19.
  */
 
-@TeleOp(name = "Jan22", group = "AAA")
+@Autonomous(name = "DepotSample", group = "AAA")
 public class Jan22_MineralTest extends  AvesAblazeOpmode {
 
 	private ElapsedTime runtime;
@@ -27,7 +28,7 @@ public class Jan22_MineralTest extends  AvesAblazeOpmode {
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
-
+if(opModeIsActive()){
 		initVuforia();
 
 
@@ -187,5 +188,6 @@ public class Jan22_MineralTest extends  AvesAblazeOpmode {
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
 			sleep(100);
 		}
-	}
+	}}
+
 }
