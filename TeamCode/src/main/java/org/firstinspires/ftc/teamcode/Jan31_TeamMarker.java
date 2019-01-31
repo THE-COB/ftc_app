@@ -28,18 +28,18 @@ public class Jan31_TeamMarker extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
 if(opModeIsActive()) {
-
+robot.startingAngle=135;
 	moveLeftRight(-1);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5 - 1));
 	sleep(350);
-	polarDrive(1, 2 * Math.PI / 2.22);
+	polarDrive(1, 2 * Math.PI / 2.32);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
-	sleep(1400);
+	sleep(2100);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(3 - 1));
 	rotateToAngle(180);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 	moveLeftRight(-1);
-	sleep(220);
+	sleep(420);
 	robot.marker1.setPosition(0.3);
 	sleep(230);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93 - 1));
