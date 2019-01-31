@@ -79,8 +79,9 @@ public class TeleOp0 extends AvesAblazeOpmode {
 			}
 			else if(relativeDrive){
 				double controlAngle = 0;
+				double newAngle = 0;
 				try {
-					controlAngle = Math.atan(moveY / moveX);
+					controlAngle = Math.toDegrees(Math.atan(moveY / moveX));
 				} catch(ArithmeticException e){
 					if(moveY > 0){
 						controlAngle = 90;
@@ -91,9 +92,8 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				}
 				double currAngle = getAngle();
 
-				if(currAngle>0){
-
-				}
+				newAngle = controlAngle-currAngle;
+				if(newAngle<0) newAngle+=360;
 			}
 			else{
 				if(Math.abs(moveX)>0.25 || Math.abs(moveY)>0.25) {
