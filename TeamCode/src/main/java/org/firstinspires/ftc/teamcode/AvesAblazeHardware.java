@@ -58,6 +58,9 @@ public class AvesAblazeHardware {
 
 	Servo lid;
 
+	Servo phoneServoX;
+	Servo phoneServoY;
+
 	RevBlinkinLedDriver lights;
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -137,20 +140,31 @@ public class AvesAblazeHardware {
 		lift1 = hwMap.get(DcMotor.class, "lift1");
 		lift1.setDirection(DcMotor.Direction.FORWARD);
 		lift1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		lift1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		lift2 = hwMap.get(DcMotor.class, "lift2");
 		lift2.setDirection(DcMotor.Direction.REVERSE);
 		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		extension.setDirection(DcMotor.Direction.REVERSE);
 
 		arm=hwMap.get(DcMotor.class, "arm");
+		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 		startingHeight=lift1.getCurrentPosition();
 
 		//int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 		//parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
 		startingExtension=extension.getCurrentPosition();
+
+		phoneServoX = hwMap.get(Servo.class, "phoneServoX");
+		phoneServoY = hwMap.get(Servo.class, "phoneServoY");
+
+		phoneServoX.setPosition(0.5);
+		phoneServoY.setPosition(0.5);
 	}
 
 
