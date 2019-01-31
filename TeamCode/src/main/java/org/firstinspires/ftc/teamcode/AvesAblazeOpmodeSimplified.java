@@ -260,4 +260,9 @@ public interface AvesAblazeOpmodeSimplified {
 	 */
 	public void finalMinFinder();
 
+	/**
+	 * Runs sleep function but only if opmode is still active to prevent errors
+	 */
+	public void safeSleep(double milliseconds);
+
 }

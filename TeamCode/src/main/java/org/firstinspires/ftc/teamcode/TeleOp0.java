@@ -29,6 +29,7 @@ public class TeleOp0 extends AvesAblazeOpmode {
 	float rotate;
 	double position=0.8;
 	double startingPosition;
+
 	int goldMinerals;
 	int silverMinerals;
 	boolean allDirDrive = false;
@@ -77,7 +78,22 @@ public class TeleOp0 extends AvesAblazeOpmode {
 				}
 			}
 			else if(relativeDrive){
+				double controlAngle = 0;
+				try {
+					controlAngle = Math.atan(moveY / moveX);
+				} catch(ArithmeticException e){
+					if(moveY > 0){
+						controlAngle = 90;
+					}
+					else{
+						controlAngle = 270;
+					}
+				}
+				double currAngle = getAngle();
 
+				if(currAngle>0){
+
+				}
 			}
 			else{
 				if(Math.abs(moveX)>0.25 || Math.abs(moveY)>0.25) {
@@ -170,6 +186,19 @@ public class TeleOp0 extends AvesAblazeOpmode {
 
 			if(gamepad1.back && gamepad1.start && gamepad1.left_trigger>0.5 && gamepad1.right_trigger>0.5 && gamepad2.back && gamepad2.start && gamepad2.left_trigger>0.5 && gamepad2.right_trigger>0.5){
 				relativeDrive = true;
+				if(gamepad1.a){
+					robot.startingAngle = 270;
+				}
+				if(gamepad1.b){
+					robot.startingAngle = 0;
+				}
+				if(gamepad1.x){
+					robot.startingAngle = 180;
+				}
+				if(gamepad1.y){
+					robot.startingAngle = 90;
+				}
+				calibrate();
 			}
 		}
 

@@ -8,6 +8,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -713,6 +715,14 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				}
 		}
 	}
+	public boolean isAlive(){
+		return !isStopRequested()&&opModeIsActive();
+	}
 
+	public void safeSleep(double milliseconds){
+		ElapsedTime et = new ElapsedTime();
+
+		while(et.time()< et.startTime()+milliseconds);
+	}
 
 }
