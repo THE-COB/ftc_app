@@ -32,7 +32,7 @@ if(opModeIsActive()) {
 	moveLeftRight(-1);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5 - 1));
 	sleep(350);
-	polarDrive(1, 2 * Math.PI / 2.1);
+	polarDrive(1, 2 * Math.PI / 2.22);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 	sleep(1400);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(3 - 1));
