@@ -28,18 +28,62 @@ public class Jan31_TeamMarker extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
 if(opModeIsActive()) {
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
+	robot.arm.setPower(1);
+	sleep(500);
+	robot.arm.setPower(0);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(39-1));
+	lift();
+	telemetry.addData("status", "deployed");
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+
+	telemetry.update();
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+	sleep(150);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
+	sleep(150);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
+	sleep(150);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93-1));
+	rotate(0.5);
+	sleep(300);
+	moveLeftRight(1);
+	sleep(370);
+	stopMotors();
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(19-1));
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93-1));
+	rotate(-0.1);
+	sleep(500);
+	stopMotors();
+
+	ElapsedTime scanTime = new ElapsedTime();
+	stopMotors();
+
+
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99-1));
+	while(opModeIsActive()&&(!robot.imu.isGyroCalibrated()&&!robot.imu1.isGyroCalibrated())){
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(97-1));
+		calibrate();
+		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
+		finalMinFinder();
+		telemetry.addData("scantime", scanTime.seconds());
+		telemetry.update();
+	}
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95-1));
+	robot.startingAngle=135;
+	rotateToAngle(135);
 robot.startingAngle=135;
 	moveLeftRight(-1);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5 - 1));
-	sleep(350);
-	polarDrive(1, 2 * Math.PI / 2.32);
+	sleep(280);
+	polarDrive(1, 2.52);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
-	sleep(2100);
+	sleep(2300);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(3 - 1));
-	rotateToAngle(180);
+	rotateToAngle(190);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 	moveLeftRight(-1);
-	sleep(420);
+	sleep(900);
 	robot.marker1.setPosition(0.3);
 	sleep(230);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93 - 1));
@@ -49,8 +93,7 @@ robot.startingAngle=135;
 	rotateToAngle(270);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(94 - 1));
 	moveUpDown(1);
-	sleep(2100);
-	sleep(200);
+	sleep(1550);
 	stopMotors();
 
 

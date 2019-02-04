@@ -13,11 +13,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
@@ -476,8 +478,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	//More lift motors correctly
 	public void lift(){
 		while(Math.abs(robot.lift1.getCurrentPosition()-robot.startingHeight)<3900&&opModeIsActive()){
-			robot.lift1.setPower(0.5);
-			robot.lift2.setPower(0.5);
+			robot.lift1.setPower(1);
+			robot.lift2.setPower(1);
 		}
 		lift("stop");
 	}
@@ -714,6 +716,36 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 				}
 		}
+	}
+
+	public void move(double x, double y){
+		double vx=0;
+		double vy=0;
+		double dx=0;
+		double dy=0;
+		Acceleration a;
+
+		ElapsedTime t=new ElapsedTime();
+		while(dx-x>.2||dy-y>.2&&opModeIsActive()){
+			polarDrive(1,Math.atan(y/x));
+			t.reset();
+			a=robot.imu.getLinearAcceleration();
+			//integrate the acceleration vector to get velocity
+			vx=a.xAccel*t.seconds();
+			vy=a.yAccel*t.seconds();
+			//integrate the velocity vector to get displacement
+			dx+=vx*t.seconds();
+			dy+=vy*t.seconds();
+			telemetry.addData("t", t);
+			telemetry.addData("a", a.toString());
+			telemetry.addData("v", vx+", "+ vy);
+			telemetry.addData("d", dx+", "+dy);
+			telemetry.update();
+					if(gamepad1.left_bumper){
+				stopMotors();
+					}
+		}
+		stopMotors();
 	}
 	public boolean isAlive(){
 		return !isStopRequested()&&opModeIsActive();
