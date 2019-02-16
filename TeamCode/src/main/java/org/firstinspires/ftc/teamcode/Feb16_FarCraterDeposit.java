@@ -53,10 +53,10 @@ public class Feb16_FarCraterDeposit extends  AvesAblazeOpmode {
 		runtime = new ElapsedTime();
 if(opModeIsActive()){
 
-	rotateToAngle(119);
+	rotateToAngle(121);
 	ElapsedTime t=new ElapsedTime();
 	robot.arm.setPower(1);
-	while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 3100) {
+	while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 2900) {
 		telemetry.addData("extension", robot.extension.getCurrentPosition());
 		telemetry.addData("closed", closedExtension);
 		telemetry.update();
@@ -78,9 +78,9 @@ if(opModeIsActive()){
 	sleep(300);
 	robot.arm.setPower(1);
 	sleep(700);
-	robot.arm.setPower(-0.5);
+	robot.arm.setPower(-1);
 	rotateToAngle(135);
-	sleep(700);
+	sleep(500);
 	robot.arm.setPower(0);
 	robot.lid.setPosition(0.55);
 	/*
