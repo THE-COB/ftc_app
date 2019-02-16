@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
  */
 
 @Autonomous(name = "TeamMarker", group = "AAA")
+@Disabled
 public class Jan31_TeamMarker extends  AvesAblazeOpmode {
 
 	private ElapsedTime runtime;

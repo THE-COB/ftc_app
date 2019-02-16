@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="DepotNoDeploy", group="AAA")
+@Disabled
 //Rohan Don't touch this I swear to God
 public class DepotNoDeploy extends AvesAblazeOpmode {
 

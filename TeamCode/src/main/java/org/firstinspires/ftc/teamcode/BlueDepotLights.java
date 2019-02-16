@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="Depot", group="AAA")
+@Disabled
 //Rohan Don't touch this I swear to God
 public class BlueDepotLights extends AvesAblazeOpmode {
 

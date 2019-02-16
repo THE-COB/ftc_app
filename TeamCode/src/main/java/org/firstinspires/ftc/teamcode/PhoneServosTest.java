@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name = "Phone Servo Test", group = "tests")
+@Disabled
 public class PhoneServosTest extends AvesAblazeOpmode {
 	@Override
 	public void runOpMode() {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Rohan Mathur on 9/26/18.
  */
 @TeleOp(name="Teleop Lights", group="Competition")
+@Disabled
 //Rohan Don't touch this I swear to God
 public class TeleopLights extends AvesAblazeOpmode {
 

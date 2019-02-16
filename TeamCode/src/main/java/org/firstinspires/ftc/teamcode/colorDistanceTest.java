@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -31,6 +32,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 @Autonomous(name = "Color/Distance test", group = "Test")
+@Disabled
 public class colorDistanceTest extends AvesAblazeOpmode  {
 	/* Declare OpMode members. */
 	private ElapsedTime runtime;

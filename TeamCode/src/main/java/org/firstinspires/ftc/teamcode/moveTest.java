@@ -17,6 +17,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * Created by Rohan Mathur on 9/26/18.
  */
 @Autonomous(name="moveTest", group="Competition")
+@Disabled
 public class moveTest extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
