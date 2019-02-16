@@ -5,14 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="imu teleop", group="Competition")
+@TeleOp(name="Teleop Lights", group="Competition")
 //Rohan Don't touch this I swear to God
-public class TelemetryTeleop extends AvesAblazeOpmode {
+public class TeleopLights extends AvesAblazeOpmode {
 
 	/* Declare OpMode members. */
 	private ElapsedTime runtime;
@@ -34,39 +32,29 @@ public class TelemetryTeleop extends AvesAblazeOpmode {
 //			tfod.shutdown();
 		}
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(60));
-		calibrate();
 		while (opModeIsActive() && (!robot.imu.isGyroCalibrated() && !robot.imu1.isGyroCalibrated())) {
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(97 - 1));
 			calibrate();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
+			finalMinFinder();
 
 
 		}
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1 - 1));
 		waitForStart();
 		if (opModeIsActive()) {
 			runtime.reset();
 			position = 57;
-
 			while (opModeIsActive()) {
-				telemetry.addData("motor0", robot.motor0.getCurrentPosition());
-				telemetry.addData("motor1", robot.motor1.getCurrentPosition());
-				telemetry.addData("motor2", robot.motor2.getCurrentPosition());
-				telemetry.addData("motor3", robot.motor3.getCurrentPosition());
-				if(gamepad1.a&&gamepad1.dpad_up){
-					while(robot.motor0.getCurrentPosition()+robot.motor3.getCurrentPosition()+robot.motor2.getCurrentPosition()+robot.motor1.getCurrentPosition()/4<2000){
-						moveUpDown(1);
-					}
-				}
+
+				telemetry.addData("time", Math.round(runtime.seconds()));
+				telemetry.addData("armLength", robot.extension.getCurrentPosition());
+				telemetry.addData("liftHeight", robot.lift1.getCurrentPosition());
+				telemetry.addData("armPosition", robot.arm.getCurrentPosition());
+				telemetry.addData("angle", getAngle());
 				telemetry.update();
 				if (runtime.seconds() > 120) {
-					position = 97;
 				} else if (runtime.seconds() > 115) {
-					position = 45;
 				} else if (runtime.seconds() > 105) {
-					if (Math.round(runtime.seconds() * 4) % 2 == 0)
-						position = 96;
-					else
-						position = 100;
 				}
 				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(position - 1));
 				//Move Robot
@@ -171,10 +159,8 @@ public class TelemetryTeleop extends AvesAblazeOpmode {
 				//lift robot
 				if (gamepad2.left_bumper) {
 					position = 97;
-					robot.lid.setPosition(0.9);
 
 				} else if (gamepad2.right_bumper) {
-					robot.lid.setPosition(0.55);
 					if (runtime.seconds() < 110) {
 						robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 						sleep(100);
@@ -193,17 +179,13 @@ public class TelemetryTeleop extends AvesAblazeOpmode {
 				}
 
 				if (gamepad2.dpad_up) {
-					lift("up");
-					position = 81;
+					position = 1;
 				} else if (gamepad2.dpad_down) {
-					lift("down");
-					position = 81;
+					position = 2;
 				} else if (gamepad1.y) {
-					lift("up");
-					position = 81;
+					position = 3;
 				} else if (gamepad1.a && !gamepad1.start) {
-					lift("down");
-					position = 81;
+					position = 4;
 				} else {
 					lift("stop");
 				}
@@ -212,29 +194,22 @@ public class TelemetryTeleop extends AvesAblazeOpmode {
 				if (gamepad2.x) {
 					//extends
 					extensionPosition = startingPosition;
-					robot.extension.setPower(0.5);
 					//	while (opModeIsActive() && gamepad1.x) ;
 				} else if (gamepad2.b && !gamepad2.start) {
 					//retracts
-					robot.extension.setPower(-0.5);
 					//	while (opModeIsActive() && gamepad1.b) ;
 				} else if (gamepad2.y) {
-					extend();
 				} else if (gamepad2.a && !gamepad2.start) {
 
-					retract();
 				} else {
 					robot.extension.setPower(0);
 				}
 
 				if (Math.abs(gamepad2.left_stick_y) > 0.1) {
-					robot.arm.setPower(gamepad2.left_stick_y / 1.5);
 					position = 22;
 				} else if (gamepad2.left_trigger > 0.1) {
-					robot.arm.setPower(gamepad2.left_trigger / 3.25);
 					position = 22;
 				} else if (gamepad2.right_trigger > 0.1) {
-					robot.arm.setPower(-gamepad2.right_trigger / 3.25);
 					position = 22;
 				} else
 					robot.arm.setPower(0);

@@ -61,6 +61,14 @@ public class AvesAblazeHardware {
 	Servo phoneServoX;
 	Servo phoneServoY;
 
+	Servo wallServo;
+
+	ColorSensor markerColor;
+	DistanceSensor markerDistance;
+
+	ColorSensor wallColor;
+	DistanceSensor wallDistance;
+
 	RevBlinkinLedDriver lights;
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
@@ -162,9 +170,17 @@ public class AvesAblazeHardware {
 
 		phoneServoX = hwMap.get(Servo.class, "phoneServoX");
 		phoneServoY = hwMap.get(Servo.class, "phoneServoY");
+		wallServo =hwMap.get(Servo.class, "wallServo");
 
-		phoneServoX.setPosition(0.5);
+		phoneServoX.setPosition(0.41);
 		phoneServoY.setPosition(0.5);
+		wallServo.setPosition(0.3);
+
+		markerColor = hwMap.get(ColorSensor.class, "markerColorDistance");
+		markerDistance = hwMap.get(DistanceSensor.class, "markerColorDistance");
+
+		wallColor = hwMap.get(ColorSensor.class, "wallColorDistance");
+		wallDistance = hwMap.get(DistanceSensor.class, "wallColorDistance");
 	}
 
 

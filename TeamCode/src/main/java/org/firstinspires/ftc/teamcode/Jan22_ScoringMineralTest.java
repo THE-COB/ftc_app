@@ -32,38 +32,12 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 
 		waitForStart();
 		if (opModeIsActive()) {
-			initVuforia();
 
-
-			if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-				initTfod();
-			} else {
-				telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-			}
-
-			while (opModeIsActive() && position.equals("none")) {
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29 - 1));
-				finalMinFinder();
-			}
-			sleep(600);
-			while (opModeIsActive() && position.equals("none")) {
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29 - 1));
-				finalMinFinder();
-			}
-			while (opModeIsActive() && position.equals("none")) {
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29 - 1));
-				finalMinFinder();
-			}
-			while (opModeIsActive() && position.equals("none")) {
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29 - 1));
-				finalMinFinder();
-			}
-			finalMinFinder();
 
 
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9 - 1));
 			robot.arm.setPower(1);
-			sleep(500);
+			sleep(600);
 			robot.arm.setPower(0);
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(39 - 1));
 
@@ -94,15 +68,6 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 			stopMotors();
 
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99 - 1));
-			while (opModeIsActive() && (!robot.imu.isGyroCalibrated() && !robot.imu1.isGyroCalibrated())) {
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(97 - 1));
-				calibrate();
-				robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
-				finalMinFinder();
-				telemetry.addData("scantime", scanTime.seconds());
-				telemetry.update();
-
-			}
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
 			robot.startingAngle = 135;
 			rotateToAngle(135);
@@ -110,15 +75,19 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(91 - 1));
 			closedExtension = robot.extension.getCurrentPosition();
 			closedArm = robot.arm.getCurrentPosition();
+			position="center";
 			if (position.equals("center")) {
-				rotateToAngle(111);
-
+				rotateToAngle(123);
+ElapsedTime t=new ElapsedTime();
 				robot.arm.setPower(1);
-				while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 1920) {
+				while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 3220) {
 					telemetry.addData("extension", robot.extension.getCurrentPosition());
 					telemetry.addData("closed", closedExtension);
 					telemetry.update();
 					robot.extension.setPower(1);
+					if(t.seconds()>1){
+						robot.arm.setPower(0);
+					}
 				}
 				telemetry.addData("extension", robot.extension.getCurrentPosition());
 				telemetry.addData("closed", closedExtension);
@@ -127,9 +96,8 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 				robot.extension.setPower(0);
 
 				robot.arm.setPower(0);
-				sleep(500);
 				robot.arm.setPower(1);
-				sleep(900);
+				sleep(700);
 				robot.arm.setPower(-1);
 				sleep(300);
 				robot.arm.setPower(1);
@@ -137,7 +105,7 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 				robot.arm.setPower(-0.5);
 				rotateToAngle(135);
 				robot.arm.setPower(-0.5);
-				while (opModeIsActive() && robot.extension.getCurrentPosition() - closedExtension < 2873) {
+				while (opModeIsActive() && robot.extension.getCurrentPosition() - closedExtension < 3400) {
 					robot.extension.setPower(1);
 				}
 				robot.extension.setPower(0);
@@ -149,33 +117,6 @@ public class Jan22_ScoringMineralTest extends  AvesAblazeOpmode {
 				robot.extension.setPower(-1);
 				sleep(100);
 				robot.arm.setPower(0);
-				rotateToAngle(125);
-
-				sleep(500);
-				robot.extension.setPower(0);
-				moveLeftRight(-1);
-				sleep(250);
-				polarDrive(1, Math.PI / 2 - 0.15);
-				sleep(400);
-				rotateToAngle(135);
-				moveUpDown(1);
-				sleep(1400);
-				rotate(-1);
-				sleep(700);
-				robot.marker1.setPosition(0.3);
-				moveLeftRight(-1);
-				sleep(200);
-				moveLeftRight(1);
-				rotateToAngle(180);
-				rotate(1);
-				sleep(60);
-				robot.marker1.setPosition(1);
-				moveUpDown(-1);
-				sleep(100);
-				moveLeftRight(-1);
-				sleep(520);
-				moveUpDown(-1);
-				sleep(2150);
 				stopMotors();
 			} else if (position.equals("right")) {
 				rotateToAngle(110);

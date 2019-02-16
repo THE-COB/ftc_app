@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -52,6 +53,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			String silverMineralLabel="";
 	List<Recognition> updatedRecognitions=null;
 	String position="none";
+
 	//	RobotValues fireVals;
 
 	static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
@@ -60,6 +62,11 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
 	static final String LABEL_GOLD_MINERAL = "Gold Mineral";
 	static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+	double markerRed=0;
+	double markerBlue=0;
+	double wallAlpha=0;
+
 	public void extend(){
 		while(Math.abs(robot.extension.getCurrentPosition()-robot.startingExtension)<1600)
 			robot.extension.setPower(0.5);
@@ -97,7 +104,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		robot.motor1.setPower(0);
 		robot.motor2.setPower(0);
 		robot.motor3.setPower(0);
-		robot.arm.setPower(0);
 	}
 	//rotates from power
 	public void rotate(double power){
@@ -254,7 +260,16 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 		robot.imu1.initialize(imuParameters);
 		robot.imu.initialize(imuParameters);
+		markerBlue=robot.markerColor.blue();
+		markerRed=robot.markerColor.red();
+		wallAlpha=robot.wallColor.alpha();
+
 	}
+
+	String format(OpenGLMatrix transformationMatrix) {
+		return transformationMatrix.formatAsTransform();
+	}
+
 	//Returns x coordinate from vuforia
 	public int getX(){
 		if(!resetCoordinates()) return 10000;
@@ -366,7 +381,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			stopMotors();
 			return;
 		}
-		while (Math.abs(getAngle() - newAngle) > 1&&opModeIsActive()) {
+		while (Math.abs(getAngle() - newAngle) > 3&&opModeIsActive()) {
 			telemetry.addData("newangle", newAngle);
 			telemetry.addData("getangle()", getAngle());
 			telemetry.update();
@@ -685,6 +700,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 								if (rec0.getLabel().equals(LABEL_GOLD_MINERAL)) {
 									telemetry.addData("rec0", rec0.getLeft());
 									telemetry.addData("rec1", rec1.getLeft());
+									telemetry.addData("rec0", "gold mineral");
 									telemetry.update();
 									if (rec0.getTop() > rec1.getTop()) {
 										position = "left";
@@ -694,6 +710,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 								} else if (rec1.getLabel().equals(LABEL_GOLD_MINERAL)) {
 									telemetry.addData("rec0", rec0.getLeft());
 									telemetry.addData("rec1", rec1.getLeft());
+									telemetry.addData("rec1", "gold mineral");
 									telemetry.update();
 									if (rec1.getTop() > rec0.getTop()) {
 										position = "left";
@@ -707,8 +724,12 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 							telemetry.addData("Gold Mineral Position", position);
 
 							telemetry.update();
+							ElapsedTime scanTime = new ElapsedTime();
 							if (updatedRecognitions.size() == 1) {
-								rotate(0.01);
+								if (Math.round(scanTime.milliseconds() / 200) % 10 == 0) {
+									robot.phoneServoX.setPosition(robot.phoneServoX.getPosition() - 0.00055);
+									robot.phoneServoY.setPosition(robot.phoneServoY.getPosition() + 0.00035);
+								}
 							}
 							stopMotors();
 						}
@@ -726,13 +747,15 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		Acceleration a;
 
 		ElapsedTime t=new ElapsedTime();
-		while(dx-x>.2||dy-y>.2&&opModeIsActive()){
+		while(!gamepad1.a&&opModeIsActive()){
 			polarDrive(1,Math.atan(y/x));
 			t.reset();
 			a=robot.imu.getLinearAcceleration();
+
 			//integrate the acceleration vector to get velocity
-			vx=a.xAccel*t.seconds();
-			vy=a.yAccel*t.seconds();
+			vx+=(a.xAccel-0.1)*t.seconds();
+			vy+=a.yAccel*t.seconds();
+
 			//integrate the velocity vector to get displacement
 			dx+=vx*t.seconds();
 			dy+=vy*t.seconds();
@@ -741,11 +764,69 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			telemetry.addData("v", vx+", "+ vy);
 			telemetry.addData("d", dx+", "+dy);
 			telemetry.update();
-					if(gamepad1.left_bumper){
-				stopMotors();
+					while(gamepad1.b&&opModeIsActive()){
+						stopMotors();
 					}
 		}
 		stopMotors();
+	}
+	public void sample(){
+		ElapsedTime scanTime=new ElapsedTime();
+		while(scanTime.seconds()<1.75&&position.equals("none")&&opModeIsActive()){
+			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
+				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&tfod.getRecognitions().get(0).getHeight()>65){
+					position="left";
+				}
+		}
+		while(scanTime.seconds()<4&&position.equals("none")&&opModeIsActive()){
+			robot.phoneServoX.setPosition(0.61);
+			robot.phoneServoY.setPosition(0.67);
+			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
+				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&scanTime.seconds()>2.25&&tfod.getRecognitions().get(0).getHeight()>65){
+					position="center";
+				}
+		}
+		if(position.equals("none"))
+			position="right";
+		if (position.equals("left") || gamepad1.b) {
+			polarDrive(1, 2 * Math.PI / 2.97);
+			sleep(1420);
+			markerBlue=robot.markerColor.blue();
+			markerRed=robot.markerColor.red();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
+			ElapsedTime driveTime=new ElapsedTime();
+			while(robot.markerColor.blue()<markerBlue+15&&robot.markerColor.red()<markerRed+15&&opModeIsActive()&&driveTime.seconds()<1.4)
+			polarDrive(1, -(Math.PI - (2 * Math.PI / 2.9)));
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
+
+		} else if (position.equals("right") || gamepad1.a) {
+			polarDrive(1, Math.PI / 4.4);
+			sleep(2220);
+			markerBlue=robot.markerColor.blue();
+			markerRed=robot.markerColor.red();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
+			ElapsedTime driveTime=new ElapsedTime();
+			while(robot.markerColor.blue()<markerBlue+15&&robot.markerColor.red()<markerRed+15&&opModeIsActive()&&driveTime.seconds()<2.25)
+				polarDrive(1, -(Math.PI - (Math.PI / 4.4)));
+			polarDrive(1, -Math.PI+0.3);
+			sleep(100);
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
+
+		} else {
+			polarDrive(1, Math.PI / 2.7);
+
+			sleep(1200);
+			markerBlue=robot.markerColor.blue();
+			markerRed=robot.markerColor.red();
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
+
+			ElapsedTime driveTime=new ElapsedTime();
+			while(robot.markerColor.blue()<markerBlue+15&&robot.markerColor.red()<markerRed+15&&opModeIsActive()&&driveTime.seconds()<2)
+				polarDrive(1, -(Math.PI - (Math.PI / 2.7)));
+			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
+		}
+
+
 	}
 	public boolean isAlive(){
 		return !isStopRequested()&&opModeIsActive();

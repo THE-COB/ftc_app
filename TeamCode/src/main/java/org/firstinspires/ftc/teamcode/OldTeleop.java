@@ -72,16 +72,40 @@ public class OldTeleop extends AvesAblazeOpmode {
 
 
 			 */
-				if ((Math.abs(moveY) > 0.25)) {
-					moveUpDown(-moveY);
-					position = 57;
-
-				} else if (Math.abs(moveX) > 0.25) {
-					moveLeftRight(-moveX);
-					position = 67;
-				} else if (Math.abs(rotate) > 0.25) {
-					rotate(-rotate);
+				/*if(Math.abs(gamepad1.right_stick_x)>.1||Math.abs(gamepad1.right_stick_y)>.1){
+					if(gamepad1.right_stick_x<0){
+						if(gamepad1.right_stick_y>0){
+							polarDrive(1, Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x));
+						}
+						else{
+							polarDrive(1, Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x));
+						}
+					}
+					else{
+						if(gamepad1.right_stick_y>0){
+							polarDrive(1, -Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x));
+						}
+						else{
+							polarDrive(1,- Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x));
+						}
+					}
 				}
+				else*/
+				if(gamepad1.x){
+					polarDrive(gamepad1.left_stick_y+gamepad1.left_stick_x, Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x));
+				}
+				else {
+					if ((Math.abs(moveY) > 0.25)) {
+						moveUpDown(-moveY);
+						position = 57;
+
+					} else if (Math.abs(moveX) > 0.25) {
+						moveLeftRight(-moveX);
+						position = 67;
+					} else if (Math.abs(rotate) > 0.25) {
+						rotate(-rotate);
+					}
+
 			/*if(!allDirDrive && relativeDrive == 10000) {
 				if ((Math.abs(moveY) > 0.25)) {
 					moveUpDown(-moveY);
@@ -129,38 +153,39 @@ public class OldTeleop extends AvesAblazeOpmode {
 				}
 				polarDrive(powerControl, Math.toRadians((360+angleWanted)-angleFacing));
 			}*/
-				else if (gamepad1.left_bumper) {
-					rotate(-0.2);
-					position = 39;
-				} else if (gamepad1.right_bumper) {
-					rotate(0.2);
-					position = 39;
-				} else if (gamepad1.dpad_up) {
-					position = 64;
-					moveUpDown(-0.3);
-				} else if (gamepad1.dpad_down) {
-					position = 64;
-					moveUpDown(+0.3);
-				} else if (gamepad1.dpad_left) {
-					position = 54;
-					moveLeftRight(-0.3);
-				} else if (gamepad1.dpad_right) {
-					position = 54;
-					moveLeftRight(0.3);
-				} else {
-					position = 72;
-					stopMotors();
+					else if (gamepad1.left_bumper) {
+						rotate(-0.2);
+						position = 39;
+					} else if (gamepad1.right_bumper) {
+						rotate(0.2);
+						position = 39;
+					} else if (gamepad1.dpad_up) {
+						position = 64;
+						moveUpDown(-0.3);
+					} else if (gamepad1.dpad_down) {
+						position = 64;
+						moveUpDown(+0.3);
+					} else if (gamepad1.dpad_left) {
+						position = 54;
+						moveLeftRight(-0.3);
+					} else if (gamepad1.dpad_right) {
+						position = 54;
+						moveLeftRight(0.3);
+					} else {
+						position = 72;
+						stopMotors();
+					}
 				}
 
 				//Move team marker mechanism
-				if (gamepad1.left_trigger > 0.1) {
+				/*if (gamepad1.left_trigger > 0.1) {
 					robot.marker1.setPosition(1);
 				}
 				if (gamepad1.right_trigger > 0.1) {
 					robot.marker1.setPosition(0.3);
 				} else {
 					//robot.marker.setPower(0.6);
-				}
+				}*/
 
 				//lift robot
 				if (gamepad2.left_bumper) {

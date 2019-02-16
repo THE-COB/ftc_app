@@ -41,10 +41,8 @@ public class moveTest extends AvesAblazeOpmode {
 		telemetry.update();
 		calibrate();
 			waitForStart();
-			while(!robot.imu.isAccelerometerCalibrated());
-		move(1,0);
-		move(0,1);
-		move(-2,-2);
+			while(!robot.imu.isGyroCalibrated());
+		move(0.1,0);
 
 		stopMotors();
 		while (opModeIsActive()){
