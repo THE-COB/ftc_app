@@ -22,6 +22,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 	int position;
 	boolean allDirDrive = false;
 	int relativeDrive = 10000;
+	private ElapsedTime lidTime;
 	@Override
 	public void runOpMode() {
 		try {
@@ -195,6 +196,8 @@ public class OldTeleop extends AvesAblazeOpmode {
 				} else if (gamepad2.right_bumper) {
 					robot.lid.setPosition(0.55);
 					if (runtime.seconds() < 110) {
+						lidTime = new ElapsedTime();
+						lidTime.reset();
 						robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 						sleep(100);
 						robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100 - 1));
@@ -209,6 +212,11 @@ public class OldTeleop extends AvesAblazeOpmode {
 						sleep(100);
 						robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 					}
+				}
+
+				if(lidTime.seconds()>5){
+					position = 97;
+					robot.lid.setPosition(0.9);
 				}
 
 				if (gamepad2.dpad_up) {
