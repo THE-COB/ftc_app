@@ -46,10 +46,44 @@ public class Feb16_FarCraterDeposit extends  AvesAblazeOpmode {
 		robot.phoneServoX.setPosition(0.27);
 		robot.phoneServoY.setPosition(0.61);
 		waitForStart();
+		robot.startingAngle=135;
+		int closedExtension = robot.extension.getCurrentPosition();
+		int closedArm = robot.arm.getCurrentPosition();
 		new Thread(new initTfod()).start();
 		runtime = new ElapsedTime();
 if(opModeIsActive()){
 
+	rotateToAngle(119);
+	ElapsedTime t=new ElapsedTime();
+	robot.arm.setPower(1);
+	while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 3100) {
+		telemetry.addData("extension", robot.extension.getCurrentPosition());
+		telemetry.addData("closed", closedExtension);
+		telemetry.update();
+		robot.extension.setPower(1);
+		if(t.seconds()>1){
+			robot.arm.setPower(0);
+		}
+	}
+	telemetry.addData("extension", robot.extension.getCurrentPosition());
+	telemetry.addData("closed", closedExtension);
+	telemetry.update();
+
+	robot.extension.setPower(0);
+
+	robot.arm.setPower(0);
+	robot.arm.setPower(1);
+	sleep(700);
+	robot.arm.setPower(-1);
+	sleep(300);
+	robot.arm.setPower(1);
+	sleep(700);
+	robot.arm.setPower(-0.5);
+	rotateToAngle(135);
+	sleep(700);
+	robot.arm.setPower(0);
+	robot.lid.setPosition(0.55);
+	/*
 
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9 - 1));
 	robot.arm.setPower(1);
@@ -86,8 +120,10 @@ if(opModeIsActive()){
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
 	robot.startingAngle = 135;
 	rotateToAngle(135);
-	sample();
-	rotate(-1);
+	sample();*/
+
+
+	/*rotate(-1);
 	sleep(220);
 	rotateToAngle(180);
 	moveLeftRight(0.8);
@@ -137,7 +173,7 @@ if(opModeIsActive()){
 
 	robot.arm.setPower(0);
 	robot.extension.setPower(0);
-	stopMotors();
+	stopMotors();*/
 
 
 	/*moveUpDown(1);
