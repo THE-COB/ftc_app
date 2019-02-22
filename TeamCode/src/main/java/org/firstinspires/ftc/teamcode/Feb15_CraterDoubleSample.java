@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -43,7 +44,7 @@ public class Feb15_CraterDoubleSample extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.25);
+		robot.phoneServoX.setPosition(0.23);
 		robot.phoneServoY.setPosition(0.61);
 		waitForStart();
 		runtime = new ElapsedTime();
@@ -70,12 +71,15 @@ if(opModeIsActive()){
 	rotate(0.5);
 	sleep(200);
 	moveLeftRight(1);
-	sleep(370);
+	sleep(270);
+	lift("down");
+	sleep(200);
+	lift("stop");
 	stopMotors();
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(19 - 1));
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93 - 1));
 	rotate(-0.1);
-	sleep(500);
+	sleep(00);
 	stopMotors();
 
 	stopMotors();
@@ -83,7 +87,8 @@ if(opModeIsActive()){
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99 - 1));
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
 	robot.startingAngle = 42;
-	rotateToAngle(45);
+	rotateToAngle(43);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
 	sample();
 
 
@@ -92,20 +97,16 @@ if(opModeIsActive()){
 	rotateToAngle(90);
 	moveLeftRight(0.8);
 	sleep(100);
-	robot.wallServo.setPosition(0.92);
 	moveUpDown(1);
-	sleep(1150);
 	ElapsedTime wallTime=new ElapsedTime();
-	while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100))&&wallTime.seconds()<2&&opModeIsActive())
-		moveUpDown(0.2);
-	robot.wallServo.setPosition(0.3);
+	while(opModeIsActive()&&wallTime.seconds()<1.2);
 	rotate(1);
 	sleep(500);
 	rotateToAngle(270);
 	moveLeftRight(-1);
 	markerBlue=robot.markerColor.blue();
 	markerRed=robot.markerColor.red();
-	sleep(1700);
+	sleep(1600);
 	ElapsedTime depotTime=new ElapsedTime();
 	while(robot.markerColor.blue()<markerBlue+15&&robot.markerColor.red()<markerRed+15&&opModeIsActive()&&depotTime.seconds()<1)
 		moveLeftRight(-0.2);

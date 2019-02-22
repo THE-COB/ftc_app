@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -66,8 +67,6 @@ public class AvesAblazeHardware {
 	ColorSensor markerColor;
 	DistanceSensor markerDistance;
 
-	ColorSensor wallColor;
-	DistanceSensor wallDistance;
 
 	RevBlinkinLedDriver lights;
 	// We will define some constants and conversions here
@@ -128,7 +127,6 @@ public class AvesAblazeHardware {
 			//2		3\\
 		*/
 
-
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -179,8 +177,6 @@ public class AvesAblazeHardware {
 		markerColor = hwMap.get(ColorSensor.class, "markerColorDistance");
 		markerDistance = hwMap.get(DistanceSensor.class, "markerColorDistance");
 
-		wallColor = hwMap.get(ColorSensor.class, "wallColorDistance");
-		wallDistance = hwMap.get(DistanceSensor.class, "wallColorDistance");
 	}
 
 

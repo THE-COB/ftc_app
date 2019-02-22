@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 //Rohan Don't touch this I swear to God
 public class OldTeleop extends AvesAblazeOpmode {
 
+
 	/* Declare OpMode members. */
 	private ElapsedTime runtime;
 	float moveY;
@@ -29,6 +30,8 @@ public class OldTeleop extends AvesAblazeOpmode {
 			runtime = new ElapsedTime();
 			robot.init(hardwareMap);
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50));
+			tfod.shutdown();
+			//vuforia.stop();
 		} catch (Exception e) {
 //			tfod.shutdown();
 		}
@@ -45,6 +48,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 		if (opModeIsActive()) {
 			runtime.reset();
 			position = 57;
+			lidTime = new ElapsedTime();
 			while (opModeIsActive()) {
 
 				telemetry.addData("time", Math.round(runtime.seconds()));
@@ -214,7 +218,7 @@ public class OldTeleop extends AvesAblazeOpmode {
 					}
 				}
 
-				if(lidTime.seconds()>5){
+				if(lidTime.seconds()>5&&lidTime.seconds()<5.5){
 					position = 97;
 					robot.lid.setPosition(0.9);
 				}

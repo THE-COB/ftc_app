@@ -261,7 +261,6 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 		robot.imu.initialize(imuParameters);
 		markerBlue=robot.markerColor.blue();
 		markerRed=robot.markerColor.red();
-		wallAlpha=robot.wallColor.alpha();
 
 	}
 
@@ -640,7 +639,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	public void initTfod() {
 		int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
 				"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters((tfodMonitorViewId));
 		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
 	}
@@ -771,19 +770,22 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	public void sample(){
 		ElapsedTime scanTime=new ElapsedTime();
-		while(scanTime.seconds()<1.75&&position.equals("none")&&opModeIsActive()){
+		while(scanTime.seconds()<2.3&&position.equals("none")&&opModeIsActive()){
 			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
 				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&tfod.getRecognitions().get(0).getHeight()>65){
-					position="left";
-				}
-		}
-		while(scanTime.seconds()<4&&position.equals("none")&&opModeIsActive()){
-			robot.phoneServoX.setPosition(0.61);
-			robot.phoneServoY.setPosition(0.67);
-			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
-				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&scanTime.seconds()>2.25&&tfod.getRecognitions().get(0).getHeight()>65){
 					position="center";
 				}
+		}
+		while(scanTime.seconds()<4.85&&position.equals("none")&&opModeIsActive()){
+			robot.phoneServoX.setPosition(0.3);
+			robot.phoneServoY.setPosition(0.64);
+			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0){
+				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&scanTime.seconds()>1.5&&tfod.getRecognitions().get(0).getHeight()>65){
+					position="left";
+					telemetry.addData("mPosition", position);
+					telemetry.update();
+				}
+			}
 		}
 		if(position.equals("none"))
 			position="right";
@@ -800,7 +802,7 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 
 		} else if (position.equals("right") || gamepad1.a) {
 			polarDrive(1, Math.PI / 4.4);
-			sleep(2220);
+			sleep(2230);
 			markerBlue=robot.markerColor.blue();
 			markerRed=robot.markerColor.red();
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
@@ -812,6 +814,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 
 		} else {
+			telemetry.addData("it ran center","it certainly ran center");
+			telemetry.update();
 			polarDrive(1, Math.PI / 2.7);
 
 			sleep(1200);
@@ -824,7 +828,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				polarDrive(1, -(Math.PI - (Math.PI / 2.7)));
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 		}
-
+		telemetry.addData("Mineral Color", position);
+		telemetry.update();
 
 	}
 	public boolean isAlive(){

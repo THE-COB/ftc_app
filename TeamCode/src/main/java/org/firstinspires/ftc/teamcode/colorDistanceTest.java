@@ -361,8 +361,6 @@ public class colorDistanceTest extends AvesAblazeOpmode  {
 					sleep(100);
 					moveUpDown(1);
 					sleep(800);
-					while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100)))
-						moveUpDown(0.7);
 					moveLeftRight(-1);
 					markerBlue=robot.markerColor.blue();
 					markerRed=robot.markerColor.red();
@@ -581,14 +579,6 @@ public class colorDistanceTest extends AvesAblazeOpmode  {
 
 				telemetry.addData("Distance", robot.markerDistance.getDistance(DistanceUnit.INCH));
 
-				telemetry.addData("wallRed", robot.wallColor.red());
-				telemetry.addData("wallGreen", robot.wallColor.green());
-				telemetry.addData("wallBlue", robot.wallColor.blue());
-				telemetry.addData("wallAlpha", robot.wallColor.alpha());
-
-				telemetry.addData("wallDistance", robot.wallDistance.getDistance(DistanceUnit.MM));
-				telemetry.addData("wallDistance", !(robot.wallDistance.getDistance(DistanceUnit.MM)<2));
-				telemetry.addData("wallDistance", !(robot.wallDistance.getDistance(DistanceUnit.MM)>100));
 				telemetry.update();
 				//Controller 1 presses back, start, and both bumpers
 			/*if(gamepad1.back && gamepad1.start && gamepad1.left_bumper && gamepad1.right_bumper){

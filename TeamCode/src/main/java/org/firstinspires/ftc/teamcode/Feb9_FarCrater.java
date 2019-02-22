@@ -23,17 +23,21 @@ public class Feb9_FarCrater extends  AvesAblazeOpmode {
 	public class initTfod implements Runnable{
 		@Override
 		public void run() {
-			initVuforia();
+			try{
+				initVuforia();
 
 
-			if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-				initTfod();
-			} else {
-				telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-			}
-			/** Activate Tensor Flow Object Detection. */
-			if (tfod != null) {
-				tfod.activate();
+				if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+					initTfod();
+				} else {
+					telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+				}
+				/** Activate Tensor Flow Object Detection. */
+				if (tfod != null) {
+					tfod.activate();
+				}
+			} catch(Exception e){
+				telemetry.addData("oops", "oops");
 			}
 		}
 	}
@@ -44,8 +48,8 @@ public class Feb9_FarCrater extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.27);
-		robot.phoneServoY.setPosition(0.61);
+		robot.phoneServoX.setPosition(0.7);	//0.24 FEB 22
+		robot.phoneServoY.setPosition(0.67);	//0.64 FEB 22
 		waitForStart();
 		new Thread(new initTfod()).start();
 		runtime = new ElapsedTime();
@@ -87,7 +91,10 @@ if(opModeIsActive()){
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
 	robot.startingAngle = 135;
 	rotateToAngle(135);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
+
 	sample();
+
 	rotate(-1);
 	sleep(220);
 	rotateToAngle(180);
@@ -95,10 +102,10 @@ if(opModeIsActive()){
 	sleep(100);
 	robot.wallServo.setPosition(0.92);
 	moveUpDown(1);
-	sleep(1050);
 	ElapsedTime wallTime=new ElapsedTime();
-	while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100))&&wallTime.seconds()<2&&opModeIsActive())
-		moveUpDown(0.2);
+	double wallTNum = 1.16;
+	if(position=="center" || position=="right") wallTNum = 1.2;
+	while(opModeIsActive()&&wallTime.seconds()<wallTNum);
 	robot.wallServo.setPosition(0.3);
 	moveLeftRight(-1);
 	markerBlue=robot.markerColor.blue();
@@ -116,7 +123,7 @@ if(opModeIsActive()){
 	robot.marker1.setPosition(1);
 	moveUpDown(1);
 	sleep(15);
-	rotateToAngle(270);
+	rotateToAngle(272);
 
 	moveUpDown(1);
 	ElapsedTime drivetime= new ElapsedTime();

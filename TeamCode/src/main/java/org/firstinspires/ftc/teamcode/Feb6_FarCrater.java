@@ -108,13 +108,11 @@ if(opModeIsActive()){
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 	}
 	rotateToAngle(180);
-	moveLeftRight(0.8);
+	moveLeftRight(1);
 	sleep(100);
 	robot.wallServo.setPosition(0.82);
 	moveUpDown(1);
 	sleep(700);
-	while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100)))
-		moveUpDown(0.5);
 	robot.wallServo.setPosition(0.3);
 	moveLeftRight(-1);
 	markerBlue=robot.markerColor.blue();

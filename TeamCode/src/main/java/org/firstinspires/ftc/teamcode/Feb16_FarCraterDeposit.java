@@ -43,17 +43,16 @@ public class Feb16_FarCraterDeposit extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.27);
-		robot.phoneServoY.setPosition(0.61);
+		robot.phoneServoX.setPosition(.7);//(0.26);
+		robot.phoneServoY.setPosition(.67);//(0.61);
 		waitForStart();
-		robot.startingAngle=135;
 		int closedExtension = robot.extension.getCurrentPosition();
 		int closedArm = robot.arm.getCurrentPosition();
 		new Thread(new initTfod()).start();
 		runtime = new ElapsedTime();
 if(opModeIsActive()){
 
-	rotateToAngle(121);
+	/*rotateToAngle(121);
 	ElapsedTime t=new ElapsedTime();
 	robot.arm.setPower(1);
 	while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 2900) {
@@ -82,8 +81,10 @@ if(opModeIsActive()){
 	rotateToAngle(135);
 	sleep(500);
 	robot.arm.setPower(0);
-	robot.lid.setPosition(0.55);
-	/*
+	robot.lid.setPosition(0.55);*/
+
+
+
 
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9 - 1));
 	robot.arm.setPower(1);
@@ -118,11 +119,66 @@ if(opModeIsActive()){
 
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99 - 1));
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
-	robot.startingAngle = 135;
+	robot.startingAngle = 132;
 	rotateToAngle(135);
-	sample();*/
+	ElapsedTime scanTime=new ElapsedTime();
+	while(scanTime.seconds()<2.25&&position.equals("none")&&opModeIsActive()){
+		if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
+			if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&tfod.getRecognitions().get(0).getHeight()>65){
+				position="left";
+			}
+	}
+	while(scanTime.seconds()<5.25&&position.equals("none")&&opModeIsActive()){
+		robot.phoneServoX.setPosition(0.61);
+		robot.phoneServoY.setPosition(0.67);
+		if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0)
+			if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&scanTime.seconds()>2.45&&tfod.getRecognitions().get(0).getHeight()>65){
+				position="center";
+			}
+	}
+	if(position.equals("none"))
+		position="right";
+	position="left";
+	if(position.equals("left")) {
+		rotateToAngle(144);
+		ElapsedTime t = new ElapsedTime();
+		robot.arm.setPower(1);
+		while (opModeIsActive() && Math.abs(robot.extension.getCurrentPosition() - closedExtension) < 2200) {
+			telemetry.addData("extension", robot.extension.getCurrentPosition());
+			telemetry.addData("closed", closedExtension);
+			telemetry.update();
+			robot.extension.setPower(1);
+			if (t.seconds() > 1.2) {
+				robot.arm.setPower(0);
+			}
+		}
+		telemetry.addData("extension", robot.extension.getCurrentPosition());
+		telemetry.addData("closed", closedExtension);
+		telemetry.update();
 
+		robot.extension.setPower(0);
+		robot.arm.setPower(0);
+		robot.arm.setPower(1);
+		sleep(700);
+		robot.arm.setPower(-1);
+		sleep(300);
+		robot.arm.setPower(1);
+		sleep(700);
+		robot.arm.setPower(-1);
+		moveLeftRight(-1);
+		sleep(20);
+		rotateToAngle(150);
+		moveUpDown(-1);
+		sleep(20);
 
+		robot.extension.setPower(1);
+		sleep(200);
+		robot.extension.setPower(0);
+
+		sleep(190);
+		robot.arm.setPower(0);
+		robot.lid.setPosition(0.55);
+	}
 	/*rotate(-1);
 	sleep(220);
 	rotateToAngle(180);

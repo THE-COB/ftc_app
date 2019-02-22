@@ -88,10 +88,8 @@ while(waitTime.seconds()<5&&opModeIsActive());
 	sleep(100);
 	robot.wallServo.setPosition(0.92);
 	moveUpDown(1);
-	sleep(1050);
 	ElapsedTime wallTime=new ElapsedTime();
-	while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100))&&wallTime.seconds()<2&&opModeIsActive())
-		moveUpDown(0.2);
+	while(opModeIsActive()&&wallTime.seconds()<1.2);
 	robot.wallServo.setPosition(0.3);
 	moveLeftRight(-1);
 	markerBlue=robot.markerColor.blue();

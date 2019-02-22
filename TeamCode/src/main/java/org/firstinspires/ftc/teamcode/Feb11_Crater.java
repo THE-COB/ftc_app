@@ -44,8 +44,8 @@ public class Feb11_Crater extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.25);
-		robot.phoneServoY.setPosition(0.61);
+		robot.phoneServoX.setPosition(0.7);		//FEB 22
+		robot.phoneServoY.setPosition(0.67);	//FEB 22
 		waitForStart();
 		runtime = new ElapsedTime();
 if(opModeIsActive()){
@@ -75,7 +75,7 @@ if(opModeIsActive()){
 	stopMotors();
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(19 - 1));
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93 - 1));
-	rotate(-0.1);
+	rotate(-0.01);
 	sleep(500);
 	stopMotors();
 
@@ -85,8 +85,10 @@ if(opModeIsActive()){
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95 - 1));
 	robot.startingAngle = 42;
 	rotateToAngle(45);
+	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(100-1));
 	sample();
-
+	telemetry.addData("Marker Color", position);
+	telemetry.update();
 
 	rotate(-1);
 	sleep(220);
@@ -95,10 +97,8 @@ if(opModeIsActive()){
 	sleep(100);
 	robot.wallServo.setPosition(0.92);
 	moveUpDown(1);
-	sleep(1150);
 	ElapsedTime wallTime=new ElapsedTime();
-	while((!(robot.wallDistance.getDistance(DistanceUnit.MM)<2)&&!(robot.wallDistance.getDistance(DistanceUnit.MM)>100))&&wallTime.seconds()<2&&opModeIsActive())
-		moveUpDown(0.2);
+	while(opModeIsActive()&&wallTime.seconds()<1.15);
 	robot.wallServo.setPosition(0.3);
 	rotate(1);
 	sleep(500);
@@ -119,13 +119,13 @@ if(opModeIsActive()){
 	robot.marker1.setPosition(1);
 	moveUpDown(-1);
 	sleep(20);
-	rotateToAngle(2);
+	rotateToAngle(4);	//changed feb 21
 
 	moveUpDown(1);
 	ElapsedTime drivetime= new ElapsedTime();
 	while(opModeIsActive()&&drivetime.seconds()<1.45&&runtime.seconds()<28.5){
 	}
-	if(drivetime.seconds()>1.6) {
+	if(drivetime.seconds()>1.6 || !opModeIsActive()) {
 		stopMotors();
 	}
 	else{
