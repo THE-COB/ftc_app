@@ -45,8 +45,8 @@ public class Feb11_Crater extends  AvesAblazeOpmode {
 		calibrate();
 		sleep(100);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.16);		//FEB 22
-		robot.phoneServoY.setPosition(0.64);	//FEB 22
+		robot.phoneServoX.setPosition(0.89);		//FEB 22
+		robot.phoneServoY.setPosition(0.7);	//FEB 22
 		waitForStart();
 		runtime = new ElapsedTime();
 if(opModeIsActive()){

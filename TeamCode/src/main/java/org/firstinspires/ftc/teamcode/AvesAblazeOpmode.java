@@ -777,8 +777,8 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 				}
 		}
 		while(scanTime.seconds()<4.85&&position.equals("none")&&opModeIsActive()){
-			robot.phoneServoX.setPosition(0.67);
-			robot.phoneServoY.setPosition(0.64);
+			robot.phoneServoX.setPosition(1);
+			robot.phoneServoY.setPosition(0.67);
 			if(tfod.getUpdatedRecognitions()!=null&&tfod.getRecognitions().size()>0){
 				if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&scanTime.seconds()>1.5&&tfod.getRecognitions().get(0).getHeight()>65){
 					position="center";

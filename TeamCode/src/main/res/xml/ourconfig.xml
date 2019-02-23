@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+	<LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ2A6VC8" parentModuleAddress="1">
+		<LynxModule name="Expansion Hub 1" port="1">
+			<TetrixMotor name="motor0" port="0" />
+			<TetrixMotor name="motor1" port="1" />
+			<TetrixMotor name="motor2" port="2" />
+			<TetrixMotor name="motor3" port="3" />
+			<Servo name="marker1" port="0" />
+			<RevBlinkinLedDriver name="extension" port="1" />
+			<RevBlinkinLedDriver name="lights" port="2" />
+			<Servo name="phoneServoX" port="3" />
+			<Servo name="phoneServoY" port="4" />
+			<Servo name="lid" port="5" />
+			<LynxEmbeddedIMU name="imu" port="0" bus="0" />
+		</LynxModule>
+		<LynxModule name="Expansion Hub 2" port="2">
+			<TetrixMotor name="lift1" port="0" />
+			<TetrixMotor name="lift2" port="1" />
+			<TetrixMotor name="arm" port="2" />
+			<TetrixMotor name="extension" port="3" />
+			<Servo name="extension" port="0" />
+			<RevBlinkinLedDriver name="lights" port="1" />
+			<Servo name="wallServo" port="4" />
+			<LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+			<LynxColorSensor name="markerColorDistance" port="3" bus="0" />
+			<LynxColorSensor name="markerColorDistance" port="0" bus="3" />
+		</LynxModule>
+	</LynxUsbDevice>
+</Robot>

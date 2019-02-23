@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Rohan Mathur on 9/26/18.
  */
 @TeleOp(name="AvesAblazeTeleop", group="Competition")
-//Rohan Don't touch this I swear to God
+
 public class OldTeleop extends AvesAblazeOpmode {
 
 
@@ -31,6 +31,8 @@ public class OldTeleop extends AvesAblazeOpmode {
 			robot.init(hardwareMap);
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(50));
 			tfod.shutdown();
+			robot.phoneServoX.setPosition(0.5);
+			robot.phoneServoY.setPosition(0.67);
 			//vuforia.stop();
 		} catch (Exception e) {
 //			tfod.shutdown();

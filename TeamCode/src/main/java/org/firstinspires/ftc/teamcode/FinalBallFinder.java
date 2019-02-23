@@ -54,7 +54,7 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 		robot.phoneServoY.setPosition(0.5);
 		waitForStart();
 		ElapsedTime runtime=new ElapsedTime();
-	new initTfod().run();
+		new initTfod().run();
 		if (opModeIsActive()) {
 
 
@@ -65,8 +65,9 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 			waitForStart();
 
 			if (opModeIsActive()) {
-
-
+				telemetry.addData("servoX", robot.phoneServoX.getPosition());
+				telemetry.addData("servoY", robot.phoneServoY.getPosition());
+				telemetry.update();
 				while (opModeIsActive()) {
 					telemetry.addData("servoX", robot.phoneServoX.getPosition());
 					telemetry.addData("servoY", robot.phoneServoY.getPosition());
@@ -77,33 +78,7 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 					telemetry.addData("angle", getAngle());
 					telemetry.addData("position", super.position);
 					telemetry.update();
-					if(runtime.seconds()<6){
-						if(tfod.getRecognitions().size()>0)
-						if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)){
-							super.position="left";
-						}
-					}
-					else if(runtime.seconds()<10){
-						robot.phoneServoX.setPosition(0.61);
-						if(tfod.getRecognitions().size()>0)
-							if(tfod.getRecognitions().get(0).getLabel().equals(LABEL_GOLD_MINERAL)&&runtime.seconds()>8){
-								super.position="center";
-							}
-					}
-					else{
-						if(super.position.equals("none"))
-						super.position="right";
-					}
-						if (runtime.seconds() > 120) {
-						position = 97;
-					} else if (runtime.seconds() > 115) {
-						position = 45;
-					} else if (runtime.seconds() > 105) {
-						if (Math.round(runtime.seconds() * 4) % 2 == 0)
-							position = 96;
-						else
-							position = 100;
-					}
+
 					robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(position - 1));
 					//Move Robot
 					moveY = Range.clip(-gamepad1.left_stick_y, -1, 1);
@@ -111,8 +86,6 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 					rotate = Range.clip(-gamepad1.right_stick_x, -1, 1);
 			/*
 			PUT FINAL CONTROL SCHEME HERE
-
-
 			 */		if (gamepad1.dpad_left&&gamepad1.x) {
 						robot.phoneServoX.setPosition(robot.phoneServoX.getPosition() - 0.01);
 						while (gamepad1.dpad_left);
@@ -144,7 +117,6 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 				if ((Math.abs(moveY) > 0.25)) {
 					moveUpDown(-moveY);
 					position = 57;
-
 				} else if (Math.abs(moveX) > 0.25) {
 					moveLeftRight(-moveX);
 					position = 67;
