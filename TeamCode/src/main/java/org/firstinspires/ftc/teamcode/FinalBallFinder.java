@@ -123,7 +123,7 @@ public class FinalBallFinder extends AvesAblazeOpmode{
 					}
 
 					if (gamepad1.dpad_up&&gamepad1.x) {
-						robot.phoneServoX.setPosition(0.61);
+						robot.phoneServoY.setPosition(robot.phoneServoY.getPosition() + 0.01);
 						while (gamepad1.dpad_up);
 					}
 					if (gamepad1.dpad_down&&gamepad1.x) {

@@ -48,8 +48,8 @@ public class Feb9_FarCrater extends  AvesAblazeOpmode {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.7);	//0.24 FEB 22
-		robot.phoneServoY.setPosition(0.67);	//0.64 FEB 22
+		robot.phoneServoX.setPosition(0.16);	//0.24 FEB 22
+		robot.phoneServoY.setPosition(0.64);	//0.64 FEB 22
 		waitForStart();
 		new Thread(new initTfod()).start();
 		runtime = new ElapsedTime();

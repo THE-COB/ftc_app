@@ -124,11 +124,11 @@ if(opModeIsActive()) {
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 
 	} else if (position.equals("right") || gamepad1.a) {
-		polarDrive(1, Math.PI / 4.4);
+		polarDrive(1, Math.PI / 4.5);
 		sleep(2020);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(5-1));
-		polarDrive(1, -(Math.PI - (Math.PI / 4.4)));
-		sleep(1450);
+		polarDrive(1, -(Math.PI - (Math.PI / 4.5)));
+		sleep(1350);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
 
 	} else {
@@ -146,11 +146,13 @@ if(opModeIsActive()) {
 	rotateToAngle(275);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 	moveLeftRight(-1);
-	sleep(1400);
+	sleep(1100);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1-1));
 	robot.marker1.setPosition(0.3);
-	sleep(830);
+	sleep(730);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(93-1));
+	moveLeftRight(1);
+	sleep(100);
 	robot.marker1.setPosition(1);
 
 	if (position.equals("left")) {
@@ -158,7 +160,7 @@ if(opModeIsActive()) {
 		sleep(1400);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(95-1));
 		moveUpDown(-1);
-		sleep(1350);
+		sleep(1400);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(97-1));
 	}
 	moveLeftRight(1);
@@ -173,21 +175,25 @@ if(opModeIsActive()) {
 	}
 	if (position.equals("right")) {
 		moveUpDown(1);
-		sleep(300);
+		sleep(250);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(7-1));
 		stopMotors();
 	}
-	rotateToAngle(185);
+	rotateToAngle(0);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4-1));
-	moveUpDown(-1);
+	moveUpDown(1);
 	sleep(850);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
-	moveLeftRight(-1);
-	sleep(200);
-	moveUpDown(-1);
+	if(position.equals("left")){
+		moveLeftRight(-1);
+	sleep(200);}
+	moveUpDown(1);
 	robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(91-1));
-	sleep(1400);
+	sleep(1200);
 	stopMotors();
+	robot.arm.setPower(1);
+	sleep(1000);
+	robot.arm.setPower(0);
 	while(opModeIsActive()){
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 		sleep(100);

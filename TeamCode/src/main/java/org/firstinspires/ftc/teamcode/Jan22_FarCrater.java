@@ -27,14 +27,14 @@ public class Jan22_FarCrater extends  AvesAblazeOpmode {
 		runtime = new ElapsedTime();
 		robot.init(hardwareMap);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
-		calibrate();
+		//calibrate();
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
 		waitForStart();
 if(opModeIsActive()){
 		initVuforia();
 
 
-		if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+		/*if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 			initTfod();
 		} else {
 			telemetry.addData("Sorry!", "This device is not compatible with TFOD");
@@ -56,7 +56,7 @@ if(opModeIsActive()){
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(29-1));
 			finalMinFinder();
 		}
-		finalMinFinder();
+		finalMinFinder();*/
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(9-1));
 		robot.arm.setPower(1);
 		sleep(500);
@@ -90,7 +90,7 @@ if(opModeIsActive()){
 		stopMotors();
 
 
-		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99-1));
+		/*robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(99-1));
 		while(opModeIsActive()&&(!robot.imu.isGyroCalibrated()&&!robot.imu1.isGyroCalibrated())){
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(97-1));
 			calibrate();
@@ -214,7 +214,7 @@ if(opModeIsActive()){
 		stopMotors();
 	robot.arm.setPower(1);
 	sleep(1000);
-	robot.arm.setPower(0);
+	robot.arm.setPower(0);*/
 		while(opModeIsActive()){
 			robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2-1));
 			sleep(100);

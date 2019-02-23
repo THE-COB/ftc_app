@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 /**
- * Created by Rohan Mathur on 1/22/19.
+ * Created by NOAH PELBERG on 1/22/19.
  */
 
 @Autonomous(name = "Feb11Crater", group = "AAA")
@@ -43,9 +43,10 @@ public class Feb11_Crater extends  AvesAblazeOpmode {
 		robot.init(hardwareMap);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(4 - 1));
 		calibrate();
+		sleep(100);
 		robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(2 - 1));
-		robot.phoneServoX.setPosition(0.7);		//FEB 22
-		robot.phoneServoY.setPosition(0.67);	//FEB 22
+		robot.phoneServoX.setPosition(0.16);		//FEB 22
+		robot.phoneServoY.setPosition(0.64);	//FEB 22
 		waitForStart();
 		runtime = new ElapsedTime();
 if(opModeIsActive()){
