@@ -52,7 +52,7 @@ public interface AvesAblazeOpmodeSimplified {
 	/**
 	 * Stops all DC Motors on the robot
 	 */
-	public  void stopMotors();
+	public void stopMotors();
 
 
 	/**
