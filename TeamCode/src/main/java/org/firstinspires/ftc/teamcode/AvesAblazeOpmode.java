@@ -113,10 +113,10 @@ public abstract class AvesAblazeOpmode extends LinearOpMode implements AvesAblaz
 	}
 	//Moves left-right based off power
 	public void moveLeftRight(double power){
-		robot.motor0.setPower(power);
-		robot.motor1.setPower(power);
-		robot.motor2.setPower(-power);
-		robot.motor3.setPower(-power);
+		robot.motor0.setPower(-power);
+		robot.motor1.setPower(-power);
+		robot.motor2.setPower(power);
+		robot.motor3.setPower(power);
 	}
 	//Moves forward-back based off power
 	public void moveUpDown(double power){

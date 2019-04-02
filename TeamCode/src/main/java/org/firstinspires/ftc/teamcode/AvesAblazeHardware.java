@@ -130,18 +130,22 @@ public class AvesAblazeHardware {
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		motor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		motor1 = hwMap.get(DcMotor.class, "motor1");
 		motor1.setDirection(DcMotor.Direction.FORWARD);
 		motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		motor2 = hwMap.get(DcMotor.class, "motor2");
 		motor2.setDirection(DcMotor.Direction.FORWARD);
 		motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		motor3 = hwMap.get(DcMotor.class, "motor3");
 		motor3.setDirection(DcMotor.Direction.FORWARD);
 		motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		lift1 = hwMap.get(DcMotor.class, "lift1");
 		lift1.setDirection(DcMotor.Direction.FORWARD);

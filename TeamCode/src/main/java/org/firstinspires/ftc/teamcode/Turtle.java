@@ -15,7 +15,6 @@ public class Turtle extends AvesAblazeOpmode {
 
 	public void runOpMode() {
 		robot.init(hardwareMap);
-
 		waitForStart();
 		if (opModeIsActive()) {
 			moveUpDown(1);
